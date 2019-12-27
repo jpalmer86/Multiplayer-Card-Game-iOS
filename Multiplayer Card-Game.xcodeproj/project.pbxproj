@@ -21,6 +21,10 @@
 		ED9F512B23B6027500FD5161 /* GameTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED9F512923B6027500FD5161 /* GameTableViewCell.xib */; };
 		ED9F512C23B6027500FD5161 /* GameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F512A23B6027500FD5161 /* GameTableViewCell.swift */; };
 		ED9F512F23B6084700FD5161 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F512E23B6084700FD5161 /* Constants.swift */; };
+		EDDBD4B123B628D1003563CB /* HostJoinViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDBD4B023B628D1003563CB /* HostJoinViewController.swift */; };
+		EDDBD4B323B63154003563CB /* JoinGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDBD4B223B63154003563CB /* JoinGameViewController.swift */; };
+		EDDBD4B523B632CD003563CB /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDBD4B423B632CD003563CB /* GameViewController.swift */; };
+		EDDBD4B923B63A29003563CB /* GameService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDBD4B823B63A29003563CB /* GameService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +65,10 @@
 		ED9F512923B6027500FD5161 /* GameTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameTableViewCell.xib; sourceTree = "<group>"; };
 		ED9F512A23B6027500FD5161 /* GameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTableViewCell.swift; sourceTree = "<group>"; };
 		ED9F512E23B6084700FD5161 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		EDDBD4B023B628D1003563CB /* HostJoinViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostJoinViewController.swift; sourceTree = "<group>"; };
+		EDDBD4B223B63154003563CB /* JoinGameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinGameViewController.swift; sourceTree = "<group>"; };
+		EDDBD4B423B632CD003563CB /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		EDDBD4B823B63A29003563CB /* GameService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,11 +122,14 @@
 			isa = PBXGroup;
 			children = (
 				ED9F512E23B6084700FD5161 /* Constants.swift */,
+				EDDBD4B723B639EC003563CB /* Services */,
 				ED9F512623B6017200FD5161 /* Models */,
 				ED9F512523B5FF3000FD5161 /* Helpers */,
-				ED9F50F023B5F76D00FD5161 /* AppDelegate.swift */,
-				ED9F50F223B5F76D00FD5161 /* SceneDelegate.swift */,
+				EDDBD4B623B638D2003563CB /* HostAndJoinView */,
 				ED9F512D23B607AC00FD5161 /* GameTableView */,
+				ED9F50F223B5F76D00FD5161 /* SceneDelegate.swift */,
+				ED9F50F023B5F76D00FD5161 /* AppDelegate.swift */,
+				EDDBD4B423B632CD003563CB /* GameViewController.swift */,
 				ED9F50F623B5F76D00FD5161 /* Main.storyboard */,
 				ED9F50F923B5F76E00FD5161 /* Assets.xcassets */,
 				ED9F50FB23B5F76E00FD5161 /* LaunchScreen.storyboard */,
@@ -177,6 +188,23 @@
 				ED9F512923B6027500FD5161 /* GameTableViewCell.xib */,
 			);
 			path = GameTableView;
+			sourceTree = "<group>";
+		};
+		EDDBD4B623B638D2003563CB /* HostAndJoinView */ = {
+			isa = PBXGroup;
+			children = (
+				EDDBD4B023B628D1003563CB /* HostJoinViewController.swift */,
+				EDDBD4B223B63154003563CB /* JoinGameViewController.swift */,
+			);
+			path = HostAndJoinView;
+			sourceTree = "<group>";
+		};
+		EDDBD4B723B639EC003563CB /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				EDDBD4B823B63A29003563CB /* GameService.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -311,12 +339,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EDDBD4B923B63A29003563CB /* GameService.swift in Sources */,
+				EDDBD4B523B632CD003563CB /* GameViewController.swift in Sources */,
 				ED9F50F523B5F76D00FD5161 /* GameTableViewController.swift in Sources */,
 				ED9F512823B6019900FD5161 /* Game.swift in Sources */,
 				ED9F50F123B5F76D00FD5161 /* AppDelegate.swift in Sources */,
 				ED9F50F323B5F76D00FD5161 /* SceneDelegate.swift in Sources */,
+				EDDBD4B123B628D1003563CB /* HostJoinViewController.swift in Sources */,
 				ED9F512F23B6084700FD5161 /* Constants.swift in Sources */,
 				ED9F512423B5FF2700FD5161 /* UIViewController+Alert.swift in Sources */,
+				EDDBD4B323B63154003563CB /* JoinGameViewController.swift in Sources */,
 				ED9F512C23B6027500FD5161 /* GameTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

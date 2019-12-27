@@ -11,9 +11,17 @@ import UIKit
 class GameTableViewCell: UITableViewCell {
 
     //MARK:- IBOutlets
-    @IBOutlet var gameNameLabel: UILabel!
+    @IBOutlet var gameNameLabel: UILabel! {
+        didSet {
+            gameNameLabel.font = UIFont(name:"HelveticaNeue-Bold", size: gameNameLabel.font.pointSize)
+        }
+    }
     @IBOutlet var gameDescriptionLabel: UILabel!
-    @IBOutlet var playerDescriptionLabel: UILabel!
+    @IBOutlet var playerDescriptionLabel: UILabel!{
+        didSet {
+            playerDescriptionLabel.font = UIFont(name:"HelveticaNeue-Bold", size: playerDescriptionLabel.font.pointSize)
+        }
+    }
     @IBOutlet var gameImageView: UIImageView!
     
     //MARK:- Property variables
@@ -33,7 +41,7 @@ class GameTableViewCell: UITableViewCell {
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
+        super.setSelected(false, animated: animated)
 
         // Configure the view for the selected state
     }

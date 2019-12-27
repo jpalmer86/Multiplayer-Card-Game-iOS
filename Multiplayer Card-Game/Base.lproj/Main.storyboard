@@ -4,6 +4,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15509"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -35,11 +36,180 @@
                     <navigationItem key="navigationItem" id="owX-8u-xmw"/>
                     <connections>
                         <outlet property="tableView" destination="flj-EN-N1I" id="vrB-OI-hDC"/>
+                        <segue destination="4LT-bU-WOM" kind="show" identifier="Host Join Game" id="cz1-ex-Lai"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1047.8260869565217" y="129.91071428571428"/>
+        </scene>
+        <!--Host Join View Controller-->
+        <scene sceneID="50Q-om-3aR">
+            <objects>
+                <viewController id="4LT-bU-WOM" customClass="HostJoinViewController" customModule="Multiplayer_Card_Game" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="AxK-eM-kq7">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="58" translatesAutoresizingMaskIntoConstraints="NO" id="4qc-UH-eNb">
+                                <rect key="frame" x="91" y="152" width="232" height="252.5"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="jSw-9b-ocF">
+                                        <rect key="frame" x="0.0" y="0.0" width="232" height="97.5"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1Xs-Pq-qqf">
+                                                <rect key="frame" x="0.0" y="0.0" width="232" height="70"/>
+                                                <color key="backgroundColor" red="0.14451342555368726" green="0.61897208121827418" blue="0.51825126137231503" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <inset key="contentEdgeInsets" minX="48" minY="12" maxX="48" maxY="12"/>
+                                                <state key="normal">
+                                                    <attributedString key="attributedTitle">
+                                                        <fragment content="Start New">
+                                                            <attributes>
+                                                                <color key="NSColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                                <font key="NSFont" size="22" name="ArialRoundedMTBold"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                    </attributedString>
+                                                </state>
+                                                <connections>
+                                                    <segue destination="WPg-mh-Ovj" kind="show" identifier="Start Game segue" id="K7c-Uc-GUy"/>
+                                                </connections>
+                                            </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Begin a new game." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YBl-U8-6QF">
+                                                <rect key="frame" x="0.0" y="78" width="232" height="19.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                                <color key="textColor" red="0.1445134256" green="0.61897208120000002" blue="0.5182512614" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="2SB-yk-Nsx">
+                                        <rect key="frame" x="0.0" y="155.5" width="232" height="97"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" hasAttributedTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AE8-So-3ZO">
+                                                <rect key="frame" x="0.0" y="0.0" width="232" height="69.5"/>
+                                                <color key="backgroundColor" red="0.21974440496111078" green="0.38112092334553116" blue="0.73068686548223349" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <inset key="contentEdgeInsets" minX="48" minY="12" maxX="48" maxY="12"/>
+                                                <state key="normal">
+                                                    <attributedString key="attributedTitle">
+                                                        <fragment content="Join Existing">
+                                                            <attributes>
+                                                                <color key="NSColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                                <font key="NSFont" size="22" name="ArialRoundedMTBold"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                    </attributedString>
+                                                </state>
+                                                <connections>
+                                                    <segue destination="alC-g4-YaW" kind="show" identifier="Active Game segue" id="jd0-bM-47L"/>
+                                                </connections>
+                                            </button>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Join an existing game." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vdv-TE-S6u">
+                                                <rect key="frame" x="0.0" y="77.5" width="232" height="19.5"/>
+                                                <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                                <color key="textColor" red="0.219744405" green="0.38112092330000003" blue="0.73068686549999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="4qc-UH-eNb" firstAttribute="centerX" secondItem="AxK-eM-kq7" secondAttribute="centerX" id="b2i-y0-ItT"/>
+                            <constraint firstItem="4qc-UH-eNb" firstAttribute="top" secondItem="Fpv-mq-Pab" secondAttribute="top" constant="64" id="iRd-Yn-0rf"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Fpv-mq-Pab"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="zgb-rP-0Bm"/>
+                    <connections>
+                        <outlet property="joinGameButton" destination="AE8-So-3ZO" id="NpV-BZ-nPP"/>
+                        <outlet property="startgameButton" destination="1Xs-Pq-qqf" id="oug-b8-aKN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uqc-Ci-f3U" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1857.9710144927537" y="129.91071428571428"/>
+        </scene>
+        <!--Join Game View Controller-->
+        <scene sceneID="s3P-zR-Fje">
+            <objects>
+                <viewController id="alC-g4-YaW" customClass="JoinGameViewController" customModule="Multiplayer_Card_Game" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="4ZR-87-4lT">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="4tq-qs-wfb">
+                                <rect key="frame" x="95" y="152" width="224.5" height="34"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Player Name:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4hh-9Z-yn4">
+                                        <rect key="frame" x="0.0" y="0.0" width="107" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Player Name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="TlX-Ru-8IW">
+                                        <rect key="frame" x="115" y="0.0" width="109.5" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                </subviews>
+                            </stackView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Jih-RS-4Hg">
+                                <rect key="frame" x="8" y="282" width="398" height="564"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </tableView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Available Lobbies:" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I7D-aw-mLU">
+                                <rect key="frame" x="8" y="250" width="398" height="24"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="I7D-aw-mLU" firstAttribute="leading" secondItem="3Qi-6a-VcU" secondAttribute="leading" constant="8" id="2hR-KU-KLY"/>
+                            <constraint firstItem="4tq-qs-wfb" firstAttribute="top" secondItem="3Qi-6a-VcU" secondAttribute="top" constant="64" id="BSB-cv-OTe"/>
+                            <constraint firstItem="3Qi-6a-VcU" firstAttribute="trailing" secondItem="I7D-aw-mLU" secondAttribute="trailing" constant="8" id="FM8-6g-DJz"/>
+                            <constraint firstItem="3Qi-6a-VcU" firstAttribute="trailing" secondItem="Jih-RS-4Hg" secondAttribute="trailing" constant="8" id="HPi-dh-6rQ"/>
+                            <constraint firstItem="Jih-RS-4Hg" firstAttribute="leading" secondItem="3Qi-6a-VcU" secondAttribute="leading" constant="8" id="Nqv-Mb-sO5"/>
+                            <constraint firstItem="Jih-RS-4Hg" firstAttribute="top" secondItem="I7D-aw-mLU" secondAttribute="bottom" constant="8" id="ji9-fB-hGe"/>
+                            <constraint firstItem="3Qi-6a-VcU" firstAttribute="bottom" secondItem="Jih-RS-4Hg" secondAttribute="bottom" constant="16" id="pAz-AG-kJK"/>
+                            <constraint firstItem="4tq-qs-wfb" firstAttribute="centerX" secondItem="4ZR-87-4lT" secondAttribute="centerX" id="tBH-Cc-osr"/>
+                            <constraint firstItem="I7D-aw-mLU" firstAttribute="top" secondItem="4tq-qs-wfb" secondAttribute="bottom" constant="64" id="zIz-mu-eec"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="3Qi-6a-VcU"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="sjN-45-BYQ"/>
+                    <connections>
+                        <outlet property="lobbiesTableView" destination="Jih-RS-4Hg" id="l8j-Ex-6b7"/>
+                        <outlet property="playerNameTextField" destination="TlX-Ru-8IW" id="bTP-yL-T0I"/>
+                        <segue destination="WPg-mh-Ovj" kind="show" identifier="Join Existing Segue" id="bUK-IY-X5K"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="6zO-LM-iGC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2662.3188405797105" y="572.54464285714278"/>
+        </scene>
+        <!--Item-->
+        <scene sceneID="9mi-03-JwK">
+            <objects>
+                <viewController id="h49-9T-XZB" customClass="GameTableViewController" customModule="Multiplayer_Card_Game" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Y3O-XW-7zQ">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="AN1-Jk-l6h"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="FmO-IT-lVO"/>
+                    <navigationItem key="navigationItem" id="Qnn-B4-hIR"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RAK-b4-YXi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4350.7246376811599" y="129.91071428571428"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="fGg-gl-LTy">
@@ -49,6 +219,14 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="MQn-ao-O51">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="barTintColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <textAttributes key="titleTextAttributes">
+                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="22"/>
+                            <color key="textColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        </textAttributes>
+                        <textAttributes key="largeTitleTextAttributes">
+                            <color key="textColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
@@ -59,5 +237,26 @@
             </objects>
             <point key="canvasLocation" x="137.68115942028987" y="129.91071428571428"/>
         </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="mOZ-c0-dZo">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="WPg-mh-Ovj" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="MGu-ZP-XDX"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="DwY-VU-BPP">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="h49-9T-XZB" kind="relationship" relationship="viewControllers" id="zRE-kB-YJp"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zPh-23-fa2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3440.579710144928" y="129.91071428571428"/>
+        </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="bUK-IY-X5K"/>
+    </inferredMetricsTieBreakers>
 </document>
