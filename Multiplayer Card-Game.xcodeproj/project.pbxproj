@@ -9,12 +9,18 @@
 /* Begin PBXBuildFile section */
 		ED9F50F123B5F76D00FD5161 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F50F023B5F76D00FD5161 /* AppDelegate.swift */; };
 		ED9F50F323B5F76D00FD5161 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F50F223B5F76D00FD5161 /* SceneDelegate.swift */; };
-		ED9F50F523B5F76D00FD5161 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F50F423B5F76D00FD5161 /* ViewController.swift */; };
+		ED9F50F523B5F76D00FD5161 /* GameTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F50F423B5F76D00FD5161 /* GameTableViewController.swift */; };
 		ED9F50F823B5F76D00FD5161 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED9F50F623B5F76D00FD5161 /* Main.storyboard */; };
 		ED9F50FA23B5F76E00FD5161 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ED9F50F923B5F76E00FD5161 /* Assets.xcassets */; };
 		ED9F50FD23B5F76E00FD5161 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ED9F50FB23B5F76E00FD5161 /* LaunchScreen.storyboard */; };
 		ED9F510823B5F76E00FD5161 /* Multiplayer_Card_GameTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F510723B5F76E00FD5161 /* Multiplayer_Card_GameTests.swift */; };
 		ED9F511323B5F76E00FD5161 /* Multiplayer_Card_GameUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F511223B5F76E00FD5161 /* Multiplayer_Card_GameUITests.swift */; };
+		ED9F512223B5FEA100FD5161 /* MultipeerConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED9F512123B5FEA100FD5161 /* MultipeerConnectivity.framework */; };
+		ED9F512423B5FF2700FD5161 /* UIViewController+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F512323B5FF2700FD5161 /* UIViewController+Alert.swift */; };
+		ED9F512823B6019900FD5161 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F512723B6019900FD5161 /* Game.swift */; };
+		ED9F512B23B6027500FD5161 /* GameTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = ED9F512923B6027500FD5161 /* GameTableViewCell.xib */; };
+		ED9F512C23B6027500FD5161 /* GameTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F512A23B6027500FD5161 /* GameTableViewCell.swift */; };
+		ED9F512F23B6084700FD5161 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F512E23B6084700FD5161 /* Constants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,7 +44,7 @@
 		ED9F50ED23B5F76D00FD5161 /* Multiplayer Card-Game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Multiplayer Card-Game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED9F50F023B5F76D00FD5161 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ED9F50F223B5F76D00FD5161 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		ED9F50F423B5F76D00FD5161 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		ED9F50F423B5F76D00FD5161 /* GameTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTableViewController.swift; sourceTree = "<group>"; };
 		ED9F50F723B5F76D00FD5161 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		ED9F50F923B5F76E00FD5161 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		ED9F50FC23B5F76E00FD5161 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -49,6 +55,12 @@
 		ED9F510E23B5F76E00FD5161 /* Multiplayer Card-GameUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Multiplayer Card-GameUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED9F511223B5F76E00FD5161 /* Multiplayer_Card_GameUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Multiplayer_Card_GameUITests.swift; sourceTree = "<group>"; };
 		ED9F511423B5F76E00FD5161 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		ED9F512123B5FEA100FD5161 /* MultipeerConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MultipeerConnectivity.framework; path = System/Library/Frameworks/MultipeerConnectivity.framework; sourceTree = SDKROOT; };
+		ED9F512323B5FF2700FD5161 /* UIViewController+Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Alert.swift"; sourceTree = "<group>"; };
+		ED9F512723B6019900FD5161 /* Game.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		ED9F512923B6027500FD5161 /* GameTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameTableViewCell.xib; sourceTree = "<group>"; };
+		ED9F512A23B6027500FD5161 /* GameTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameTableViewCell.swift; sourceTree = "<group>"; };
+		ED9F512E23B6084700FD5161 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED9F512223B5FEA100FD5161 /* MultipeerConnectivity.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +96,7 @@
 				ED9F510623B5F76E00FD5161 /* Multiplayer Card-GameTests */,
 				ED9F511123B5F76E00FD5161 /* Multiplayer Card-GameUITests */,
 				ED9F50EE23B5F76D00FD5161 /* Products */,
+				ED9F512023B5FEA100FD5161 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,9 +113,12 @@
 		ED9F50EF23B5F76D00FD5161 /* Multiplayer Card-Game */ = {
 			isa = PBXGroup;
 			children = (
+				ED9F512E23B6084700FD5161 /* Constants.swift */,
+				ED9F512623B6017200FD5161 /* Models */,
+				ED9F512523B5FF3000FD5161 /* Helpers */,
 				ED9F50F023B5F76D00FD5161 /* AppDelegate.swift */,
 				ED9F50F223B5F76D00FD5161 /* SceneDelegate.swift */,
-				ED9F50F423B5F76D00FD5161 /* ViewController.swift */,
+				ED9F512D23B607AC00FD5161 /* GameTableView */,
 				ED9F50F623B5F76D00FD5161 /* Main.storyboard */,
 				ED9F50F923B5F76E00FD5161 /* Assets.xcassets */,
 				ED9F50FB23B5F76E00FD5161 /* LaunchScreen.storyboard */,
@@ -126,6 +143,40 @@
 				ED9F511423B5F76E00FD5161 /* Info.plist */,
 			);
 			path = "Multiplayer Card-GameUITests";
+			sourceTree = "<group>";
+		};
+		ED9F512023B5FEA100FD5161 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ED9F512123B5FEA100FD5161 /* MultipeerConnectivity.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		ED9F512523B5FF3000FD5161 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				ED9F512323B5FF2700FD5161 /* UIViewController+Alert.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		ED9F512623B6017200FD5161 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				ED9F512723B6019900FD5161 /* Game.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		ED9F512D23B607AC00FD5161 /* GameTableView */ = {
+			isa = PBXGroup;
+			children = (
+				ED9F50F423B5F76D00FD5161 /* GameTableViewController.swift */,
+				ED9F512A23B6027500FD5161 /* GameTableViewCell.swift */,
+				ED9F512923B6027500FD5161 /* GameTableViewCell.xib */,
+			);
+			path = GameTableView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -235,6 +286,7 @@
 				ED9F50FD23B5F76E00FD5161 /* LaunchScreen.storyboard in Resources */,
 				ED9F50FA23B5F76E00FD5161 /* Assets.xcassets in Resources */,
 				ED9F50F823B5F76D00FD5161 /* Main.storyboard in Resources */,
+				ED9F512B23B6027500FD5161 /* GameTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,9 +311,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED9F50F523B5F76D00FD5161 /* ViewController.swift in Sources */,
+				ED9F50F523B5F76D00FD5161 /* GameTableViewController.swift in Sources */,
+				ED9F512823B6019900FD5161 /* Game.swift in Sources */,
 				ED9F50F123B5F76D00FD5161 /* AppDelegate.swift in Sources */,
 				ED9F50F323B5F76D00FD5161 /* SceneDelegate.swift in Sources */,
+				ED9F512F23B6084700FD5161 /* Constants.swift in Sources */,
+				ED9F512423B5FF2700FD5161 /* UIViewController+Alert.swift in Sources */,
+				ED9F512C23B6027500FD5161 /* GameTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

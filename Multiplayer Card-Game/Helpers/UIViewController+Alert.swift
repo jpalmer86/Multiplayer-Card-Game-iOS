@@ -1,0 +1,26 @@
+//
+//  UIViewController+Alert.swift
+//  Bluetooth Testing
+//
+//  Created by Tushar Gusain on 26/12/19.
+//  Copyright © 2019 Hot Cocoa Software. All rights reserved.
+//
+
+import UIKit
+
+extension UIViewController
+{
+    func alert(title: String?, message: String?, completion: @escaping (Bool) -> Void)
+    {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+                completion(true)
+            }))
+            alert.addAction(UIAlertAction(title: "Close", style: .cancel, handler: { _ in
+                completion(false)
+            }))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+}
