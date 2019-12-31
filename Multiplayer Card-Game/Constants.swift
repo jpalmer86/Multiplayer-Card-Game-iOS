@@ -8,9 +8,12 @@
 
 import UIKit
 
+var gameService = GameService.shared
+
 struct Constants {
     //MARK:- Games
     static private let CRAZY8S = Game(name: "Crazy 8's",
+                                      serviceType: "crazy8-service",
                                       image: UIImage(imageLiteralResourceName: "crazy_eights_image"),
                                       playerDescription: "2-5 Players",
                                       gameDescription: "A game where the first person to get rid of all their cards win!")

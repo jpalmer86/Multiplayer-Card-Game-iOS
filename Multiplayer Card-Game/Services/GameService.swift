@@ -5,7 +5,9 @@
 //  Created by Tushar Gusain on 27/12/19.
 //  Copyright © 2019 Hot Cocoa Software. All rights reserved.
 //
+// Service type for mcpeerconnectivity valid characters include ASCII lowercase letters, numbers, and the hyphen(single)
 
+import Foundation
 import MultipeerConnectivity
 
 //MARK:- Protocols
@@ -15,14 +17,16 @@ protocol GameServiceBrowserDelegate {
 }
 
 protocol GameServiceAdvertiserDelegate {
-    func invitationWasReceived(fromPeer: String, completion: @escaping (Bool)->Void)
+    func invitationWasReceived(fromPeer: String, handler: @escaping (Bool, MCSession?) -> Void, session: MCSession)
 }
 
 protocol GameServiceSessionDelegate {
     func connectedWithPeer(peerID: MCPeerID)
+    func connectionFailed(peerID: MCPeerID)
     func recievedData(data: Data, fromPeerID: MCPeerID)
 }
 
+//MARK:- Service Class
 class GameService: NSObject {
     
     //MARK:- IBOutlets
@@ -31,43 +35,52 @@ class GameService: NSObject {
     
     // MARK:- Member Variables
     static var shared = GameService()
-    var browserDelegate: GameServiceBrowserDelegate?
-    var advertiserDelegate: GameServiceAdvertiserDelegate?
-    var sessionDelegate: GameServiceSessionDelegate?
+    var browserDelegate: GameServiceBrowserDelegate? {
+        didSet {
+            print("Game Service browser delegate: ", browserDelegate)
+        }
+    }
+    var advertiserDelegate: GameServiceAdvertiserDelegate? {
+        didSet {
+            print("Game Service advertiser delegate: ", advertiserDelegate)
+        }
+    }
+    var sessionDelegate: GameServiceSessionDelegate? {
+        didSet {
+            print("Game Service session delegate: ", sessionDelegate)
+        }
+    }
 
-    var peerID: MCPeerID!
-    var mcSession: MCSession!
-    var advertiser: MCNearbyServiceAdvertiser!
-    var browser: MCNearbyServiceBrowser!
+    private var myPeerID: MCPeerID! = MCPeerID(displayName: UIDevice.current.name)
+    private lazy var mcSession : MCSession = {
+        let session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .required)
+        session.delegate = self
+        return session
+    }()
+    private var advertiser: MCNearbyServiceAdvertiser!
+    private var browser: MCNearbyServiceBrowser!
     var messageToSend: String!
     private var serviceType = ""
-    var foundPeers = [MCPeerID]()
-    var invitationHandler: ((Bool, MCSession?)->Void)!
+    private var foundPeers = [MCPeerID]()
     
     //MARK:- Constructor
-    private override init() {}
+    private override init() {
+        super.init()
+         myPeerID = MCPeerID(displayName: UIDevice.current.name)
+    }
     
     //MARK:- Methods
     func setServiceType(serviceType: String) {
         self.serviceType = serviceType
+        setUpService()
     }
-    
-    func setUpService() {
-        if serviceType != "" {
-            peerID = MCPeerID(displayName: UIDevice.current.name)
-            mcSession = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .required)
-            advertiser = MCNearbyServiceAdvertiser(peer: peerID, discoveryInfo: nil, serviceType: serviceType)
-            browser = MCNearbyServiceBrowser(peer: peerID, serviceType: serviceType)
-            advertiser.delegate = self
-            browser.delegate = self
-            mcSession.delegate = self
-            //        advertiser.startAdvertisingPeer()
-            //        browser.startBrowsingForPeers()
-        }
+
+    func getPeerID() -> MCPeerID {
+        return myPeerID
     }
 
     func send() {
-        messageToSend = "\(peerID.displayName): \(inputMessage.text!)\n"
+        messageToSend = "\(myPeerID.displayName): \(inputMessage.text!)\n"
         let message = messageToSend.data(using: .utf8)
         if mcSession.connectedPeers.count > 0 {
             do {
@@ -89,12 +102,26 @@ class GameService: NSObject {
         browser.startBrowsingForPeers()
     }
     
-    func getPeerID() -> MCPeerID {
-        return peerID
+    func stopBrowsingForPeers() {
+        browser.stopBrowsingForPeers()
+    }
+    
+    func stopAdvertisingToPeers() {
+        advertiser.stopAdvertisingPeer()
     }
     
     func invitePeer(peerID: MCPeerID) {
          browser.invitePeer(peerID, to: mcSession, withContext: nil, timeout: 20)
+    }
+    
+    //MARK:- Private methods
+    private func setUpService() {
+        if serviceType != "" {
+            advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: nil, serviceType: serviceType)
+            advertiser.delegate = self
+            browser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: serviceType)
+            browser.delegate = self
+        }
     }
 }
 
@@ -109,6 +136,7 @@ extension GameService: MCSessionDelegate {
           print("Connecting: \(peerID.displayName)")
         case .notConnected:
           print("Not Connected: \(peerID.displayName)")
+          sessionDelegate?.connectionFailed(peerID: peerID)
         @unknown default:
           print("fatal error")
         }
@@ -141,7 +169,6 @@ extension GameService: MCNearbyServiceBrowserDelegate {
         foundPeers.append(peerID)
         print(foundPeers)
         browserDelegate?.foundPeer(peers: foundPeers)
-//        browser.invitePeer(peerID, to: mcSession, withContext: nil, timeout: 20)
     }
 
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
@@ -163,8 +190,7 @@ extension GameService: MCNearbyServiceBrowserDelegate {
 //MARK:- MCNearbyServiceAdvertiser Delegate Methods
 extension GameService: MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-        advertiserDelegate?.invitationWasReceived(fromPeer: peerID.displayName, completion: { invitationResponse in
-            invitationHandler(true, self.mcSession)
-        })
+//        invitationHandler(true, self.mcSession)
+        advertiserDelegate?.invitationWasReceived(fromPeer: peerID.displayName, handler: invitationHandler, session: self.mcSession)
     }
 }

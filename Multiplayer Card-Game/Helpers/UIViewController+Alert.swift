@@ -23,4 +23,26 @@ extension UIViewController
             self.present(alert, animated: true, completion: nil)
         }
     }
+    
+    func showOnlyAlert(title: String?, message: String?)
+    {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    func loadingAlert(title: String) -> UIAlertController {
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+
+        let indicator = UIActivityIndicatorView(frame: alert.view.bounds)
+        indicator.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+
+        alert.view.addSubview(indicator)
+        indicator.isUserInteractionEnabled = false
+        indicator.startAnimating()
+
+        return alert
+    }
 }

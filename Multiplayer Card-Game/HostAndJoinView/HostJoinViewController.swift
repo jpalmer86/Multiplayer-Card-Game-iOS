@@ -9,7 +9,6 @@
 import UIKit
 
 class HostJoinViewController: UIViewController {
-
     //MARK:- IBOutlets
     @IBOutlet var joinGameButton: UIButton! {
         didSet {
@@ -26,28 +25,27 @@ class HostJoinViewController: UIViewController {
     var game: Game!
     let joinSegueIdentifier = "Active Game segue"
     let startGameSegureIdentifier = "Start Game segue"
-    private let gameService = GameService.shared
     
     //MARK:- Lifecycle Hooks
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Play"
-        gameService.setServiceType(serviceType: game.name)
-        gameService.setUpService()
+        gameService.setServiceType(serviceType: game.serviceType)
     }
-    
 
     // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == joinSegueIdentifier {
             if let joinVC = segue.destination as? JoinGameViewController {
                 joinVC.game = game
-                gameService.joinSession()
             }
         } else if segue.identifier == startGameSegureIdentifier {
             if let tabBarVC = segue.destination as? UITabBarController, let gameVC = tabBarVC.viewControllers?.first {
-                gameService.hostSession()
-                //set game
+                print("Game view controller: ", gameVC)
+                if let gameVC = gameVC as? GameViewController {
+                    gameVC.game = game
+                    gameVC.isHost = true
+                }
             }
         }
     }

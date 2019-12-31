@@ -21,7 +21,7 @@ class GameTableViewController: UIViewController {
     //MARK:- Member Variables
     var games = [Game]() {
         didSet {
-            tableView.reloadData()
+            tableView?.reloadData()
         }
     }
     private let segueIdentifier = "Host Join Game"
@@ -39,7 +39,7 @@ class GameTableViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == segueIdentifier {
             if let hostJoinVC = segue.destination as? HostJoinViewController {
-                if let cell = sender as? HostJoinViewController {
+                if let cell = sender as? GameTableViewCell {
                     hostJoinVC.game = cell.game
                 }
             }
@@ -49,7 +49,7 @@ class GameTableViewController: UIViewController {
     //MARK:- Custom Methods
     private func registerTableViewCell() {
         let tableViewCell = UINib(nibName: "GameTableViewCell", bundle: nil)
-        self.tableView.register(tableViewCell, forCellReuseIdentifier: "GameTableViewCell")
+        self.tableView?.register(tableViewCell, forCellReuseIdentifier: "GameTableViewCell")
     }
 }
 

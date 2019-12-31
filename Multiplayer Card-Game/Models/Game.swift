@@ -10,6 +10,7 @@ import UIKit
 
 struct Game {
     let name: String
+    let serviceType: String
     let image: UIImage
     let playerDescription: String
     let gameDescription: String

@@ -12,11 +12,7 @@ import MultipeerConnectivity
 class JoinGameViewController: UIViewController {
 
     //MARK:- IBOutlets
-    @IBOutlet var playerNameTextField: UITextField! {
-        didSet {
-            playerNameTextField.text = gameService.getPeerID().displayName
-        }
-    }
+    @IBOutlet var playerNameTextField: UITextField!
     @IBOutlet var lobbiesTableView: UITableView! {
         didSet {
             lobbiesTableView.delegate = self
@@ -28,7 +24,6 @@ class JoinGameViewController: UIViewController {
     //MARK:- Property Variables
     let segueIdentifier = "Join Existing Segue"
     var game: Game!
-    let gameService = GameService.shared
     var availableDevices = [MCPeerID]() {
         didSet {
             lobbiesTableView.reloadData()
@@ -38,8 +33,14 @@ class JoinGameViewController: UIViewController {
     //MARK:- Lifecycle Hooks
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
+        gameService.browserDelegate = self
+        gameService.joinSession()
+        playerNameTextField.text = gameService.getPeerID().displayName
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        gameService.stopBrowsingForPeers()
+        super.viewWillDisappear(animated)
     }
     
     // MARK: - Navigation
@@ -47,7 +48,10 @@ class JoinGameViewController: UIViewController {
         if segue.identifier == segueIdentifier {
             if let tabBarVC = segue.destination as? UITabBarController, let gameVC = tabBarVC.viewControllers?.first {
                 if let cell = sender as? UITableViewCell {
-                    //set your game values
+                    if let gameVC = gameVC as? GameViewController {
+                        gameService.stopBrowsingForPeers()
+                        gameVC.game = game
+                    }
                 }
             }
         }
@@ -57,6 +61,7 @@ class JoinGameViewController: UIViewController {
 //MARK:- UITableView Delegate Methods
 extension JoinGameViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        gameService.invitePeer(peerID: availableDevices[indexPath.item])
         performSegue(withIdentifier: segueIdentifier, sender: tableView.cellForRow(at: indexPath))
     }
 }
@@ -68,12 +73,11 @@ extension JoinGameViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "GameTableViewCell") {
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "AvailableLobbyCell") {
             cell.textLabel?.text = availableDevices[indexPath.item].displayName
             return cell
         }
-        return GameTableViewCell()
-
+        return UITableViewCell()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
