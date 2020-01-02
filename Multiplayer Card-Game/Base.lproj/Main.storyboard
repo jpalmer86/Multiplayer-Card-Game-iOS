@@ -162,24 +162,17 @@
                                 <rect key="frame" x="8" y="282" width="398" height="564"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="AvailableLobbyCell" textLabel="Zj5-vx-HsH" detailTextLabel="5fc-bf-MBr" style="IBUITableViewCellStyleValue2" id="3SA-Nb-zg1">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="AvailableLobbyCell" textLabel="Zj5-vx-HsH" style="IBUITableViewCellStyleDefault" id="3SA-Nb-zg1">
                                         <rect key="frame" x="0.0" y="28" width="398" height="43.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="3SA-Nb-zg1" id="DSR-K8-j5Q" customClass="UITableViewCell">
                                             <rect key="frame" x="0.0" y="0.0" width="398" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Zj5-vx-HsH">
-                                                    <rect key="frame" x="20" y="14" width="91" height="16"/>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Zj5-vx-HsH">
+                                                    <rect key="frame" x="20" y="0.0" width="358" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Detail" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5fc-bf-MBr">
-                                                    <rect key="frame" x="117" y="14" width="35" height="16"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -237,6 +230,27 @@
             </objects>
             <point key="canvasLocation" x="4350.7246376811599" y="129.91071428571428"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="9gn-7K-Kn5">
+            <objects>
+                <viewController id="2Hv-bR-JJQ" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="YC4-xc-Ifd" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="iye-xJ-vYX"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="rank">
+                                <integer key="value" value="11"/>
+                            </userDefinedRuntimeAttribute>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="isFaceUp" value="YES"/>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="RxW-z3-D1e" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4629" y="864"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="fGg-gl-LTy">
             <objects>
@@ -284,6 +298,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="K7c-Uc-GUy"/>
+        <segue reference="bUK-IY-X5K"/>
     </inferredMetricsTieBreakers>
 </document>

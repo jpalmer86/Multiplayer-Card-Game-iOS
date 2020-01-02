@@ -7,7 +7,6 @@
 //
 // Service type for mcpeerconnectivity valid characters include ASCII lowercase letters, numbers, and the hyphen(single)
 
-import Foundation
 import MultipeerConnectivity
 
 //MARK:- Protocols
@@ -33,23 +32,11 @@ class GameService: NSObject {
     var chatView: UITextView!
     var inputMessage: UITextField!
     
-    // MARK:- Member Variables
+    // MARK:- Property Variables
     static var shared = GameService()
-    var browserDelegate: GameServiceBrowserDelegate? {
-        didSet {
-            print("Game Service browser delegate: ", browserDelegate)
-        }
-    }
-    var advertiserDelegate: GameServiceAdvertiserDelegate? {
-        didSet {
-            print("Game Service advertiser delegate: ", advertiserDelegate)
-        }
-    }
-    var sessionDelegate: GameServiceSessionDelegate? {
-        didSet {
-            print("Game Service session delegate: ", sessionDelegate)
-        }
-    }
+    var browserDelegate: GameServiceBrowserDelegate?
+    var advertiserDelegate: GameServiceAdvertiserDelegate?
+    var sessionDelegate: GameServiceSessionDelegate?
 
     private var myPeerID: MCPeerID! = MCPeerID(displayName: UIDevice.current.name)
     private lazy var mcSession : MCSession = {
@@ -69,7 +56,7 @@ class GameService: NSObject {
          myPeerID = MCPeerID(displayName: UIDevice.current.name)
     }
     
-    //MARK:- Methods
+    //MARK:- Member Methods
     func setServiceType(serviceType: String) {
         self.serviceType = serviceType
         setUpService()
@@ -166,7 +153,11 @@ extension GameService: MCSessionDelegate {
 //MARK:- MCNearbyServiceBrowser Delegate Methods
 extension GameService: MCNearbyServiceBrowserDelegate {
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
-        foundPeers.append(peerID)
+        if let index = foundPeers.map({return $0.displayName}).firstIndex(of: peerID.displayName) {
+            foundPeers[index] = peerID
+        } else {
+            foundPeers.append(peerID)
+        }
         print(foundPeers)
         browserDelegate?.foundPeer(peers: foundPeers)
     }
@@ -190,7 +181,6 @@ extension GameService: MCNearbyServiceBrowserDelegate {
 //MARK:- MCNearbyServiceAdvertiser Delegate Methods
 extension GameService: MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-//        invitationHandler(true, self.mcSession)
         advertiserDelegate?.invitationWasReceived(fromPeer: peerID.displayName, handler: invitationHandler, session: self.mcSession)
     }
 }

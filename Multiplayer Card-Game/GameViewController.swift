@@ -23,10 +23,12 @@ class GameViewController: UIViewController {
     //MARK:- Lifecycle Hooks
     override func viewDidLoad() {
         super.viewDidLoad()
-        gameService.hostSession()
+        title = "Waiting for Players..."
         if !isHost {
             connectingAlert = loadingAlert(title: "Connecting ...")
             present(connectingAlert!, animated: true, completion: nil)
+        } else {
+            gameService.hostSession()
         }
     }
     
@@ -58,9 +60,9 @@ extension GameViewController: GameServiceSessionDelegate {
     }
     
     func connectionFailed(peerID: MCPeerID) {
-        DispatchQueue.main.async {
-            self.connectingAlert?.dismiss(animated: true, completion: nil)
-            self.dismiss(animated: true, completion: nil)
+        DispatchQueue.main.async { [weak self] in
+            self?.connectingAlert?.dismiss(animated: true, completion: nil)
+            self?.navigationController?.popViewController(animated: true)
         }
     }
     
