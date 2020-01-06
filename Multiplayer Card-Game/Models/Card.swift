@@ -14,10 +14,7 @@ struct Card : CustomStringConvertible {
     
     var description: String{ return "\(rank) \(suit)"}
     
-    //swift generates an initilizer for the structs automatically
-    
-    
-    //MARK:- enum Suit
+    //MARK:- Enum Suit
     enum Suit : String, CustomStringConvertible {
         
         var description: String {
@@ -32,10 +29,10 @@ struct Card : CustomStringConvertible {
         static var allSuits = [Suit.hearts , .spades, .diamonds , .clubs]
     }
     
-    //MARK:- enum Rank
+    //MARK:- Enum Rank
     enum Rank: CustomStringConvertible {
         
-        public var description: String {
+        var description: String {
             switch self {
             case .ace: return "A"
             case .numeric(let pips) : return "\(pips)"
@@ -65,7 +62,7 @@ struct Card : CustomStringConvertible {
             for pips in 2...10{
                 all.append(Rank.numeric(pips))
             }
-            all+=[Rank.face("J"),Rank.face("Q"),Rank.face("K")]
+            all += [Rank.face("J"),Rank.face("Q"),Rank.face("K")]
             return all
         }
     }

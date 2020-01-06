@@ -7,9 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ED30B9FB23BF383300F48C3E /* Int+random.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED30B9FA23BF383300F48C3E /* Int+random.swift */; };
+		ED30B9FD23BF46C100F48C3E /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED30B9FC23BF46C100F48C3E /* GameState.swift */; };
+		ED30B9FF23BF540900F48C3E /* PlayerCardsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED30B9FE23BF540900F48C3E /* PlayerCardsViewController.swift */; };
+		ED30BA0123BF595A00F48C3E /* CGRect+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED30BA0023BF595A00F48C3E /* CGRect+extensions.swift */; };
+		ED30BA0323BF598E00F48C3E /* CGPoint+offsetBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED30BA0223BF598E00F48C3E /* CGPoint+offsetBy.swift */; };
 		ED4D604223BE084600AFCA36 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4D604123BE084600AFCA36 /* Card.swift */; };
 		ED4D604423BE08B300AFCA36 /* Deck.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4D604323BE08B300AFCA36 /* Deck.swift */; };
 		ED4D604723BE095100AFCA36 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4D604623BE095100AFCA36 /* CardView.swift */; };
+		ED4D604B23BE117B00AFCA36 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4D604A23BE117B00AFCA36 /* Result.swift */; };
+		ED4D604D23BE11FE00AFCA36 /* CardError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4D604C23BE11FE00AFCA36 /* CardError.swift */; };
 		ED9F50F123B5F76D00FD5161 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F50F023B5F76D00FD5161 /* AppDelegate.swift */; };
 		ED9F50F323B5F76D00FD5161 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F50F223B5F76D00FD5161 /* SceneDelegate.swift */; };
 		ED9F50F523B5F76D00FD5161 /* GameTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9F50F423B5F76D00FD5161 /* GameTableViewController.swift */; };
@@ -29,6 +36,7 @@
 		EDDBD4B323B63154003563CB /* JoinGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDBD4B223B63154003563CB /* JoinGameViewController.swift */; };
 		EDDBD4B523B632CD003563CB /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDBD4B423B632CD003563CB /* GameViewController.swift */; };
 		EDDBD4B923B63A29003563CB /* GameService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDBD4B823B63A29003563CB /* GameService.swift */; };
+		EDDD413423C377A700CF7508 /* AppUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDDD413323C377A700CF7508 /* AppUtility.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,9 +57,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		ED30B9FA23BF383300F48C3E /* Int+random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Int+random.swift"; sourceTree = "<group>"; };
+		ED30B9FC23BF46C100F48C3E /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
+		ED30B9FE23BF540900F48C3E /* PlayerCardsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCardsViewController.swift; sourceTree = "<group>"; };
+		ED30BA0023BF595A00F48C3E /* CGRect+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+extensions.swift"; sourceTree = "<group>"; };
+		ED30BA0223BF598E00F48C3E /* CGPoint+offsetBy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+offsetBy.swift"; sourceTree = "<group>"; };
 		ED4D604123BE084600AFCA36 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		ED4D604323BE08B300AFCA36 /* Deck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deck.swift; sourceTree = "<group>"; };
 		ED4D604623BE095100AFCA36 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		ED4D604A23BE117B00AFCA36 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		ED4D604C23BE11FE00AFCA36 /* CardError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardError.swift; sourceTree = "<group>"; };
 		ED9F50ED23B5F76D00FD5161 /* Multiplayer Card-Game.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Multiplayer Card-Game.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED9F50F023B5F76D00FD5161 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		ED9F50F223B5F76D00FD5161 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -77,6 +92,7 @@
 		EDDBD4B223B63154003563CB /* JoinGameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinGameViewController.swift; sourceTree = "<group>"; };
 		EDDBD4B423B632CD003563CB /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		EDDBD4B823B63A29003563CB /* GameService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameService.swift; sourceTree = "<group>"; };
+		EDDD413323C377A700CF7508 /* AppUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtility.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +129,15 @@
 			path = CustomViews;
 			sourceTree = "<group>";
 		};
+		ED4D604E23BE162A00AFCA36 /* GameViewController */ = {
+			isa = PBXGroup;
+			children = (
+				EDDBD4B423B632CD003563CB /* GameViewController.swift */,
+				ED30B9FE23BF540900F48C3E /* PlayerCardsViewController.swift */,
+			);
+			path = GameViewController;
+			sourceTree = "<group>";
+		};
 		ED9F50E423B5F76D00FD5161 = {
 			isa = PBXGroup;
 			children = (
@@ -138,16 +163,16 @@
 			isa = PBXGroup;
 			children = (
 				ED9F512E23B6084700FD5161 /* Constants.swift */,
-				ED4D604523BE093800AFCA36 /* CustomViews */,
 				EDAEF9B623BB5B06009E2108 /* Manager */,
 				EDDBD4B723B639EC003563CB /* Services */,
 				ED9F512623B6017200FD5161 /* Models */,
 				ED9F512523B5FF3000FD5161 /* Helpers */,
-				EDDBD4B623B638D2003563CB /* HostAndJoinView */,
+				EDDBD4B623B638D2003563CB /* HostAndJoinViewControllers */,
 				ED9F512D23B607AC00FD5161 /* GameTableView */,
+				ED4D604523BE093800AFCA36 /* CustomViews */,
+				ED4D604E23BE162A00AFCA36 /* GameViewController */,
 				ED9F50F223B5F76D00FD5161 /* SceneDelegate.swift */,
 				ED9F50F023B5F76D00FD5161 /* AppDelegate.swift */,
-				EDDBD4B423B632CD003563CB /* GameViewController.swift */,
 				ED9F50F623B5F76D00FD5161 /* Main.storyboard */,
 				ED9F50F923B5F76E00FD5161 /* Assets.xcassets */,
 				ED9F50FB23B5F76E00FD5161 /* LaunchScreen.storyboard */,
@@ -186,6 +211,10 @@
 			isa = PBXGroup;
 			children = (
 				ED9F512323B5FF2700FD5161 /* UIViewController+Alert.swift */,
+				ED30B9FA23BF383300F48C3E /* Int+random.swift */,
+				ED30BA0023BF595A00F48C3E /* CGRect+extensions.swift */,
+				ED30BA0223BF598E00F48C3E /* CGPoint+offsetBy.swift */,
+				EDDD413323C377A700CF7508 /* AppUtility.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -194,8 +223,11 @@
 			isa = PBXGroup;
 			children = (
 				ED9F512723B6019900FD5161 /* Game.swift */,
+				ED30B9FC23BF46C100F48C3E /* GameState.swift */,
 				ED4D604123BE084600AFCA36 /* Card.swift */,
 				ED4D604323BE08B300AFCA36 /* Deck.swift */,
+				ED4D604A23BE117B00AFCA36 /* Result.swift */,
+				ED4D604C23BE11FE00AFCA36 /* CardError.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -218,13 +250,13 @@
 			path = Manager;
 			sourceTree = "<group>";
 		};
-		EDDBD4B623B638D2003563CB /* HostAndJoinView */ = {
+		EDDBD4B623B638D2003563CB /* HostAndJoinViewControllers */ = {
 			isa = PBXGroup;
 			children = (
 				EDDBD4B023B628D1003563CB /* HostJoinViewController.swift */,
 				EDDBD4B223B63154003563CB /* JoinGameViewController.swift */,
 			);
-			path = HostAndJoinView;
+			path = HostAndJoinViewControllers;
 			sourceTree = "<group>";
 		};
 		EDDBD4B723B639EC003563CB /* Services */ = {
@@ -370,17 +402,25 @@
 				ED4D604423BE08B300AFCA36 /* Deck.swift in Sources */,
 				EDDBD4B923B63A29003563CB /* GameService.swift in Sources */,
 				EDAEF9B823BB5B1A009E2108 /* GameManager.swift in Sources */,
+				ED30B9FF23BF540900F48C3E /* PlayerCardsViewController.swift in Sources */,
+				ED30BA0123BF595A00F48C3E /* CGRect+extensions.swift in Sources */,
 				EDDBD4B523B632CD003563CB /* GameViewController.swift in Sources */,
+				EDDD413423C377A700CF7508 /* AppUtility.swift in Sources */,
 				ED4D604723BE095100AFCA36 /* CardView.swift in Sources */,
 				ED9F50F523B5F76D00FD5161 /* GameTableViewController.swift in Sources */,
+				ED30BA0323BF598E00F48C3E /* CGPoint+offsetBy.swift in Sources */,
+				ED4D604B23BE117B00AFCA36 /* Result.swift in Sources */,
+				ED30B9FD23BF46C100F48C3E /* GameState.swift in Sources */,
 				ED4D604223BE084600AFCA36 /* Card.swift in Sources */,
 				ED9F512823B6019900FD5161 /* Game.swift in Sources */,
 				ED9F50F123B5F76D00FD5161 /* AppDelegate.swift in Sources */,
 				ED9F50F323B5F76D00FD5161 /* SceneDelegate.swift in Sources */,
+				ED4D604D23BE11FE00AFCA36 /* CardError.swift in Sources */,
 				EDDBD4B123B628D1003563CB /* HostJoinViewController.swift in Sources */,
 				ED9F512F23B6084700FD5161 /* Constants.swift in Sources */,
 				ED9F512423B5FF2700FD5161 /* UIViewController+Alert.swift in Sources */,
 				EDDBD4B323B63154003563CB /* JoinGameViewController.swift in Sources */,
+				ED30B9FB23BF383300F48C3E /* Int+random.swift in Sources */,
 				ED9F512C23B6027500FD5161 /* GameTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

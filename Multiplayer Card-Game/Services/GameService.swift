@@ -22,16 +22,11 @@ protocol GameServiceAdvertiserDelegate {
 protocol GameServiceSessionDelegate {
     func connectedWithPeer(peerID: MCPeerID)
     func connectionFailed(peerID: MCPeerID)
-    func recievedData(data: Data, fromPeerID: MCPeerID)
+    func recievedData(data: String, fromPeerID: MCPeerID)
 }
 
 //MARK:- Service Class
 class GameService: NSObject {
-    
-    //MARK:- IBOutlets
-    var chatView: UITextView!
-    var inputMessage: UITextField!
-    
     // MARK:- Property Variables
     static var shared = GameService()
     var browserDelegate: GameServiceBrowserDelegate?
@@ -39,14 +34,13 @@ class GameService: NSObject {
     var sessionDelegate: GameServiceSessionDelegate?
 
     private var myPeerID: MCPeerID! = MCPeerID(displayName: UIDevice.current.name)
-    private lazy var mcSession : MCSession = {
+    private lazy var session: MCSession = {
         let session = MCSession(peer: myPeerID, securityIdentity: nil, encryptionPreference: .required)
         session.delegate = self
         return session
     }()
     private var advertiser: MCNearbyServiceAdvertiser!
     private var browser: MCNearbyServiceBrowser!
-    var messageToSend: String!
     private var serviceType = ""
     private var foundPeers = [MCPeerID]()
     
@@ -66,17 +60,17 @@ class GameService: NSObject {
         return myPeerID
     }
 
-    func send() {
-        messageToSend = "\(myPeerID.displayName): \(inputMessage.text!)\n"
+    func send(data: String, completion: @escaping (Result<String,Error>) -> Void) {
+        var messageToSend = "\(myPeerID.displayName): \(data)"
         let message = messageToSend.data(using: .utf8)
-        if mcSession.connectedPeers.count > 0 {
+        if session.connectedPeers.count > 0 {
             do {
-                try self.mcSession.send(message!, toPeers: self.mcSession.connectedPeers, with: .reliable)
-                chatView.text = chatView.text + messageToSend
-                inputMessage.text = ""
+                try self.session.send(message!, toPeers: self.session.connectedPeers, with: .reliable)
+                completion(.success(messageToSend))
             }
             catch {
                 print("Error sending message: ",error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }
@@ -89,6 +83,10 @@ class GameService: NSObject {
         browser.startBrowsingForPeers()
     }
     
+    func invitePeer(peerID: MCPeerID) {
+         browser.invitePeer(peerID, to: session, withContext: nil, timeout: 20)
+    }
+    
     func stopBrowsingForPeers() {
         browser.stopBrowsingForPeers()
     }
@@ -97,8 +95,8 @@ class GameService: NSObject {
         advertiser.stopAdvertisingPeer()
     }
     
-    func invitePeer(peerID: MCPeerID) {
-         browser.invitePeer(peerID, to: mcSession, withContext: nil, timeout: 20)
+    func disconnectSession() {
+        session.disconnect()
     }
     
     //MARK:- Private methods
@@ -130,11 +128,8 @@ extension GameService: MCSessionDelegate {
     }
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        DispatchQueue.main.async { [unowned self] in
-            let message = String(data: data, encoding: .utf8)!
-            self.chatView.text = self.chatView.text + message
-        }
-        sessionDelegate?.recievedData(data: data, fromPeerID: peerID)
+        let message = String(data: data, encoding: .utf8)!
+        sessionDelegate?.recievedData(data: message, fromPeerID: peerID)
     }
     
     func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {
@@ -181,6 +176,6 @@ extension GameService: MCNearbyServiceBrowserDelegate {
 //MARK:- MCNearbyServiceAdvertiser Delegate Methods
 extension GameService: MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-        advertiserDelegate?.invitationWasReceived(fromPeer: peerID.displayName, handler: invitationHandler, session: self.mcSession)
+        advertiserDelegate?.invitationWasReceived(fromPeer: peerID.displayName, handler: invitationHandler, session: self.session)
     }
 }

@@ -32,7 +32,19 @@ class GameTableViewController: UIViewController {
         registerTableViewCell()
         title = "Home"
         games = Constants.getAllGamesInfo()
-        // Do any additional setup after loading the view.
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "back", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        AppUtility.lockOrientation(.portrait)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        AppUtility.lockOrientation(.all)
     }
     
     // MARK: - Navigation
@@ -44,6 +56,11 @@ class GameTableViewController: UIViewController {
                 }
             }
         }
+    }
+    
+    //MARK:- ViewController Methods
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+          return .lightContent
     }
     
     //MARK:- Custom Methods
@@ -81,4 +98,11 @@ extension GameTableViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
+}
+
+//MARK:- NavigationController Status Bar Extension
+extension UINavigationController {
+   open override var preferredStatusBarStyle: UIStatusBarStyle {
+      return topViewController?.preferredStatusBarStyle ?? .default
+   }
 }

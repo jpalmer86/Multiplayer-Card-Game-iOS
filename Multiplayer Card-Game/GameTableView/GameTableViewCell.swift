@@ -28,9 +28,12 @@ class GameTableViewCell: UITableViewCell {
     var game: Game! {
         didSet {
             gameNameLabel?.text = game.name
+            
             gameImageView?.image = game.image
+            
             playerDescriptionLabel?.text = game.playerDescription
             gameDescriptionLabel?.text = game.gameDescription
+            
             setNeedsDisplay()
         }
     }
@@ -38,6 +41,7 @@ class GameTableViewCell: UITableViewCell {
     //MARK:- Lifecycle Hooks
     override func awakeFromNib() {
         super.awakeFromNib()
+
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

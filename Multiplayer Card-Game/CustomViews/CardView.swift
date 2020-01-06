@@ -110,7 +110,6 @@ class CardView: UIView {
     
     
     //    A bezier path that is created by the above class cannot stand on its own. It needs a Core Graphics context where it can be rendered to. There are three ways to get a context like that:
-    //
     //    1.To use a CGContext context.
     //    2.To subclass the UIView class which you want to draw the custom shape to, and use its draw(_:) method provided by default. The context needed        is provided automatically then.
     //    3.To create special layers called CAShapeLayer objects.
@@ -221,36 +220,4 @@ extension CardView {
         }
     }
     
-}
-
-//MARK:- CGRect extensions
-extension CGRect{
-    var leftHalf : CGRect {
-        return CGRect(x: minX ,y: minY, width: width/2, height: height)
-    }
-    var rightHalf : CGRect{
-        return CGRect(x: midX ,y: minY, width: width/2, height: height)
-    }
-    func inset(by size :CGSize) -> CGRect {
-        return insetBy(dx: size.width, dy: size.height)
-    }
-    func sized(by size : CGSize) -> CGRect {
-        return CGRect(origin: origin, size: size)
-    }
-    func zoom(by scale : CGFloat) -> CGRect {
-        let newWidth = width*scale
-        let newHeight = height*scale
-        
-        //insetBy returns a rect that has same centre point but different size ....
-        //        a +ve sign of the dx means decrease in size ,and -ve means an increase in size
-        return insetBy(dx: (width - newWidth)/2, dy: (height - newHeight)/2)
-    }
-    
-}
-
-//MARK:- CGPoint extension
-extension CGPoint {
-    func offsetBy(dx : CGFloat, dy : CGFloat) -> CGPoint {
-        return CGPoint(x: x+dx, y: y+dy)
-    }
 }

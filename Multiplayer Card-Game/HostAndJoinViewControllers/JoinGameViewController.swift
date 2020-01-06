@@ -34,10 +34,15 @@ class JoinGameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         gameService.browserDelegate = self
-        gameService.joinSession()
         playerNameTextField.text = gameService.getPeerID().displayName
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "back", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        gameService.joinSession()
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
         gameService.stopBrowsingForPeers()
         super.viewWillDisappear(animated)
@@ -56,6 +61,11 @@ class JoinGameViewController: UIViewController {
             }
         }
     }
+    
+    //MARK:- ViewController Methods
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+            return .lightContent
+      }
 }
 
 //MARK:- UITableView Delegate Methods

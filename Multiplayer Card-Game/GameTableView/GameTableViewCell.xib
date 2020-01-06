@@ -16,51 +16,47 @@
                 <rect key="frame" x="0.0" y="0.0" width="634" height="381"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <stackView opaque="NO" contentMode="scaleAspectFill" distribution="fillProportionally" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="pvF-hN-l6e">
-                        <rect key="frame" x="16" y="16" width="602" height="349"/>
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hUm-sE-GLY">
-                                <rect key="frame" x="0.0" y="0.0" width="441" height="349"/>
-                            </imageView>
-                            <stackView opaque="NO" contentMode="scaleAspectFill" axis="vertical" distribution="fillProportionally" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Y2I-cF-8NY">
-                                <rect key="frame" x="457" y="122.5" width="145" height="104"/>
-                                <subviews>
-                                    <stackView opaque="NO" contentMode="scaleAspectFill" axis="vertical" distribution="fillProportionally" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Mss-hk-y37">
-                                        <rect key="frame" x="0.0" y="0.0" width="145" height="66.5"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Game Name" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="20" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zWq-xf-slf">
-                                                <rect key="frame" x="0.0" y="0.0" width="145" height="29"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2-x Players" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="14" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pdV-FB-13H">
-                                                <rect key="frame" x="0.0" y="45" width="145" height="21.5"/>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Game Description" lineBreakMode="wordWrap" numberOfLines="5" baselineAdjustment="alignBaselines" minimumFontSize="14" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uwa-ix-azj">
-                                        <rect key="frame" x="0.0" y="82.5" width="145" height="21.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                            </stackView>
-                        </subviews>
-                    </stackView>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hUm-sE-GLY">
+                        <rect key="frame" x="16" y="16" width="209.5" height="349"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="hUm-sE-GLY" secondAttribute="height" multiplier="3:5" id="WIa-fv-hxP"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2-x Players" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="14" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pdV-FB-13H">
+                        <rect key="frame" x="241.5" y="97.5" width="356.5" height="20.5"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Game Description" lineBreakMode="wordWrap" numberOfLines="5" baselineAdjustment="alignBaselines" minimumFontSize="14" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uwa-ix-azj">
+                        <rect key="frame" x="241.5" y="134" width="356.5" height="19.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Game Name" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="20" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zWq-xf-slf">
+                        <rect key="frame" x="241.5" y="43" width="356.5" height="38.5"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="32"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
-                    <constraint firstAttribute="bottom" secondItem="pvF-hN-l6e" secondAttribute="bottom" constant="16" id="0m6-bY-0Vb"/>
-                    <constraint firstItem="pvF-hN-l6e" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="AAm-Pd-Mlu"/>
-                    <constraint firstItem="pvF-hN-l6e" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="16" id="DFy-Ru-LS7"/>
-                    <constraint firstAttribute="trailing" secondItem="pvF-hN-l6e" secondAttribute="trailing" constant="16" id="qnL-6n-mcZ"/>
+                    <constraint firstItem="zWq-xf-slf" firstAttribute="leading" secondItem="hUm-sE-GLY" secondAttribute="trailing" constant="16" id="2qf-zX-C3b"/>
+                    <constraint firstItem="zWq-xf-slf" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="32" id="FgN-y4-Vg0"/>
+                    <constraint firstItem="uwa-ix-azj" firstAttribute="leading" secondItem="hUm-sE-GLY" secondAttribute="trailing" constant="16" id="Pgj-wz-wfe"/>
+                    <constraint firstItem="hUm-sE-GLY" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="Viu-zQ-8cn"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="pdV-FB-13H" secondAttribute="trailing" constant="16" id="XgA-Q7-Wj4"/>
+                    <constraint firstItem="uwa-ix-azj" firstAttribute="top" secondItem="pdV-FB-13H" secondAttribute="bottom" constant="16" id="YCr-6x-4BX"/>
+                    <constraint firstItem="hUm-sE-GLY" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="16" id="bJW-hh-gxx"/>
+                    <constraint firstAttribute="bottom" secondItem="hUm-sE-GLY" secondAttribute="bottom" constant="16" id="ekf-7F-BsA"/>
+                    <constraint firstItem="pdV-FB-13H" firstAttribute="leading" secondItem="hUm-sE-GLY" secondAttribute="trailing" constant="16" id="g0b-Vd-kaU"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="uwa-ix-azj" secondAttribute="trailing" constant="16" id="t7Z-EZ-q3d"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="zWq-xf-slf" secondAttribute="trailing" constant="16" id="tsV-RP-ZxJ"/>
+                    <constraint firstItem="pdV-FB-13H" firstAttribute="top" secondItem="zWq-xf-slf" secondAttribute="bottom" constant="16" id="wMa-n9-rPT"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>

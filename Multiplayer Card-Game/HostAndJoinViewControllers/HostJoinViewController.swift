@@ -13,11 +13,19 @@ class HostJoinViewController: UIViewController {
     @IBOutlet var joinGameButton: UIButton! {
         didSet {
             joinGameButton.layer.cornerRadius = 10
+            joinGameButton.layer.shadowColor = Constants.shadowColor
+            joinGameButton.layer.shadowOffset = Constants.shadowOffset
+            joinGameButton.layer.shadowRadius = Constants.shadowRadius
+            joinGameButton.layer.shadowOpacity = Constants.shadowOpacity
         }
     }
     @IBOutlet var startgameButton: UIButton! {
         didSet {
             startgameButton.layer.cornerRadius = 10
+            startgameButton.layer.shadowColor = Constants.shadowColor
+            startgameButton.layer.shadowOffset = Constants.shadowOffset
+            startgameButton.layer.shadowRadius = Constants.shadowRadius
+            startgameButton.layer.shadowOpacity = Constants.shadowOpacity
         }
     }
     
@@ -31,6 +39,19 @@ class HostJoinViewController: UIViewController {
         super.viewDidLoad()
         title = "Play"
         gameService.setServiceType(serviceType: game.serviceType)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "back", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        AppUtility.lockOrientation(.portrait)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        AppUtility.lockOrientation(.all)
     }
 
     // MARK: - Navigation
@@ -49,4 +70,9 @@ class HostJoinViewController: UIViewController {
             }
         }
     }
+    
+    //MARK:- ViewController Methods
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+            return .lightContent
+      }
 }
