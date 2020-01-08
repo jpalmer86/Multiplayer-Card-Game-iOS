@@ -30,14 +30,13 @@ class PlayerCardsViewController: UIViewController {
         if let index = gameManager.players.firstIndex(of: GameService.shared.getPeerID()) {
             cards = gameManager.cardsForPlayer[index]
         }
-        // Do any additional setup after loading the view.
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        AppUtility.lockOrientation(.landscape)
+        AppUtility.lockOrientation(.landscape, andRotateTo: .landscapeLeft)
     }
 
     override func viewWillDisappear(_ animated: Bool) {

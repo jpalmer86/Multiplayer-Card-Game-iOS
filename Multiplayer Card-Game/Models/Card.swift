@@ -65,5 +65,23 @@ struct Card : CustomStringConvertible {
             all += [Rank.face("J"),Rank.face("Q"),Rank.face("K")]
             return all
         }
+        
+        static func orderOf(rank: String) -> Int {
+            if let numeric = Int(rank) {
+                return numeric
+            } else {
+                if rank == "A" {
+                    return 1
+                } else if rank == "J" {
+                    return 11
+                } else if rank == "Q" {
+                    return 12
+                } else if rank == "K" {
+                    return 13
+                } else {
+                    return 0
+                }
+            }
+        }
     }
 }

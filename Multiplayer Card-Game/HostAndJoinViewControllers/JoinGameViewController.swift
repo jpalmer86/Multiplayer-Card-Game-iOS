@@ -35,17 +35,21 @@ class JoinGameViewController: UIViewController {
         super.viewDidLoad()
         gameService.browserDelegate = self
         playerNameTextField.text = gameService.getPeerID().displayName
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "back", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
+        AppUtility.setBackNavigationBarItem(navigationItem: navigationItem)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         gameService.joinSession()
+        
+        AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         gameService.stopBrowsingForPeers()
         super.viewWillDisappear(animated)
+        
+        AppUtility.lockOrientation(.all)
     }
     
     // MARK: - Navigation

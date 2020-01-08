@@ -39,13 +39,13 @@ class HostJoinViewController: UIViewController {
         super.viewDidLoad()
         title = "Play"
         gameService.setServiceType(serviceType: game.serviceType)
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "back", style: UIBarButtonItem.Style.plain, target: nil, action: nil)
+        AppUtility.setBackNavigationBarItem(navigationItem: navigationItem)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        AppUtility.lockOrientation(.portrait)
+        AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
     }
 
     override func viewWillDisappear(_ animated: Bool) {

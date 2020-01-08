@@ -222,8 +222,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="896" height="414"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0: 00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BwQ-0L-Jfc">
-                                <rect key="frame" x="849" y="48" width="43" height="22"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BwQ-0L-Jfc">
+                                <rect key="frame" x="854.5" y="48" width="37.5" height="22"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -271,9 +271,8 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="isFaceUp" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dUt-Ae-arH" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dUt-Ae-arH" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
                                 <rect key="frame" x="421" y="280" width="41" height="57"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="isFaceUp" value="NO"/>
@@ -368,7 +367,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Agv-gk-Q5X" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="41" height="57"/>
+                                        <rect key="frame" x="-8" y="0.0" width="41" height="57"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <userDefinedRuntimeAttributes>
@@ -399,16 +398,58 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="isFaceUp" value="NO"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hTx-ty-FXT" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                <rect key="frame" x="429" y="218" width="39" height="45"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="hTx-ty-FXT" secondAttribute="height" multiplier="13:15" id="pCW-vv-h7S"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CtY-qU-AAF" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                <rect key="frame" x="515" y="185" width="39" height="45"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="CtY-qU-AAF" secondAttribute="height" multiplier="13:15" id="RLC-Cc-BcW"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E8Q-FX-5f2" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                <rect key="frame" x="429" y="142" width="39" height="45"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="E8Q-FX-5f2" secondAttribute="height" multiplier="13:15" id="N7V-mm-MaU"/>
+                                </constraints>
+                            </view>
+                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kQc-ad-bVC" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                <rect key="frame" x="338" y="185" width="39" height="45"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="kQc-ad-bVC" secondAttribute="height" multiplier="13:15" id="71Q-LA-1oS"/>
+                                </constraints>
+                            </view>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="player's turn" textAlignment="justified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ZL-LF-T6o">
+                                <rect key="frame" x="60" y="52" width="116.5" height="26.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="hTx-ty-FXT" firstAttribute="width" secondItem="dUt-Ae-arH" secondAttribute="height" multiplier="13:19" id="8z7-WQ-8aP"/>
                             <constraint firstAttribute="trailing" secondItem="BwQ-0L-Jfc" secondAttribute="trailing" constant="4" id="BMi-er-pxi"/>
+                            <constraint firstItem="0ZL-LF-T6o" firstAttribute="leading" secondItem="AN1-Jk-l6h" secondAttribute="leading" constant="16" id="C9t-EN-t79"/>
                             <constraint firstItem="BwQ-0L-Jfc" firstAttribute="top" secondItem="AN1-Jk-l6h" secondAttribute="top" constant="4" id="DIs-Rw-ZmG"/>
+                            <constraint firstItem="CtY-qU-AAF" firstAttribute="width" secondItem="CtY-qU-AAF" secondAttribute="height" multiplier="13:15" id="F5U-Ag-wOK"/>
+                            <constraint firstItem="hTx-ty-FXT" firstAttribute="width" secondItem="dUt-Ae-arH" secondAttribute="width" multiplier="0.95122" id="I3E-UP-AQJ"/>
                             <constraint firstItem="K4B-uO-uLm" firstAttribute="leading" secondItem="6o7-ZB-ZIb" secondAttribute="leading" id="KbX-Pd-OhY"/>
                             <constraint firstItem="6o7-ZB-ZIb" firstAttribute="bottom" secondItem="K4B-uO-uLm" secondAttribute="bottom" id="PtJ-YQ-5s5"/>
+                            <constraint firstItem="E8Q-FX-5f2" firstAttribute="width" secondItem="E8Q-FX-5f2" secondAttribute="height" multiplier="13:15" id="QRR-A6-oKy"/>
+                            <constraint firstItem="0ZL-LF-T6o" firstAttribute="top" secondItem="AN1-Jk-l6h" secondAttribute="top" constant="8" id="c3L-FY-PqF"/>
                             <constraint firstItem="6o7-ZB-ZIb" firstAttribute="centerX" secondItem="Y3O-XW-7zQ" secondAttribute="centerX" id="ftj-Do-bCR"/>
                             <constraint firstItem="6o7-ZB-ZIb" firstAttribute="centerY" secondItem="Y3O-XW-7zQ" secondAttribute="centerY" id="lPB-81-sDT"/>
+                            <constraint firstItem="kQc-ad-bVC" firstAttribute="width" secondItem="kQc-ad-bVC" secondAttribute="height" multiplier="13:15" id="o2a-xe-Pb2"/>
                             <constraint firstItem="6o7-ZB-ZIb" firstAttribute="leading" secondItem="AN1-Jk-l6h" secondAttribute="leading" constant="304" id="rbk-nU-Thk"/>
+                            <constraint firstItem="hTx-ty-FXT" firstAttribute="height" secondItem="dUt-Ae-arH" secondAttribute="height" multiplier="0.789474" id="s6I-dA-soq"/>
                             <constraint firstItem="K4B-uO-uLm" firstAttribute="top" secondItem="6o7-ZB-ZIb" secondAttribute="top" id="sEw-6i-uqG"/>
                             <constraint firstItem="6o7-ZB-ZIb" firstAttribute="trailing" secondItem="K4B-uO-uLm" secondAttribute="trailing" id="tiL-ZQ-3DM"/>
                         </constraints>
@@ -421,6 +462,7 @@
                     <connections>
                         <outlet property="centreDeckBottomCard" destination="ZfU-7r-fkV" id="Gxi-cD-iZo"/>
                         <outlet property="centreDeckTopCard" destination="RLX-br-lcM" id="3iT-gV-XfR"/>
+                        <outlet property="playersTurnLabel" destination="0ZL-LF-T6o" id="RAP-V0-aCl"/>
                         <outlet property="startGameButton" destination="K4B-uO-uLm" id="XFn-1t-79i"/>
                         <outlet property="timeLabel" destination="BwQ-0L-Jfc" id="Pey-WJ-3Hl"/>
                         <outletCollection property="middlePlayerCards" destination="dUt-Ae-arH" collectionClass="NSMutableArray" id="u2O-n1-n11"/>
@@ -439,6 +481,10 @@
                         <outletCollection property="playerDeckTopCard" destination="H6g-jj-OZN" collectionClass="NSMutableArray" id="0Ic-1Q-p39"/>
                         <outletCollection property="playerDeckTopCard" destination="Smu-ca-6Zk" collectionClass="NSMutableArray" id="Ull-17-bGu"/>
                         <outletCollection property="playerDeckBottomCard" destination="Agv-gk-Q5X" collectionClass="NSMutableArray" id="275-80-PJt"/>
+                        <outletCollection property="playerThrownCards" destination="hTx-ty-FXT" collectionClass="NSMutableArray" id="JOj-75-IiB"/>
+                        <outletCollection property="playerThrownCards" destination="CtY-qU-AAF" collectionClass="NSMutableArray" id="8N5-5e-FUf"/>
+                        <outletCollection property="playerThrownCards" destination="E8Q-FX-5f2" collectionClass="NSMutableArray" id="821-yy-qx8"/>
+                        <outletCollection property="playerThrownCards" destination="kQc-ad-bVC" collectionClass="NSMutableArray" id="6eW-EE-qiw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RAK-b4-YXi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -571,7 +617,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="0ZH-MK-3u8" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="MQn-ao-O51">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" backIndicatorImage="arrowshape.turn.up.left.fill" catalog="system" backIndicatorTransitionMaskImage="arrowshape.turn.up.left.fill" id="MQn-ao-O51">
                         <rect key="frame" x="0.0" y="0.0" width="896" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -618,6 +664,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="arrowshape.turn.up.left.fill" catalog="system" width="64" height="52"/>
         <image name="card_table" width="1820" height="1214"/>
     </resources>
     <inferredMetricsTieBreakers>

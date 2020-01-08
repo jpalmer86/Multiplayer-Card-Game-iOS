@@ -23,6 +23,15 @@ protocol GameServiceSessionDelegate {
     func connectedWithPeer(peerID: MCPeerID)
     func connectionFailed(peerID: MCPeerID)
     func recievedData(data: String, fromPeerID: MCPeerID)
+    func stateChanged(newState: GameState)
+}
+
+protocol GameServiceGameDelegate {
+    func boutWinner(playerName: String)
+    func winner(playerName: String)
+    func gaveCardToPlayer(card: Card, playerName: String)
+    func playerTurnedCard(playerName: String, card: Card)
+    func remainingTime(time: Int)
 }
 
 //MARK:- Service Class
@@ -32,6 +41,8 @@ class GameService: NSObject {
     var browserDelegate: GameServiceBrowserDelegate?
     var advertiserDelegate: GameServiceAdvertiserDelegate?
     var sessionDelegate: GameServiceSessionDelegate?
+    var gameDelegate: GameServiceGameDelegate?
+    let messageService = MessageService.shared
 
     private var myPeerID: MCPeerID! = MCPeerID(displayName: UIDevice.current.name)
     private lazy var session: MCSession = {
@@ -43,11 +54,12 @@ class GameService: NSObject {
     private var browser: MCNearbyServiceBrowser!
     private var serviceType = ""
     private var foundPeers = [MCPeerID]()
-    
+        
     //MARK:- Constructor
     private override init() {
         super.init()
-         myPeerID = MCPeerID(displayName: UIDevice.current.name)
+        myPeerID = MCPeerID(displayName: UIDevice.current.name)
+        messageService.setSession(mcSession: session)
     }
     
     //MARK:- Member Methods
@@ -58,21 +70,6 @@ class GameService: NSObject {
 
     func getPeerID() -> MCPeerID {
         return myPeerID
-    }
-
-    func send(data: String, completion: @escaping (Result<String,Error>) -> Void) {
-        var messageToSend = "\(myPeerID.displayName): \(data)"
-        let message = messageToSend.data(using: .utf8)
-        if session.connectedPeers.count > 0 {
-            do {
-                try self.session.send(message!, toPeers: self.session.connectedPeers, with: .reliable)
-                completion(.success(messageToSend))
-            }
-            catch {
-                print("Error sending message: ",error.localizedDescription)
-                completion(.failure(error))
-            }
-        }
     }
 
     func hostSession() {
@@ -129,6 +126,29 @@ extension GameService: MCSessionDelegate {
     
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         let message = String(data: data, encoding: .utf8)!
+        let messageType = messageService.getMessageType(data: data)
+        switch messageType {
+        case .BoutWinnerMessage:
+            let winnerName = messageService.winnerData(data: data)
+            gameDelegate?.boutWinner(playerName: winnerName)
+        case .GameStateMessage:
+            let state = messageService.gameStateData(data: data)
+            sessionDelegate?.stateChanged(newState: state)
+        case .GameWinnerMessage:
+            let gameWinnerName = messageService.winnerData(data: data)
+            gameDelegate?.winner(playerName: gameWinnerName)
+        case .GiveCardToPlayerMessage:
+            let dict = messageService.cardExchangeData(data: data)
+            let playerName = dict.keys.first!
+            gameDelegate?.gaveCardToPlayer(card: dict[playerName]!, playerName: playerName)
+        case .PlayerTurnCardMessage:
+            let dict = messageService.cardExchangeData(data: data)
+            let playerName = dict.keys.first!
+            gameDelegate?.playerTurnedCard(playerName: playerName, card: dict[playerName]!)
+        case .RemainingTime:
+            let time = messageService.timeData(data: data)
+            gameDelegate?.remainingTime(time: time)
+        }
         sessionDelegate?.recievedData(data: message, fromPeerID: peerID)
     }
     

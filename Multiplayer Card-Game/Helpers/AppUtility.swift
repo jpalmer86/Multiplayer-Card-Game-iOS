@@ -25,5 +25,9 @@ struct AppUtility {
         UIDevice.current.setValue(rotateOrientation.rawValue, forKey: "orientation")
         UINavigationController.attemptRotationToDeviceOrientation()
     }
+    
+    static func setBackNavigationBarItem(navigationItem: UINavigationItem, action: Selector? = nil) {
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: UIBarButtonItem.Style.plain, target: nil, action: action)
+    }
 
 }
