@@ -18,6 +18,10 @@ protocol GameManagerDelegate {
     func nextPlayerTurn(playerName: String)
 }
 
+protocol GameCardManagerDelegate {
+    func cardsSwapped(updatedCards: [Card])
+}
+
 class GameManager {
     //MARK:- Property Variables
     static var shared = GameManager()
@@ -38,6 +42,7 @@ class GameManager {
     private var isHost = true
     
     var delegate: GameManagerDelegate?
+    var cardsDelegate: GameCardManagerDelegate?
 
     let minPlayersNeeded = 1
     var playerNames: [String]!
@@ -109,6 +114,16 @@ class GameManager {
     
     func setTime(time: Int) {
         timeLeft = time
+    }
+    
+    func swapCardWithFirst(player: MCPeerID, index: Int) {
+        let playerIndex = players.firstIndex(of: player)!
+        let card = cardsForPlayer[playerIndex][0]
+        cardsForPlayer[playerIndex][0] = cardsForPlayer[playerIndex][index]
+        cardsForPlayer[playerIndex][index] = card
+        if player == gameService.getPeerID() {
+            cardsDelegate?.cardsSwapped(updatedCards: cardsForPlayer[0])
+        }
     }
     
     func endGame() {
@@ -206,5 +221,11 @@ extension GameManager: GameServiceGameDelegate {
     
     func remainingTime(time: Int) {
         timeLeft = time
+    }
+    
+    func cardsSwapped(byPlayer: String, index: Int) {
+        let index = playerNames.firstIndex(of: byPlayer)!
+        let player = players[index]
+        swapCardWithFirst(player: player, index: index)
     }
 }

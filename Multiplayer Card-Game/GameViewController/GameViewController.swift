@@ -57,7 +57,7 @@ class GameViewController: UIViewController {
     }
     
     //MARK:- Property variables
-    private var connectedPlayers = [gameService.getPeerID()] {
+    private var connectedPlayers: [MCPeerID]! {
         didSet {
             playerNameArray = connectedPlayers.map({ $0.displayName })
             self.gameManager.newGame(playersArray: self.connectedPlayers)
@@ -77,7 +77,10 @@ class GameViewController: UIViewController {
             case .waitingForPlayers:
                 title = "Waiting for Players..."
             case .dealing:
-                timeLabel.isHidden = false
+                DispatchQueue.main.async { [unowned self] in
+                    self.title = "Game"
+                    self.timeLabel.isHidden = false
+                }
             case .decidingRoundWinner:
                 print("round winner decided")
             case .playing:
@@ -96,6 +99,7 @@ class GameViewController: UIViewController {
         didSet {
             gameService.advertiserDelegate = self
             gameService.sessionDelegate = self
+            connectedPlayers = [gameService.getPeerID()]
         }
     }
     var isHost = false
@@ -135,6 +139,7 @@ class GameViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        //handle game end 
         alert(title: "Confirm disconnection:", message: "Are you sure you want to end the game?") { response in
             if response {
                 gameService.stopAdvertisingToPeers()
@@ -164,7 +169,6 @@ class GameViewController: UIViewController {
     private func startGame() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            self.title = "Game"
             self.timeLabel.isHidden = false
             self.centreDeckTopCard.isHidden = false
             self.centreDeckBottomCard.isHidden = false
@@ -192,7 +196,6 @@ class GameViewController: UIViewController {
                     self.centreDeckTopCard.transform = .init(translationX: translationX, y: translationY)
                 },completion: { finish in
                     self.cardsGiven += 1
-                    print("got the card: cards Given =", self.cardsGiven)
                     if self.cardsGiven <= self.gameManager.playerCount {
                         self.middlePlayerCards[index].isHidden = false
                     } else if self.cardsGiven <= 2 * self.gameManager.playerCount {
@@ -288,7 +291,7 @@ extension GameViewController: GameServiceSessionDelegate {
     }
     
     func stateChanged(newState: GameState) {
-//        gameState = newState
+        gameState = newState
     }
 }
 

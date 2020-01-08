@@ -14,7 +14,6 @@ class PlayerCardsViewController: UIViewController {
     
     //MARK:- Property Variables
     private let gameManager = GameManager.shared
-
     var cards: [Card]? {
         didSet {
             updateUI()
@@ -23,6 +22,7 @@ class PlayerCardsViewController: UIViewController {
     
     //MARK:- Lifecycle Hooks
     override func viewDidLoad() {
+        gameManager.cardsDelegate = self
         super.viewDidLoad()
         let value = UIInterfaceOrientation.landscapeLeft.rawValue
         UIDevice.current.setValue(value, forKey: "orientation")
@@ -30,8 +30,12 @@ class PlayerCardsViewController: UIViewController {
         if let index = gameManager.players.firstIndex(of: GameService.shared.getPeerID()) {
             cards = gameManager.cardsForPlayer[index]
         }
+        
+        for cardView in cardViews {
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectCard(_:)))
+            cardView.addGestureRecognizer(tapGesture)
+        }
     }
-    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -63,12 +67,27 @@ class PlayerCardsViewController: UIViewController {
         guard let cards = cards else { return }
         for cardView in cardViews {
             cardView.isHidden = true
+            cardView.isUserInteractionEnabled = false
         }
         for (index,card) in cards.enumerated() {
             cardViews[index].rank = card.rank.order
             cardViews[index].suit = card.suit.description
             cardViews[index].isFaceUp = true
             cardViews[index].isHidden = false
+            cardViews[index].isUserInteractionEnabled = true
         }
+    }
+    
+    @objc func selectCard(_ sender: UITapGestureRecognizer? = nil) {
+        if let senderView = sender?.view, let cardView = senderView as? CardView, let index = cardViews.firstIndex(of: cardView) {
+            gameManager.swapCardWithFirst(player: gameService.getPeerID(),index: index)
+        }
+    }
+}
+
+//MARK:- GameCard Manager Delegate Methods
+extension PlayerCardsViewController: GameCardManagerDelegate {
+    func cardsSwapped(updatedCards: [Card]) {
+        cards = updatedCards
     }
 }

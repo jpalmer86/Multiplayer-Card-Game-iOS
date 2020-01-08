@@ -15,6 +15,7 @@ enum MessageType: Int {
     case BoutWinnerMessage = 4
     case GameWinnerMessage = 5
     case RemainingTime = 6
+    case CardsSwapped = 7
     
     static let allMessageType = [MessageType.GameStateMessage, .GiveCardToPlayerMessage, .PlayerTurnCardMessage, .BoutWinnerMessage, .GameWinnerMessage, .RemainingTime]
     

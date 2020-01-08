@@ -32,6 +32,7 @@ protocol GameServiceGameDelegate {
     func gaveCardToPlayer(card: Card, playerName: String)
     func playerTurnedCard(playerName: String, card: Card)
     func remainingTime(time: Int)
+    func cardsSwapped(byPlayer: String, index: Int)
 }
 
 //MARK:- Service Class
@@ -148,6 +149,10 @@ extension GameService: MCSessionDelegate {
         case .RemainingTime:
             let time = messageService.timeData(data: data)
             gameDelegate?.remainingTime(time: time)
+        case .CardsSwapped:
+            let dict = messageService.cardsSwappedData(data: data)
+            let playerName = dict.keys.first!
+            gameDelegate?.cardsSwapped(byPlayer: playerName, index: dict[playerName]!)
         }
         sessionDelegate?.recievedData(data: message, fromPeerID: peerID)
     }

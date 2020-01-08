@@ -28,32 +28,35 @@ class MessageService {
     
     func sendCardExchangePlayerMessage(played: MessageType, card: Card, player: String) {
         let message = "\(played.rawValue)\(seperator)\(card)\(seperator)\(player)"
-        let data = message.data(using: .utf8)!
-        send(data: data) { (result) in
+        send(message: message) { (result) in
             //
         }
     }
     
     func sendGameStateMessage(state: GameState) {
         let message = "\(MessageType.GameStateMessage.rawValue)\(seperator)\(state)"
-        let data = message.data(using: .utf8)!
-        send(data: data) { (result) in
+        send(message: message) { (result) in
             //
         }
     }
     
     func sendWinnerMessage(bout: MessageType, player: String) {
         let message = "\(bout.rawValue)\(seperator)\(player)"
-        let data = message.data(using: .utf8)!
-        send(data: data) { result in
+        send(message: message) { result in
             //
         }
     }
     
     func sendRemainingTime(timeString: String) {
         let message = "\(MessageType.RemainingTime.rawValue)\(seperator)\(timeString)"
-        let data = message.data(using: .utf8)!
-        send(data: data) { result in
+        send(message: message) { result in
+            //
+        }
+    }
+    
+    func sendCardsSwapped(player: String, index: Int) {
+        let message = "\(MessageType.CardsSwapped.rawValue)\(seperator)\(player)\(seperator)\(index)"
+        send(message: message) { result in
             //
         }
     }
@@ -105,6 +108,19 @@ class MessageService {
         return 60 * timeArray[0] + timeArray[1]
     }
     
+    func cardsSwappedData(data: Data) -> [String: Int] {
+        let message = String(data: data, encoding: .utf8)!
+         
+        let characterArray = message.split(separator: Character(seperator))
+        let messageArray = characterArray.map({ String($0) })
+                
+        let playerName = messageArray[1]
+        
+        let index = Int(messageArray[2])!
+                
+        return [playerName: index]
+    }
+    
     func getMessageType(data: Data) -> MessageType {
         let message = String(data: data, encoding: .utf8)!
         
@@ -115,9 +131,11 @@ class MessageService {
         
         return messageType
     }
-    
+        
     //MARK:- Private Methods
-    private func send(data: Data, completion: @escaping (Result<Data,Error>) -> Void) {
+    private func send(message: String, completion: @escaping (Result<Data,Error>) -> Void) {
+        
+        let data = message.data(using: .utf8)!
         if session.connectedPeers.count > 0 {
             do {
                 try self.session.send(data, toPeers: self.session.connectedPeers, with: .reliable)
