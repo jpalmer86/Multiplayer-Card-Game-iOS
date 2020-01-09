@@ -64,23 +64,25 @@ class PlayerCardsViewController: UIViewController {
     
     //MARK:- Custom Methods
     private func updateUI() {
-        guard let cards = cards else { return }
-        for cardView in cardViews {
-            cardView.isHidden = true
-            cardView.isUserInteractionEnabled = false
-        }
-        for (index,card) in cards.enumerated() {
-            cardViews[index].rank = card.rank.order
-            cardViews[index].suit = card.suit.description
-            cardViews[index].isFaceUp = true
-            cardViews[index].isHidden = false
-            cardViews[index].isUserInteractionEnabled = true
+        DispatchQueue.main.async { [unowned self] in
+            guard let cards = self.cards else { return }
+            for cardView in self.cardViews {
+                cardView.isHidden = true
+                cardView.isUserInteractionEnabled = false
+            }
+            for (index,card) in cards.enumerated() {
+                self.cardViews[index].rank = card.rank.order
+                self.cardViews[index].suit = card.suit.description
+                self.cardViews[index].isFaceUp = true
+                self.cardViews[index].isHidden = false
+                self.cardViews[index].isUserInteractionEnabled = true
+            }
         }
     }
     
     @objc func selectCard(_ sender: UITapGestureRecognizer? = nil) {
         if let senderView = sender?.view, let cardView = senderView as? CardView, let index = cardViews.firstIndex(of: cardView) {
-            gameManager.swapCardWithFirst(player: gameService.getPeerID(),index: index)
+            gameManager.swapCard(player: gameService.getPeerID(),index: index)
         }
     }
 }

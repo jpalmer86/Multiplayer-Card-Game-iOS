@@ -13,7 +13,7 @@ class MessageService {
     
     //MARK:- Property Variables
     static let shared = MessageService()
-    
+    private var hostPeerID: MCPeerID!
     private let seperator = "-"
     private let suits = Card.Suit.allSuits.map({ $0.description })
     private var session: MCSession!
@@ -26,15 +26,27 @@ class MessageService {
         self.session = mcSession
     }
     
+    func setHost(hostID: MCPeerID) {
+        self.hostPeerID = hostID
+    }
+    
+    //MARK:- Sending Methods
     func sendCardExchangePlayerMessage(played: MessageType, card: Card, player: String) {
         let message = "\(played.rawValue)\(seperator)\(card)\(seperator)\(player)"
-        send(message: message) { (result) in
-            //
+        
+        if played == .PlayerTurnedCardClientMessage {
+            sendToHost(message: message) { (result) in
+                //
+            }
+        } else {
+            send(message: message) { (result) in
+                //
+            }
         }
     }
     
     func sendGameStateMessage(state: GameState) {
-        let message = "\(MessageType.GameStateMessage.rawValue)\(seperator)\(state)"
+        let message = "\(MessageType.GameStateChange.rawValue)\(seperator)\(state)"
         send(message: message) { (result) in
             //
         }
@@ -54,13 +66,35 @@ class MessageService {
         }
     }
     
-    func sendCardsSwapped(player: String, index: Int) {
-        let message = "\(MessageType.CardsSwapped.rawValue)\(seperator)\(player)\(seperator)\(index)"
+    func sendCardsSwappedHostMessage(player: String, index: Int) {
+        let message = "\(MessageType.CardsSwappedHostMessage.rawValue)\(seperator)\(player)\(seperator)\(index)"
         send(message: message) { result in
             //
         }
     }
     
+    func sendCardsSwappedClientMessage(player: String, index: Int) {
+        let message = "\(MessageType.CardsSwappedClientMessage.rawValue)\(seperator)\(player)\(seperator)\(index)"
+        sendToHost(message: message) { (result) in
+            //
+        }
+    }
+    
+    func sendNextPlayerTurn(player: String) {
+        let message = "\(MessageType.NextPlayerTurn.rawValue)\(seperator)\(player)"
+        send(message: message) { result in
+            //
+        }
+    }
+    
+    func sendHostName(player: String) {
+        let message = "\(MessageType.HostNameMessage.rawValue)\(seperator)\(player)"
+        send(message: message) { result in
+            //
+        }
+    }
+    
+    //MARK:- Retrieval Methods
     func cardExchangeData(data: Data) -> [String:Card] {
         let message = String(data: data, encoding: .utf8)!
          
@@ -121,6 +155,15 @@ class MessageService {
         return [playerName: index]
     }
     
+    func nextPlaterData(data: Data) -> String {
+        let message = String(data: data, encoding: .utf8)!
+        
+        let characterArray = message.split(separator: Character(seperator))
+        let messageArray = characterArray.map({ String($0) })
+                
+        return messageArray[1]
+    }
+    
     func getMessageType(data: Data) -> MessageType {
         let message = String(data: data, encoding: .utf8)!
         
@@ -131,6 +174,15 @@ class MessageService {
         
         return messageType
     }
+    
+    func getHostNameData(data: Data) -> String {
+        let message = String(data: data, encoding: .utf8)!
+        
+        let characterArray = message.split(separator: Character(seperator))
+        let messageArray = characterArray.map({ String($0) })
+        
+        return messageArray[1]
+    }
         
     //MARK:- Private Methods
     private func send(message: String, completion: @escaping (Result<Data,Error>) -> Void) {
@@ -139,6 +191,20 @@ class MessageService {
         if session.connectedPeers.count > 0 {
             do {
                 try self.session.send(data, toPeers: self.session.connectedPeers, with: .reliable)
+                completion(.success(data))
+            }
+            catch {
+                print("Error sending message: ",error.localizedDescription)
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    private func sendToHost(message: String, completion: @escaping (Result<Data,Error>) -> Void) {
+        let data = message.data(using: .utf8)!
+        if session.connectedPeers.count > 0 {
+            do {
+                try self.session.send(data, toPeers: [hostPeerID], with: .reliable)
                 completion(.success(data))
             }
             catch {

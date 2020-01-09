@@ -26,13 +26,20 @@ protocol GameServiceSessionDelegate {
     func stateChanged(newState: GameState)
 }
 
-protocol GameServiceGameDelegate {
+protocol GameServiceGameClientDelegate {
     func boutWinner(playerName: String)
     func winner(playerName: String)
+    func nextPlayer(playerName: String)
     func gaveCardToPlayer(card: Card, playerName: String)
     func playerTurnedCard(playerName: String, card: Card)
     func remainingTime(time: Int)
     func cardsSwapped(byPlayer: String, index: Int)
+    func gameHost(hostName: String)
+}
+
+protocol GameServiceGameHostDelegate {
+    func clientPlayerTurnedCard(playerName: String, card: Card)
+    func clientCardsSwapped(byPlayer: String, index: Int)
 }
 
 //MARK:- Service Class
@@ -42,7 +49,8 @@ class GameService: NSObject {
     var browserDelegate: GameServiceBrowserDelegate?
     var advertiserDelegate: GameServiceAdvertiserDelegate?
     var sessionDelegate: GameServiceSessionDelegate?
-    var gameDelegate: GameServiceGameDelegate?
+    var gameClientDelegate: GameServiceGameClientDelegate?
+    var gameHostDelegate: GameServiceGameHostDelegate?
     let messageService = MessageService.shared
 
     private var myPeerID: MCPeerID! = MCPeerID(displayName: UIDevice.current.name)
@@ -128,32 +136,52 @@ extension GameService: MCSessionDelegate {
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         let message = String(data: data, encoding: .utf8)!
         let messageType = messageService.getMessageType(data: data)
+        
         switch messageType {
         case .BoutWinnerMessage:
             let winnerName = messageService.winnerData(data: data)
-            gameDelegate?.boutWinner(playerName: winnerName)
-        case .GameStateMessage:
+            gameClientDelegate?.boutWinner(playerName: winnerName)
+        case .GameStateChange:
             let state = messageService.gameStateData(data: data)
             sessionDelegate?.stateChanged(newState: state)
         case .GameWinnerMessage:
             let gameWinnerName = messageService.winnerData(data: data)
-            gameDelegate?.winner(playerName: gameWinnerName)
-        case .GiveCardToPlayerMessage:
+            gameClientDelegate?.winner(playerName: gameWinnerName)
+        case .GiveCardToPlayer:
             let dict = messageService.cardExchangeData(data: data)
             let playerName = dict.keys.first!
-            gameDelegate?.gaveCardToPlayer(card: dict[playerName]!, playerName: playerName)
-        case .PlayerTurnCardMessage:
+            gameClientDelegate?.gaveCardToPlayer(card: dict[playerName]!, playerName: playerName)
+        case .PlayerTurnedCardHostMessage:
             let dict = messageService.cardExchangeData(data: data)
             let playerName = dict.keys.first!
-            gameDelegate?.playerTurnedCard(playerName: playerName, card: dict[playerName]!)
+            gameClientDelegate?.playerTurnedCard(playerName: playerName, card: dict[playerName]!)
+        case .PlayerTurnedCardClientMessage:
+            let dict = messageService.cardExchangeData(data: data)
+            let playerName = dict.keys.first!
+            gameHostDelegate?.clientPlayerTurnedCard(playerName: playerName, card: dict[playerName]!)
         case .RemainingTime:
             let time = messageService.timeData(data: data)
-            gameDelegate?.remainingTime(time: time)
-        case .CardsSwapped:
+            gameClientDelegate?.remainingTime(time: time)
+        case .CardsSwappedHostMessage:
             let dict = messageService.cardsSwappedData(data: data)
             let playerName = dict.keys.first!
-            gameDelegate?.cardsSwapped(byPlayer: playerName, index: dict[playerName]!)
+            let index = dict[playerName]!
+            print(dict, index)
+            gameClientDelegate?.cardsSwapped(byPlayer: playerName, index: index)
+        case .CardsSwappedClientMessage:
+            let dict = messageService.cardsSwappedData(data: data)
+            let playerName = dict.keys.first!
+            let index = dict[playerName]!
+            gameHostDelegate?.clientCardsSwapped(byPlayer: playerName, index: index)
+        case .NextPlayerTurn:
+            let nextPlayerName = messageService.nextPlaterData(data: data)
+            gameClientDelegate?.nextPlayer(playerName: nextPlayerName)
+        case .HostNameMessage:
+            let hostName = messageService.getHostNameData(data: data)
+            print("Game Host is:",hostName)
+            gameClientDelegate?.gameHost(hostName: hostName)
         }
+        
         sessionDelegate?.recievedData(data: message, fromPeerID: peerID)
     }
     

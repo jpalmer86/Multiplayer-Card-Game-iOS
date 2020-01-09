@@ -16,6 +16,7 @@ class GameViewController: UIViewController {
     @IBOutlet var centreDeckTopCard: CardView!
     @IBOutlet var centreDeckBottomCard: CardView!
     @IBOutlet var startGameButton: UIButton!
+    
     @IBOutlet var middlePlayerCards: [CardView]! {
         didSet {
             for index in [1,3] {
@@ -70,7 +71,7 @@ class GameViewController: UIViewController {
     
     private var gameState: GameState! {
         didSet {
-            if isHost {
+            if isHost || gameState == GameState.gameOver {
                 gameService.messageService.sendGameStateMessage(state: gameState)
             }
             switch gameState {
@@ -85,10 +86,20 @@ class GameViewController: UIViewController {
                 print("round winner decided")
             case .playing:
                 print("play the game turn by turn")
-                playersTurnLabel.isHidden = false
+                DispatchQueue.main.async { [unowned self] in
+                    self.playersTurnLabel.isHidden = false
+                }
             case .gameOver:
-                navigationController?.popViewController(animated: true)
-                gameManager.endGame()
+                DispatchQueue.main.async { [unowned self] in
+                    self.dismiss(animated: true) {
+                        AppUtility.lockOrientation(.all)
+                        let value = UIInterfaceOrientation.portrait.rawValue
+                        UIDevice.current.setValue(value, forKey: "orientation")
+                        gameService.disconnectSession()
+                        gameService.stopAdvertisingToPeers()
+                        self.gameManager.endGame()
+                    }
+                }
             case .none:
                 print("Do nothing")
             }
@@ -107,6 +118,7 @@ class GameViewController: UIViewController {
     //MARK:- IBAction Methods
     @IBAction func startNewGame(_ sender: UIButton) {
         if connectedPlayers.count >= gameManager.minPlayersNeeded {
+            gameManager.sendHostID(name: gameService.getPeerID().displayName)
             gameState = .dealing
             startGame()
             startGameButton.isHidden = true
@@ -114,19 +126,30 @@ class GameViewController: UIViewController {
             showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded) players to start the game")
         }
     }
+    @IBAction func quit(_ sender: Any) {
+        alert(title: "Confirm disconnection:", message: "Are you sure you want to end the game?") { response in
+            if response {
+                self.gameState = .gameOver
+            }
+        }
+    }
     
     //MARK:- Lifecycle Hooks
     override func viewDidLoad() {
         super.viewDidLoad()
         gameManager.delegate = self
+        gameManager.setAsHost(host: isHost)
         if !isHost {
-            gameManager.setAsReciever()
             startGameButton.isHidden = true
             connectingAlert = loadingAlert(title: "Connecting ...")
             present(connectingAlert!, animated: true, completion: nil)
         } else {
             gameService.hostSession()
         }
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(throwCardInCenter(_:)))
+        middlePlayerCards[0].addGestureRecognizer(tapGesture)
+        
         gameState = .waitingForPlayers
         centreDeckTopCard.isHidden = true
         centreDeckBottomCard.isHidden = true
@@ -139,17 +162,7 @@ class GameViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        //handle game end 
-        alert(title: "Confirm disconnection:", message: "Are you sure you want to end the game?") { response in
-            if response {
-                gameService.stopAdvertisingToPeers()
-                gameService.disconnectSession()
-                AppUtility.lockOrientation(.all)
-                let value = UIInterfaceOrientation.portrait.rawValue
-                UIDevice.current.setValue(value, forKey: "orientation")
-                super.viewWillDisappear(animated)
-            }
-        }
+        super.viewWillDisappear(animated)
     }
     
     //MARK:- ViewController Methods
@@ -186,6 +199,16 @@ class GameViewController: UIViewController {
         }
     }
     
+    @objc func throwCardInCenter(_ sender: UIGestureRecognizer) {
+        gameManager.throwCardInCenter(player: connectedPlayers[0], card: gameManager.cardsForPlayer[0][0])
+        playersTurnLabel.isHidden = true
+        middlePlayerCards[0].isUserInteractionEnabled = false
+    }
+    
+    private func enablePlayer() {
+        middlePlayerCards[0].isUserInteractionEnabled = true
+    }
+    
     private func giveCardToPlayer(player: MCPeerID) {
         DispatchQueue.main.async { [unowned self] in
             if let index = self.connectedPlayers.firstIndex(of: player) {
@@ -217,7 +240,6 @@ class GameViewController: UIViewController {
                 let translationY: CGFloat = translateDirection.y * 80.0 //middlePlayerCards[index].frame.origin.y - centreDeckTopCard.frame.origin.y
                 UIView.animate(withDuration: 0.5, delay: 0.0, options: [.curveEaseIn], animations: {
                     self.middlePlayerCards[index].transform = .init(translationX: -translationX, y: -translationY)
-                    self.middlePlayerCards[index].isFaceUp = true
                 },completion: { finish in
                     self.middlePlayerCards[index].isFaceUp = false
                     self.playerThrownCards[index].rank = card.rank.order
@@ -230,7 +252,7 @@ class GameViewController: UIViewController {
         }
     }
     
-    private func giveCardToWinner(player: MCPeerID) {
+    private func giveCenterCardsToWinner(player: MCPeerID) {
         DispatchQueue.main.async { [unowned self] in
             if let index = self.connectedPlayers.firstIndex(of: player) {
                 let translateDirection = Constants.distributeDirection[index]
@@ -299,6 +321,9 @@ extension GameViewController: GameServiceSessionDelegate {
 extension GameViewController: GameServiceAdvertiserDelegate {
     func invitationWasReceived(fromPeer: String, handler: @escaping (Bool, MCSession?) -> Void, session: MCSession) {
         self.alert(title: "Invitation to Connect", message: "\(fromPeer) wants to connect.") { (response) in
+            if response {
+                
+            }
             handler(response,session)
         }
     }
@@ -309,7 +334,8 @@ extension GameViewController: GameManagerDelegate {
 
     func roundWinner(winner: MCPeerID) {
         gameState = .decidingRoundWinner
-        giveCardToPlayer(player: winner)
+        giveCenterCardsToWinner(player: winner)
+        gameState = .playing
     }
     
     func gameWinner(winner: MCPeerID) {
@@ -319,8 +345,8 @@ extension GameViewController: GameManagerDelegate {
     }
     
     func timeRemaining(timeString: String) {
-        DispatchQueue.main.async { [unowned self] in
-            self.timeLabel.text = timeString
+        DispatchQueue.main.async { [weak self] in
+            self?.timeLabel.text = timeString
         }
     }
     
@@ -336,6 +362,12 @@ extension GameViewController: GameManagerDelegate {
     }
         
     func nextPlayerTurn(playerName: String) {
-        playersTurnLabel.text = "\(playerName)'s turn"
+        DispatchQueue.main.async { [unowned self] in
+            self.playersTurnLabel.isHidden = false
+            self.playersTurnLabel.text = "\(playerName)'s turn"
+            if self.connectedPlayers[0].displayName == playerName {
+                self.enablePlayer()
+            }
+        }
     }
 }

@@ -27,7 +27,12 @@ class GameManager {
     static var shared = GameManager()
     private var deck: Deck!
     private let numberOfCardsPerPlayer = 13
-    private var currentPlayerIndex = 0
+    private var currentPlayerIndex = 0 {
+        didSet {
+            delegate?.nextPlayerTurn(playerName: players[currentPlayerIndex].displayName)
+            gameService.messageService.sendNextPlayerTurn(player: players[currentPlayerIndex].displayName)
+        }
+    }
     private var timer: Timer? = nil
     private var timeLeft = 5 * 60 {
         didSet {
@@ -63,12 +68,20 @@ class GameManager {
     var cardsWonPerPlayer: [[Card]]!
     
     //MARK:- Initializers
-    private init() { }
+    private init() {  }
     
     //MARK:- Member Methods
-    func setAsReciever() {
-        isHost = false
-        gameService.gameDelegate = self
+    func setAsHost(host: Bool) {
+        isHost = host
+        if isHost {
+            gameService.gameHostDelegate = self
+        } else {
+            gameService.gameClientDelegate = self
+        }
+    }
+    
+    func sendHostID(name: String) {
+        gameService.messageService.sendHostName(player: name)
     }
     
     func newGame(playersArray: [MCPeerID]) {
@@ -90,7 +103,7 @@ class GameManager {
             for playerIndex in 0..<players.count {
                 if let card = deck.draw() {
                     cardsForPlayer[playerIndex].append(card)
-                    gameService.messageService.sendCardExchangePlayerMessage(played: .GiveCardToPlayerMessage, card: card, player: players[playerIndex].displayName)
+                    gameService.messageService.sendCardExchangePlayerMessage(played: .GiveCardToPlayer, card: card, player: players[playerIndex].displayName)
                     uiHandler(.success((card,players[playerIndex])))
                 } else {
                     print("Error getting the card from the deck")
@@ -99,15 +112,20 @@ class GameManager {
             }
         }
         startTimer()
+        currentPlayerIndex = 0
     }
     
     func throwCardInCenter(player: MCPeerID, card: Card) {
-        cardsInCentre.append(card)
-        delegate?.playerTurnedCard(player: player, card: card)
-        updateNextPlayer()
+        if isHost {
+            throwCardInCenterClient(player: player, card: card)
+            gameService.messageService.sendCardExchangePlayerMessage(played: .PlayerTurnedCardHostMessage, card: card, player: player.displayName)
+            updateNextPlayer()
+        } else {
+            gameService.messageService.sendCardExchangePlayerMessage(played: .PlayerTurnedCardClientMessage, card: card, player: player.displayName)
+        }
     }
     
-    func giveCardToPlayer(card: Card, player: MCPeerID) {
+    func giveCardToPlayerFromDeck(card: Card, player: MCPeerID) {
         cardsForPlayer[players.firstIndex(of: player)!].append(card)
         delegate?.gaveCardToPlayer(card: card, playerName: player.displayName)
     }
@@ -116,13 +134,12 @@ class GameManager {
         timeLeft = time
     }
     
-    func swapCardWithFirst(player: MCPeerID, index: Int) {
-        let playerIndex = players.firstIndex(of: player)!
-        let card = cardsForPlayer[playerIndex][0]
-        cardsForPlayer[playerIndex][0] = cardsForPlayer[playerIndex][index]
-        cardsForPlayer[playerIndex][index] = card
-        if player == gameService.getPeerID() {
-            cardsDelegate?.cardsSwapped(updatedCards: cardsForPlayer[0])
+    func swapCard(player: MCPeerID, index: Int) {
+        if isHost {
+            swapCardWithFirst(player: player, index: index)
+            gameService.messageService.sendCardsSwappedHostMessage(player: player.displayName, index: index)
+        } else {
+            gameService.messageService.sendCardsSwappedClientMessage(player: player.displayName, index: index)
         }
     }
     
@@ -131,6 +148,25 @@ class GameManager {
     }
     
     //MARK:- Private Methods
+    private func throwCardInCenterClient(player: MCPeerID, card: Card) {
+        cardsInCentre.append(card)
+        delegate?.playerTurnedCard(player: player, card: card)
+    }
+    
+    private func swapCardWithFirst(player: MCPeerID, index: Int) {
+        let playerIndex = players.firstIndex(of: player)!
+        print(gameService.getPeerID())
+        print(cardsForPlayer[playerIndex][0], cardsForPlayer[playerIndex][index])
+        let card = cardsForPlayer[playerIndex][0]
+        cardsForPlayer[playerIndex][0] = cardsForPlayer[playerIndex][index]
+        cardsForPlayer[playerIndex][index] = card
+        print(cardsForPlayer[playerIndex][0], cardsForPlayer[playerIndex][index])
+        print(player.displayName, gameService.getPeerID().displayName )
+        if player.displayName == gameService.getPeerID().displayName {
+            cardsDelegate?.cardsSwapped(updatedCards: cardsForPlayer[0])
+        }
+    }
+    
     private func getBoutWinnerIndex() -> Int {
         var winnerIndex = 0
         for index in 1..<cardsInCentre.count {
@@ -146,7 +182,7 @@ class GameManager {
     }
     
     private func updateNextPlayer() {
-        if currentPlayerIndex == playerCount {
+        if currentPlayerIndex == playerCount - 1 {
             currentPlayerIndex = 0
         } else {
             currentPlayerIndex += 1
@@ -154,8 +190,6 @@ class GameManager {
         
         if cardsForPlayer[currentPlayerIndex].count == 0 {
             updateNextPlayer()
-        } else {
-            delegate?.nextPlayerTurn(playerName: players[currentPlayerIndex].displayName)
         }
     }
     private func startTimer() {
@@ -197,8 +231,13 @@ class GameManager {
     }
 }
 
-//MARK:- GameService Game Delegate Methods
-extension GameManager: GameServiceGameDelegate {
+//MARK:- GameService Game Client Delegate Methods
+extension GameManager: GameServiceGameClientDelegate {
+    func gameHost(hostName: String) {
+        let hostID = players[playerNames.firstIndex(of: hostName)!]
+        gameService.messageService.setHost(hostID: hostID)
+    }
+    
     func boutWinner(playerName: String) {
         //This'll we decided by the game manager of the client device
         print("Bout Winner is: ", playerName)
@@ -209,23 +248,44 @@ extension GameManager: GameServiceGameDelegate {
         print("Winner is: ", playerName)
     }
     
-    func gaveCardToPlayer(card: Card, playerName: String) {
-        let playerID = players[playerNames.firstIndex(of: playerName)!]
-        giveCardToPlayer(card: card, player: playerID)
-    }
-    
-    func playerTurnedCard(playerName: String, card: Card) {
-        let playerID = players[playerNames.firstIndex(of: playerName)!]
-        throwCardInCenter(player: playerID, card: card)
-    }
-    
     func remainingTime(time: Int) {
         timeLeft = time
     }
     
+    func nextPlayer(playerName: String) {
+        let index = playerNames.firstIndex(of: playerName)!
+        currentPlayerIndex = index
+    }
+    
+    func gaveCardToPlayer(card: Card, playerName: String) {
+        if !isHost {
+            let playerID = players[playerNames.firstIndex(of: playerName)!]
+            giveCardToPlayerFromDeck(card: card, player: playerID)
+        }
+    }
+    
+    func playerTurnedCard(playerName: String, card: Card) {
+        let playerID = players[playerNames.firstIndex(of: playerName)!]
+        throwCardInCenterClient(player: playerID, card: card)
+    }
+    
     func cardsSwapped(byPlayer: String, index: Int) {
-        let index = playerNames.firstIndex(of: byPlayer)!
-        let player = players[index]
+        let playerIndex = playerNames.firstIndex(of: byPlayer)!
+        let player = players[playerIndex]
         swapCardWithFirst(player: player, index: index)
+    }
+}
+
+//MARK:- GameService Game Host Delegate Methods
+extension GameManager: GameServiceGameHostDelegate {
+    func clientPlayerTurnedCard(playerName: String, card: Card) {
+        let playerID = players[playerNames.firstIndex(of: playerName)!]
+        throwCardInCenter(player: playerID, card: card)
+    }
+    
+    func clientCardsSwapped(byPlayer: String, index: Int) {
+        let playerIndex = playerNames.firstIndex(of: byPlayer)!
+        let player = players[playerIndex]
+        swapCard(player: player, index: index)
     }
 }
