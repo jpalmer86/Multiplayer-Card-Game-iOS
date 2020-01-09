@@ -16,11 +16,13 @@ class GameViewController: UIViewController {
     @IBOutlet var centreDeckTopCard: CardView!
     @IBOutlet var centreDeckBottomCard: CardView!
     @IBOutlet var startGameButton: UIButton!
+    @IBOutlet var winnerDisplayLabel: UILabel!
     
     @IBOutlet var middlePlayerCards: [CardView]! {
         didSet {
             for index in [1,3] {
-                self.middlePlayerCards[index].transform = .init(rotationAngle: CGFloat.pi/2)
+                let rotationDirection: CGFloat = index == 1 ? -1 : 1
+                self.middlePlayerCards[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
             }
         }
     }
@@ -28,7 +30,8 @@ class GameViewController: UIViewController {
     @IBOutlet var playerCardsWon: [CardView]! {
         didSet {
             for index in [1,3] {
-                self.playerCardsWon[index].transform = .init(rotationAngle: CGFloat.pi/2)
+                let rotationDirection: CGFloat = index == 1 ? -1 : 1
+                self.playerCardsWon[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
             }
         }
     }
@@ -68,6 +71,7 @@ class GameViewController: UIViewController {
     private let gameManager = GameManager.shared
     private var cardsGiven = 0
     private var playerNameArray: [String]!
+    private let animationDuration = 0.8
     
     private var gameState: GameState! {
         didSet {
@@ -200,6 +204,7 @@ class GameViewController: UIViewController {
     }
     
     @objc func throwCardInCenter(_ sender: UIGestureRecognizer) {
+        //Handle when the cards become zero for player
         gameManager.throwCardInCenter(player: connectedPlayers[0], card: gameManager.cardsForPlayer[0][0])
         playersTurnLabel.isHidden = true
         middlePlayerCards[0].isUserInteractionEnabled = false
@@ -215,7 +220,7 @@ class GameViewController: UIViewController {
                 let translateDirection = Constants.distributeDirection[index]
                 let translationX: CGFloat = translateDirection.x * 80.0 //middlePlayerCards[index].frame.origin.x - centreDeckTopCard.frame.origin.x
                 let translationY: CGFloat = translateDirection.y * 80.0 //middlePlayerCards[index].frame.origin.y - centreDeckTopCard.frame.origin.y
-                UIView.animate(withDuration: 0.5, delay: 0.0, options: [.curveEaseIn], animations: {
+                UIView.animate(withDuration: self.animationDuration, delay: 0.0, options: [.curveEaseIn], animations: {
                     self.centreDeckTopCard.transform = .init(translationX: translationX, y: translationY)
                 },completion: { finish in
                     self.cardsGiven += 1
@@ -258,11 +263,16 @@ class GameViewController: UIViewController {
                 let translateDirection = Constants.distributeDirection[index]
                 let translationX: CGFloat = translateDirection.x * 80.0 //middlePlayerCards[index].frame.origin.x - centreDeckTopCard.frame.origin.x
                 let translationY: CGFloat = translateDirection.y * 80.0 //middlePlayerCards[index].frame.origin.y - centreDeckTopCard.frame.origin.y
-                UIView.animate(withDuration: 0.5, delay: 0.0, options: [.curveEaseIn], animations: {
+                UIView.animate(withDuration: self.animationDuration, delay: 0.0, options: [.curveEaseIn], animations: {
+                    self.winnerDisplayLabel.text = "\(self.connectedPlayers[index].displayName) won the round!!"
+                    self.winnerDisplayLabel.isHidden = false
+                    
                     for cardView in self.playerThrownCards {
                         cardView.transform = .init(translationX: translationX, y: translationY)
                     }
                 },completion: { finish in
+                     self.winnerDisplayLabel.isHidden = true
+                    
                     for cardView in self.playerThrownCards {
                         cardView.isHidden = true
                         cardView.transform = .identity
@@ -351,13 +361,11 @@ extension GameViewController: GameManagerDelegate {
     }
     
     func gaveCardToPlayer(card: Card, playerName: String) {
-        print("\(card) recieved by ", playerName)
         let playerID = connectedPlayers[playerNameArray.firstIndex(of: playerName)!]
         giveCardToPlayer(player: playerID)
     }
     
     func playerTurnedCard(player: MCPeerID, card: Card) {
-        print("\(player.displayName) gave the card: ",card)
         playerTurnedCard(card: card, player: player)
     }
         

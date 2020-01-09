@@ -136,9 +136,7 @@ class MessageService {
         let messageArray = characterArray.map({ String($0) })
         
         let timeCharacterArray = messageArray[1].split(separator: Character(":"))
-        print(timeCharacterArray)
         let timeArray = timeCharacterArray.map({ Int($0) ?? 0 })
-        print(timeArray)
         return 60 * timeArray[0] + timeArray[1]
     }
     

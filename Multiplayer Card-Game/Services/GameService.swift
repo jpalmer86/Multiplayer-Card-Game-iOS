@@ -166,7 +166,6 @@ extension GameService: MCSessionDelegate {
             let dict = messageService.cardsSwappedData(data: data)
             let playerName = dict.keys.first!
             let index = dict[playerName]!
-            print(dict, index)
             gameClientDelegate?.cardsSwapped(byPlayer: playerName, index: index)
         case .CardsSwappedClientMessage:
             let dict = messageService.cardsSwappedData(data: data)

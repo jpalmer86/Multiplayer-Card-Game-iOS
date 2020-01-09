@@ -6,8 +6,7 @@
 //  Copyright © 2020 Hot Cocoa Software. All rights reserved.
 //
 
-struct Card : CustomStringConvertible {
-    
+struct Card : CustomStringConvertible, Equatable {
     //MARK:- Property Variables
     var suit: Suit
     var rank: Rank
@@ -15,7 +14,7 @@ struct Card : CustomStringConvertible {
     var description: String{ return "\(rank) \(suit)"}
     
     //MARK:- Enum Suit
-    enum Suit : String, CustomStringConvertible {
+    enum Suit : String, CustomStringConvertible, Equatable {
         
         var description: String {
             return self.rawValue
@@ -30,7 +29,7 @@ struct Card : CustomStringConvertible {
     }
     
     //MARK:- Enum Rank
-    enum Rank: CustomStringConvertible {
+    enum Rank: CustomStringConvertible, Equatable {
         
         var description: String {
             switch self {
@@ -83,5 +82,9 @@ struct Card : CustomStringConvertible {
                 }
             }
         }
+    }
+    
+    static func == (lhs: Card, rhs: Card) -> Bool {
+        return lhs.rank == rhs.rank && lhs.suit == rhs.suit
     }
 }

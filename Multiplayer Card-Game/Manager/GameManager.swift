@@ -38,9 +38,13 @@ class GameManager {
         didSet {
             self.delegate?.timeRemaining(timeString: self.getTimeString())
             if timeLeft == 0 {
-                delegate?.gameWinner(winner: getGameWinner())
-                self.stopTimer()
-                timeLeft = 5 * 60
+                let winner = getGameWinner()
+                if isHost {
+                    gameService.messageService.sendWinnerMessage(bout: .GameWinnerMessage, player: winner.displayName)
+                    delegate?.gameWinner(winner: winner)
+                    self.stopTimer()
+                    timeLeft = 5 * 60
+                }
             }
         }
     }
@@ -57,11 +61,19 @@ class GameManager {
         }
     }
     var playerCount = 1
-    var cardsForPlayer: [[Card]]!
+    var cardsForPlayer: [[Card]]! {
+        didSet {
+            cardsDelegate?.cardsSwapped(updatedCards: cardsForPlayer[0])
+        }
+    }
     var cardsInCentre: [Card]! {
         didSet {
             if cardsInCentre.count == playerCount {
-                delegate?.roundWinner(winner: players[getBoutWinnerIndex()])
+                let winner = players[getBoutWinnerIndex()]
+                if isHost {
+                    gameService.messageService.sendWinnerMessage(bout: .BoutWinnerMessage, player: winner.displayName)
+                    delegate?.roundWinner(winner: winner)
+                }
             }
         }
     }
@@ -150,18 +162,17 @@ class GameManager {
     //MARK:- Private Methods
     private func throwCardInCenterClient(player: MCPeerID, card: Card) {
         cardsInCentre.append(card)
+        let playerIndex = players.firstIndex(of: player)!
+        let cardIndex = cardsForPlayer[playerIndex].firstIndex(of: card)!
+        cardsForPlayer[playerIndex].remove(at: cardIndex)
         delegate?.playerTurnedCard(player: player, card: card)
     }
     
     private func swapCardWithFirst(player: MCPeerID, index: Int) {
         let playerIndex = players.firstIndex(of: player)!
-        print(gameService.getPeerID())
-        print(cardsForPlayer[playerIndex][0], cardsForPlayer[playerIndex][index])
         let card = cardsForPlayer[playerIndex][0]
         cardsForPlayer[playerIndex][0] = cardsForPlayer[playerIndex][index]
         cardsForPlayer[playerIndex][index] = card
-        print(cardsForPlayer[playerIndex][0], cardsForPlayer[playerIndex][index])
-        print(player.displayName, gameService.getPeerID().displayName )
         if player.displayName == gameService.getPeerID().displayName {
             cardsDelegate?.cardsSwapped(updatedCards: cardsForPlayer[0])
         }
@@ -197,7 +208,6 @@ class GameManager {
             guard let self = self else { return }
             self.timeLeft -= 1
             gameService.messageService.sendRemainingTime(timeString: self.getTimeString())
-            print(self.timeLeft)
         }
     }
     
@@ -239,12 +249,18 @@ extension GameManager: GameServiceGameClientDelegate {
     }
     
     func boutWinner(playerName: String) {
-        //This'll we decided by the game manager of the client device
+        let playerIndex = playerNames.firstIndex(of: playerName)!
+        let boutWinner = players[playerIndex]
+        delegate?.roundWinner(winner: boutWinner)
         print("Bout Winner is: ", playerName)
     }
 
     func winner(playerName: String) {
-        //This'll we decided by the game manager of the client device
+        let playerIndex = playerNames.firstIndex(of: playerName)!
+        let winner = players[playerIndex]
+        delegate?.gameWinner(winner: winner)
+        self.stopTimer()
+        timeLeft = 5 * 60
         print("Winner is: ", playerName)
     }
     

@@ -19,7 +19,6 @@ enum GameState: String {
     
     static func gameState(state: String) -> GameState {
         let gameStatesArray = allStates.map({ $0.rawValue })
-        print(gameStatesArray, state)
         return allStates[gameStatesArray.firstIndex(of: state)!]
     }
 }
