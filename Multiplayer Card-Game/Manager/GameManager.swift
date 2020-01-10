@@ -16,6 +16,7 @@ protocol GameManagerDelegate {
     func gaveCardToPlayer(card: Card, playerName: String)
     func playerTurnedCard(player: MCPeerID, card: Card)
     func nextPlayerTurn(playerName: String)
+    func roundsWonPerPlayer(wonCountArray: [Int])
 }
 
 protocol GameCardManagerDelegate {
@@ -30,11 +31,13 @@ class GameManager {
     private var currentPlayerIndex = 0 {
         didSet {
             delegate?.nextPlayerTurn(playerName: players[currentPlayerIndex].displayName)
-            gameService.messageService.sendNextPlayerTurn(player: players[currentPlayerIndex].displayName)
+            if isHost {
+                gameService.messageService.sendNextPlayerTurn(player: players[currentPlayerIndex].displayName)
+            }
         }
     }
     private var timer: Timer? = nil
-    private var timeLeft = 5 * 60 {
+    private var timeLeft = Constants.gameTime[0] {
         didSet {
             self.delegate?.timeRemaining(timeString: self.getTimeString())
             if timeLeft == 0 {
@@ -43,7 +46,7 @@ class GameManager {
                     gameService.messageService.sendWinnerMessage(bout: .GameWinnerMessage, player: winner.displayName)
                     delegate?.gameWinner(winner: winner)
                     self.stopTimer()
-                    timeLeft = 5 * 60
+                    timeLeft = Constants.gameTime[0]
                 }
             }
         }
@@ -69,15 +72,22 @@ class GameManager {
     var cardsInCentre: [Card]! {
         didSet {
             if cardsInCentre.count == playerCount {
-                let winner = players[getBoutWinnerIndex()]
+                let roundWinnerIndex = getBoutWinnerIndex()
+                let winner = players[roundWinnerIndex]
                 if isHost {
                     gameService.messageService.sendWinnerMessage(bout: .BoutWinnerMessage, player: winner.displayName)
                     delegate?.roundWinner(winner: winner)
+                    updateWonRoundCountPerPlayer(player: winner)
                 }
             }
         }
     }
     var cardsWonPerPlayer: [[Card]]!
+    var roundsWonPerPlayer: [Int]! {
+        didSet {
+            delegate?.roundsWonPerPlayer(wonCountArray: roundsWonPerPlayer)
+        }
+    }
     
     //MARK:- Initializers
     private init() {  }
@@ -103,10 +113,12 @@ class GameManager {
         cardsInCentre = [Card]()
         cardsForPlayer = [[Card]]()
         cardsWonPerPlayer = [[Card]]()
-        timeLeft = 5 * 60
+        timeLeft = Constants.gameTime[0]
+        roundsWonPerPlayer = [Int]()
         for _ in 0..<players.count {
             cardsForPlayer.append([Card]())
             cardsWonPerPlayer.append([Card]())
+            roundsWonPerPlayer.append(0)
         }
     }
     
@@ -138,8 +150,12 @@ class GameManager {
     }
     
     func giveCardToPlayerFromDeck(card: Card, player: MCPeerID) {
-        cardsForPlayer[players.firstIndex(of: player)!].append(card)
-        delegate?.gaveCardToPlayer(card: card, playerName: player.displayName)
+        if let cardToTake = deck.draw(card: card) {
+            cardsForPlayer[players.firstIndex(of: player)!].append(cardToTake)
+            delegate?.gaveCardToPlayer(card: card, playerName: player.displayName)
+        } else {
+            print("Error getting the card from the deck")
+        }
     }
     
     func setTime(time: Int) {
@@ -241,6 +257,11 @@ class GameManager {
         }
         return players[winnerIndex]
     }
+    
+    private func updateWonRoundCountPerPlayer(player: MCPeerID) {
+        let roundWinnerIndex = players.firstIndex(of: player)!
+        roundsWonPerPlayer[roundWinnerIndex] += 1
+    }
 }
 
 //MARK:- GameService Game Client Delegate Methods
@@ -254,6 +275,7 @@ extension GameManager: GameServiceGameClientDelegate {
         let playerIndex = playerNames.firstIndex(of: playerName)!
         let boutWinner = players[playerIndex]
         delegate?.roundWinner(winner: boutWinner)
+        updateWonRoundCountPerPlayer(player: boutWinner)
         print("Bout Winner is: ", playerName)
     }
 
@@ -262,7 +284,7 @@ extension GameManager: GameServiceGameClientDelegate {
         let winner = players[playerIndex]
         delegate?.gameWinner(winner: winner)
         self.stopTimer()
-        timeLeft = 5 * 60
+        timeLeft = Constants.gameTime[0]
         print("Winner is: ", playerName)
     }
     

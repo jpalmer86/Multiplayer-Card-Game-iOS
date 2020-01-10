@@ -17,6 +17,7 @@ class GameViewController: UIViewController {
     @IBOutlet var centreDeckBottomCard: CardView!
     @IBOutlet var startGameButton: UIButton!
     @IBOutlet var winnerDisplayLabel: UILabel!
+    @IBOutlet var roundsWonLabel: [UILabel]!
     
     @IBOutlet var middlePlayerCards: [CardView]! {
         didSet {
@@ -74,12 +75,12 @@ class GameViewController: UIViewController {
     private var connectedPlayers: [MCPeerID]! {
         didSet {
             playerNameArray = connectedPlayers.map({ $0.displayName })
+            print(playerNameArray)
             self.gameManager.newGame(playersArray: self.connectedPlayers)
         }
     }
     private var connectingAlert: UIAlertController?
     private let gameManager = GameManager.shared
-    private var cardsGiven = 0
     private var playerNameArray: [String]!
     private let animationDuration = 0.8
     
@@ -93,13 +94,16 @@ class GameViewController: UIViewController {
                 title = "Waiting for Players..."
             case .dealing:
                 DispatchQueue.main.async { [unowned self] in
-                    self.centreDeckTopCard.isHidden = true
-                    self.centreDeckBottomCard.isHidden = true
+                    self.centreDeckTopCard.isHidden = false
+                    self.centreDeckBottomCard.isHidden = false
                     self.title = "Game"
+                    gameService.stopAdvertisingToPeers()
+                    for index in 0..<self.connectedPlayers.count {
+                        self.roundsWonLabel[index].isHidden = false
+                    }
                     self.timeLabel.isHidden = false
                 }
             case .decidingRoundWinner:
-//                setCardViews()
                 print("round winner decided")
             case .playing:
                 let cards = gameManager.cardsForPlayer[0]
@@ -116,7 +120,11 @@ class GameViewController: UIViewController {
                         let value = UIInterfaceOrientation.portrait.rawValue
                         UIDevice.current.setValue(value, forKey: "orientation")
                         gameService.disconnectSession()
-                        gameService.stopAdvertisingToPeers()
+                        if !self.isHost {
+                            gameService.joinSession()
+                        } else {
+                            gameService.stopAdvertisingToPeers()
+                        }
                         self.gameManager.endGame()
                     }
                 }
@@ -163,6 +171,7 @@ class GameViewController: UIViewController {
             startGameButton.isHidden = true
             connectingAlert = loadingAlert(title: "Connecting ...")
             present(connectingAlert!, animated: true, completion: nil)
+            gameService.stopBrowsingForPeers()
         } else {
             gameService.hostSession()
         }
@@ -237,17 +246,12 @@ class GameViewController: UIViewController {
                 let translateDistance = Constants.translateDistance[index]
                 let translationX: CGFloat = translateDirection.x * translateDistance.x
                 let translationY: CGFloat = translateDirection.y * translateDistance.y
-                UIView.animate(withDuration: self.animationDuration, delay: 0.0, options: [.curveEaseIn], animations: {
+                UIView.animate(withDuration: 0.0 /*self.animationDuration*/, delay: 0.0, options: [.curveEaseIn], animations: {
                     self.centreDeckTopCard.transform = .init(translationX: translationX, y: translationY)
                 },completion: { finish in
-                    self.cardsGiven += 1
-                    if self.cardsGiven <= self.gameManager.playerCount {
                         self.middlePlayerCards[index].isHidden = false
-                    } else if self.cardsGiven <= 2 * self.gameManager.playerCount {
                         self.playerDeckBottomCard[index].isHidden = false
-                    } else {
                         self.playerDeckTopCard[index].isHidden = false
-                    }
                     self.centreDeckTopCard.transform = .identity
                 })
             }
@@ -342,7 +346,7 @@ extension GameViewController: GameServiceSessionDelegate {
         } else {
             connectedPlayers.append(peerID)
         }
-        
+        print(connectedPlayers)
         if !isHost {
             gameService.stopBrowsingForPeers()
         } else {
@@ -409,6 +413,7 @@ extension GameViewController: GameManagerDelegate {
     
     func gaveCardToPlayer(card: Card, playerName: String) {
         let playerID = connectedPlayers[playerNameArray.firstIndex(of: playerName)!]
+        print("gave \(card) to player: ",playerID.displayName)
         giveCardToPlayer(player: playerID)
     }
     
@@ -422,6 +427,14 @@ extension GameViewController: GameManagerDelegate {
             self?.playersTurnLabel.text = "\(playerName)'s turn"
             if self?.connectedPlayers[0].displayName == playerName {
                 self?.enablePlayer()
+            }
+        }
+    }
+    
+    func roundsWonPerPlayer(wonCountArray: [Int]) {
+        DispatchQueue.main.async { [unowned self] in
+            for (index,roundsWon) in wonCountArray.enumerated() {
+                self.roundsWonLabel[index].text = "Won: \(roundsWon)"
             }
         }
     }

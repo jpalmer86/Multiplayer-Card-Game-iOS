@@ -216,7 +216,6 @@ extension GameService: MCNearbyServiceBrowserDelegate {
                 break
             }
         }
-
         browserDelegate?.lostPeer(peerID: peerID)
     }
 

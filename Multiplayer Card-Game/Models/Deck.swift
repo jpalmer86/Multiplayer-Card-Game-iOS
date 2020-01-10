@@ -15,8 +15,8 @@ struct Deck {
 
     //MARK:- Initializers
     init() {
-        for suit in Card.Suit.allSuits{
-            for rank in Card.Rank.allRanks{
+        for suit in Card.Suit.allSuits {
+            for rank in Card.Rank.allRanks {
                 cards.append(Card(suit: suit, rank: rank))
             }
         }
@@ -30,7 +30,15 @@ struct Deck {
     mutating func draw() -> Card? {
         if cards.count > 0{
             return cards.remove(at : cards.count.random)
-        }else{
+        } else {
+            return nil
+        }
+    }
+    
+    mutating func draw(card: Card) -> Card? {
+        if let index = cards.firstIndex(of: card) {
+            return cards.remove(at: index)
+        } else {
             return nil
         }
     }

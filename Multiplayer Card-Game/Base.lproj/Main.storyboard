@@ -444,12 +444,38 @@
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="isFaceUp" value="NO"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Won: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UKm-pv-gBE">
+                                <rect key="frame" x="542" y="291" width="54" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Won: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zhg-HN-VNB">
+                                <rect key="frame" x="76" y="291" width="54" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Won: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ybn-yl-dYN">
+                                <rect key="frame" x="296" y="88" width="54" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Won: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xRQ-fd-UOX">
+                                <rect key="frame" x="766" y="82" width="54" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Smu-ca-6Zk" firstAttribute="height" secondItem="K8b-wM-uLN" secondAttribute="height" id="0oF-FX-20c"/>
                             <constraint firstItem="BwQ-0L-Jfc" firstAttribute="top" secondItem="AN1-Jk-l6h" secondAttribute="top" constant="16" id="33m-eb-gdG"/>
+                            <constraint firstItem="AN1-Jk-l6h" firstAttribute="bottom" secondItem="UKm-pv-gBE" secondAttribute="bottom" constant="32" id="3HE-0v-NIN"/>
                             <constraint firstItem="kQc-ad-bVC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="K4B-uO-uLm" secondAttribute="leading" constant="-32" id="4dQ-uV-vT0"/>
+                            <constraint firstItem="AN1-Jk-l6h" firstAttribute="trailing" secondItem="xRQ-fd-UOX" secondAttribute="trailing" constant="32" id="4lT-Yl-CLf"/>
                             <constraint firstItem="GR1-tX-HcK" firstAttribute="height" secondItem="oft-WH-SNu" secondAttribute="height" id="4qZ-t8-QEL"/>
                             <constraint firstItem="hTx-ty-FXT" firstAttribute="centerX" secondItem="Y3O-XW-7zQ" secondAttribute="centerX" id="86W-CP-rr4"/>
                             <constraint firstItem="oft-WH-SNu" firstAttribute="leading" relation="lessThanOrEqual" secondItem="GR1-tX-HcK" secondAttribute="trailing" constant="16" id="9YL-x3-Bwc"/>
@@ -468,8 +494,10 @@
                             <constraint firstItem="CtY-qU-AAF" firstAttribute="leading" relation="lessThanOrEqual" secondItem="K4B-uO-uLm" secondAttribute="trailing" constant="-32" id="K3V-ok-szz"/>
                             <constraint firstItem="E8Q-FX-5f2" firstAttribute="centerX" secondItem="Y3O-XW-7zQ" secondAttribute="centerX" id="KYR-Ig-sty"/>
                             <constraint firstItem="K4B-uO-uLm" firstAttribute="top" relation="greaterThanOrEqual" secondItem="E8Q-FX-5f2" secondAttribute="bottom" constant="-32" id="NJZ-eL-L4m"/>
+                            <constraint firstItem="Ybn-yl-dYN" firstAttribute="top" secondItem="0R1-6u-iYC" secondAttribute="bottom" constant="32" id="NYj-d7-QYD"/>
                             <constraint firstItem="K4B-uO-uLm" firstAttribute="centerY" secondItem="6o7-ZB-ZIb" secondAttribute="centerY" id="O4N-Rd-I4S"/>
                             <constraint firstItem="hTx-ty-FXT" firstAttribute="height" secondItem="RLX-br-lcM" secondAttribute="height" id="OZB-fN-8MC"/>
+                            <constraint firstItem="RKw-wQ-WaO" firstAttribute="top" secondItem="xRQ-fd-UOX" secondAttribute="bottom" constant="8" id="OpV-CS-s0k"/>
                             <constraint firstItem="Csf-4s-dPL" firstAttribute="height" secondItem="K8b-wM-uLN" secondAttribute="height" id="PHD-TS-2CI"/>
                             <constraint firstItem="MV3-Qa-Gd2" firstAttribute="top" secondItem="BwQ-0L-Jfc" secondAttribute="bottom" constant="8" id="QLs-t9-cPj"/>
                             <constraint firstItem="oft-WH-SNu" firstAttribute="width" secondItem="E8Q-FX-5f2" secondAttribute="width" id="QY8-2x-UcW"/>
@@ -488,6 +516,7 @@
                             <constraint firstItem="0ZL-LF-T6o" firstAttribute="top" secondItem="AN1-Jk-l6h" secondAttribute="top" constant="16" id="c3L-FY-PqF"/>
                             <constraint firstItem="RKw-wQ-WaO" firstAttribute="leading" secondItem="K4B-uO-uLm" secondAttribute="trailing" constant="128" id="dak-yg-hAt"/>
                             <constraint firstItem="VT1-re-2Mq" firstAttribute="leading" relation="lessThanOrEqual" secondItem="K4B-uO-uLm" secondAttribute="trailing" constant="128" id="eA7-zp-N9b"/>
+                            <constraint firstItem="GR1-tX-HcK" firstAttribute="leading" secondItem="Ybn-yl-dYN" secondAttribute="trailing" constant="18" id="fPL-1s-bRt"/>
                             <constraint firstItem="K8b-wM-uLN" firstAttribute="width" secondItem="kQc-ad-bVC" secondAttribute="width" id="ffW-hZ-AAY"/>
                             <constraint firstItem="K8b-wM-uLN" firstAttribute="height" secondItem="kQc-ad-bVC" secondAttribute="height" id="fpb-eP-lHy"/>
                             <constraint firstItem="6o7-ZB-ZIb" firstAttribute="centerX" secondItem="Y3O-XW-7zQ" secondAttribute="centerX" id="ftj-Do-bCR"/>
@@ -500,18 +529,21 @@
                             <constraint firstItem="8Rf-34-nsV" firstAttribute="width" secondItem="oft-WH-SNu" secondAttribute="width" id="h1G-e9-71g"/>
                             <constraint firstItem="oft-WH-SNu" firstAttribute="centerX" secondItem="Y3O-XW-7zQ" secondAttribute="centerX" id="hNW-pR-8ll"/>
                             <constraint firstItem="gxv-oA-o54" firstAttribute="height" secondItem="VT1-re-2Mq" secondAttribute="height" id="hXY-O4-Ui8"/>
+                            <constraint firstItem="UKm-pv-gBE" firstAttribute="leading" secondItem="5rv-5B-SMY" secondAttribute="trailing" constant="18" id="hgG-Jf-JIW"/>
                             <constraint firstItem="Csf-4s-dPL" firstAttribute="width" secondItem="K8b-wM-uLN" secondAttribute="width" id="iqG-IA-i9C"/>
                             <constraint firstItem="dUt-Ae-arH" firstAttribute="width" secondItem="hTx-ty-FXT" secondAttribute="width" id="js4-Iz-ouZ"/>
                             <constraint firstItem="RKw-wQ-WaO" firstAttribute="width" secondItem="VT1-re-2Mq" secondAttribute="width" id="kt0-3e-3k9"/>
                             <constraint firstItem="6o7-ZB-ZIb" firstAttribute="centerY" secondItem="Y3O-XW-7zQ" secondAttribute="centerY" id="lPB-81-sDT"/>
                             <constraint firstItem="5rv-5B-SMY" firstAttribute="width" secondItem="dUt-Ae-arH" secondAttribute="width" id="m3a-8E-hpF"/>
                             <constraint firstItem="hTx-ty-FXT" firstAttribute="top" relation="greaterThanOrEqual" secondItem="K4B-uO-uLm" secondAttribute="bottom" constant="-32" id="mXm-Bz-FNR"/>
+                            <constraint firstItem="AN1-Jk-l6h" firstAttribute="bottom" secondItem="Zhg-HN-VNB" secondAttribute="bottom" constant="32" id="mok-ZD-k3A"/>
                             <constraint firstItem="8Rf-34-nsV" firstAttribute="height" secondItem="oft-WH-SNu" secondAttribute="height" id="n1t-bB-L8l"/>
                             <constraint firstItem="CtY-qU-AAF" firstAttribute="width" secondItem="RLX-br-lcM" secondAttribute="width" id="nev-oP-EsT"/>
                             <constraint firstItem="gxv-oA-o54" firstAttribute="leading" secondItem="K4B-uO-uLm" secondAttribute="trailing" constant="128" id="p1c-uN-iai"/>
                             <constraint firstItem="GR1-tX-HcK" firstAttribute="width" secondItem="oft-WH-SNu" secondAttribute="width" id="p8U-x7-fqt"/>
                             <constraint firstItem="BwQ-0L-Jfc" firstAttribute="centerX" secondItem="Y3O-XW-7zQ" secondAttribute="centerX" id="qHr-bf-gPJ"/>
                             <constraint firstItem="CtY-qU-AAF" firstAttribute="height" secondItem="RLX-br-lcM" secondAttribute="height" id="qxN-He-6e5"/>
+                            <constraint firstItem="Zhg-HN-VNB" firstAttribute="leading" secondItem="AN1-Jk-l6h" secondAttribute="leading" constant="32" id="rys-by-HLT"/>
                             <constraint firstItem="Smu-ca-6Zk" firstAttribute="width" secondItem="K8b-wM-uLN" secondAttribute="width" id="sRl-ip-YZD"/>
                             <constraint firstItem="kQc-ad-bVC" firstAttribute="centerY" secondItem="Y3O-XW-7zQ" secondAttribute="centerY" id="sUJ-11-VbZ"/>
                             <constraint firstItem="VT1-re-2Mq" firstAttribute="centerY" secondItem="Y3O-XW-7zQ" secondAttribute="centerY" id="sg6-u4-n5E"/>
@@ -553,14 +585,18 @@
                         <outletCollection property="playerDeckBottomCard" destination="gxv-oA-o54" collectionClass="NSMutableArray" id="ZPp-os-Lhl"/>
                         <outletCollection property="playerDeckBottomCard" destination="GR1-tX-HcK" collectionClass="NSMutableArray" id="801-HD-T5y"/>
                         <outletCollection property="playerDeckBottomCard" destination="Smu-ca-6Zk" collectionClass="NSMutableArray" id="g3X-z6-LC6"/>
-                        <outletCollection property="playerDeckTopCard" destination="km7-DW-AMf" collectionClass="NSMutableArray" id="2h6-iQ-bYi"/>
-                        <outletCollection property="playerDeckTopCard" destination="uUU-NF-AjO" collectionClass="NSMutableArray" id="qfo-Fr-kC6"/>
-                        <outletCollection property="playerDeckTopCard" destination="H6g-jj-OZN" collectionClass="NSMutableArray" id="wPS-2S-YnW"/>
-                        <outletCollection property="playerDeckTopCard" destination="Agv-gk-Q5X" collectionClass="NSMutableArray" id="kHU-71-5e0"/>
                         <outletCollection property="playerThrownCards" destination="hTx-ty-FXT" collectionClass="NSMutableArray" id="hzJ-x4-zMA"/>
                         <outletCollection property="playerThrownCards" destination="CtY-qU-AAF" collectionClass="NSMutableArray" id="0fO-Ue-gYg"/>
                         <outletCollection property="playerThrownCards" destination="E8Q-FX-5f2" collectionClass="NSMutableArray" id="hI2-7v-LpE"/>
                         <outletCollection property="playerThrownCards" destination="kQc-ad-bVC" collectionClass="NSMutableArray" id="K2A-y9-MKU"/>
+                        <outletCollection property="roundsWonLabel" destination="UKm-pv-gBE" collectionClass="NSMutableArray" id="TfZ-C1-tDN"/>
+                        <outletCollection property="roundsWonLabel" destination="xRQ-fd-UOX" collectionClass="NSMutableArray" id="7P9-yT-fy5"/>
+                        <outletCollection property="roundsWonLabel" destination="Ybn-yl-dYN" collectionClass="NSMutableArray" id="oCR-PK-jrD"/>
+                        <outletCollection property="roundsWonLabel" destination="Zhg-HN-VNB" collectionClass="NSMutableArray" id="FNz-OS-jac"/>
+                        <outletCollection property="playerDeckTopCard" destination="km7-DW-AMf" collectionClass="NSMutableArray" id="yKX-u5-wL6"/>
+                        <outletCollection property="playerDeckTopCard" destination="uUU-NF-AjO" collectionClass="NSMutableArray" id="cLA-Of-3r9"/>
+                        <outletCollection property="playerDeckTopCard" destination="H6g-jj-OZN" collectionClass="NSMutableArray" id="BZY-NB-Hyy"/>
+                        <outletCollection property="playerDeckTopCard" destination="Agv-gk-Q5X" collectionClass="NSMutableArray" id="ZzG-44-zfV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RAK-b4-YXi" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

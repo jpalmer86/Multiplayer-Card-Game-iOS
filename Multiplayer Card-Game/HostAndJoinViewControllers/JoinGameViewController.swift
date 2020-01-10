@@ -46,7 +46,6 @@ class JoinGameViewController: UIViewController {
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        gameService.stopBrowsingForPeers()
         super.viewWillDisappear(animated)
         
         AppUtility.lockOrientation(.all)
