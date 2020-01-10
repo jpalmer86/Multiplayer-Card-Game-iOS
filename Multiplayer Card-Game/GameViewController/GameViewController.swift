@@ -20,42 +20,52 @@ class GameViewController: UIViewController {
     
     @IBOutlet var middlePlayerCards: [CardView]! {
         didSet {
-            for index in [1,3] {
-                let rotationDirection: CGFloat = index == 1 ? -1 : 1
-                self.middlePlayerCards[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
+            for index in 0..<middlePlayerCards.count {
+                if index == 1 || index == 3 {
+                    let rotationDirection: CGFloat = index == 1 ? -1 : 1
+                    self.middlePlayerCards[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
+                }
             }
         }
     }
     
     @IBOutlet var playerCardsWon: [CardView]! {
         didSet {
-            for index in [1,3] {
-                let rotationDirection: CGFloat = index == 1 ? -1 : 1
-                self.playerCardsWon[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
+            for index in 0..<playerCardsWon.count {
+                if index == 1 || index == 3 {
+                    let rotationDirection: CGFloat = index == 1 ? -1 : 1
+                    self.playerCardsWon[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
+                }
             }
         }
     }
     @IBOutlet var playerDeckBottomCard: [CardView]! {
         didSet {
-            for index in [1,3] {
-                let rotationDirection: CGFloat = index == 1 ? -1 : 1
-                self.playerDeckBottomCard[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
+            for index in 0..<playerDeckBottomCard.count {
+                if index == 1 || index == 3 {
+                    let rotationDirection: CGFloat = index == 1 ? -1 : 1
+                    self.playerDeckBottomCard[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
+                }
             }
         }
     }
     @IBOutlet var playerDeckTopCard: [CardView]! {
         didSet {
-            for index in [1,3] {
-                let rotationDirection: CGFloat = index == 1 ? -1 : 1
-                self.playerDeckTopCard[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
+            for index in 0..<playerDeckTopCard.count {
+                if index == 1 || index == 3 {
+                    let rotationDirection: CGFloat = index == 1 ? -1 : 1
+                    self.playerDeckTopCard[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
+                }
             }
         }
     }
     @IBOutlet var playerThrownCards: [CardView]! {
         didSet {
-            for index in [1,3] {
-                let rotationDirection: CGFloat = index == 1 ? -1 : 1
-                self.playerThrownCards[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
+            for index in 0..<playerThrownCards.count {
+                if index == 1 || index == 3 {
+                    let rotationDirection: CGFloat = index == 1 ? -1 : 1
+                    self.playerThrownCards[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
+                }
             }
         }
     }
@@ -83,15 +93,21 @@ class GameViewController: UIViewController {
                 title = "Waiting for Players..."
             case .dealing:
                 DispatchQueue.main.async { [unowned self] in
+                    self.centreDeckTopCard.isHidden = true
+                    self.centreDeckBottomCard.isHidden = true
                     self.title = "Game"
                     self.timeLabel.isHidden = false
                 }
             case .decidingRoundWinner:
+//                setCardViews()
                 print("round winner decided")
             case .playing:
+                let cards = gameManager.cardsForPlayer[0]
                 print("play the game turn by turn")
                 DispatchQueue.main.async { [unowned self] in
                     self.playersTurnLabel.isHidden = false
+                    self.centreDeckTopCard.isHidden = true
+                    self.centreDeckBottomCard.isHidden = true
                 }
             case .gameOver:
                 DispatchQueue.main.async { [unowned self] in
@@ -204,10 +220,10 @@ class GameViewController: UIViewController {
     }
     
     @objc func throwCardInCenter(_ sender: UIGestureRecognizer) {
-        //Handle when the cards become zero for player
         gameManager.throwCardInCenter(player: connectedPlayers[0], card: gameManager.cardsForPlayer[0][0])
         playersTurnLabel.isHidden = true
         middlePlayerCards[0].isUserInteractionEnabled = false
+        setCardViews()
     }
     
     private func enablePlayer() {
@@ -218,8 +234,9 @@ class GameViewController: UIViewController {
         DispatchQueue.main.async { [unowned self] in
             if let index = self.connectedPlayers.firstIndex(of: player) {
                 let translateDirection = Constants.distributeDirection[index]
-                let translationX: CGFloat = translateDirection.x * 80.0 //middlePlayerCards[index].frame.origin.x - centreDeckTopCard.frame.origin.x
-                let translationY: CGFloat = translateDirection.y * 80.0 //middlePlayerCards[index].frame.origin.y - centreDeckTopCard.frame.origin.y
+                let translateDistance = Constants.translateDistance[index]
+                let translationX: CGFloat = translateDirection.x * translateDistance.x
+                let translationY: CGFloat = translateDirection.y * translateDistance.y
                 UIView.animate(withDuration: self.animationDuration, delay: 0.0, options: [.curveEaseIn], animations: {
                     self.centreDeckTopCard.transform = .init(translationX: translationX, y: translationY)
                 },completion: { finish in
@@ -241,8 +258,9 @@ class GameViewController: UIViewController {
         DispatchQueue.main.async { [unowned self] in
             if let index = self.connectedPlayers.firstIndex(of: player) {
                 let translateDirection = Constants.distributeDirection[index]
-                let translationX: CGFloat = translateDirection.x * 80.0 //middlePlayerCards[index].frame.origin.x - centreDeckTopCard.frame.origin.x
-                let translationY: CGFloat = translateDirection.y * 80.0 //middlePlayerCards[index].frame.origin.y - centreDeckTopCard.frame.origin.y
+                let translateDistance = Constants.translateDistance[index]
+                let translationX: CGFloat = translateDirection.x * translateDistance.x
+                let translationY: CGFloat = translateDirection.y * translateDistance.y
                 UIView.animate(withDuration: 0.5, delay: 0.0, options: [.curveEaseIn], animations: {
                     self.middlePlayerCards[index].transform = .init(translationX: -translationX, y: -translationY)
                 },completion: { finish in
@@ -261,8 +279,9 @@ class GameViewController: UIViewController {
         DispatchQueue.main.async { [unowned self] in
             if let index = self.connectedPlayers.firstIndex(of: player) {
                 let translateDirection = Constants.distributeDirection[index]
-                let translationX: CGFloat = translateDirection.x * 80.0 //middlePlayerCards[index].frame.origin.x - centreDeckTopCard.frame.origin.x
-                let translationY: CGFloat = translateDirection.y * 80.0 //middlePlayerCards[index].frame.origin.y - centreDeckTopCard.frame.origin.y
+                let translateDistance = Constants.translateDistance[index]
+                let translationX: CGFloat = translateDirection.x * translateDistance.x
+                let translationY: CGFloat = translateDirection.y * translateDistance.y
                 UIView.animate(withDuration: self.animationDuration, delay: 0.0, options: [.curveEaseIn], animations: {
                     self.winnerDisplayLabel.text = "\(self.connectedPlayers[index].displayName) won the round!!"
                     self.winnerDisplayLabel.isHidden = false
@@ -285,10 +304,37 @@ class GameViewController: UIViewController {
             }
         }
     }
+    
+    private func setCardViews() {
+        guard let cardsForPlayer = gameManager.cardsForPlayer else {
+            return
+        }
+        DispatchQueue.main.async { [unowned self] in
+            for index in 0..<cardsForPlayer.count {
+                let cards = cardsForPlayer[index]
+                if cards.count < 3 {
+                    self.playerDeckBottomCard[index].isHidden = true
+                    if cards.count < 2 {
+                        self.playerDeckTopCard[index].isHidden = true
+                        if cards.count < 1 {
+                            self.middlePlayerCards[index].isHidden = true
+                        } else {
+                            self.middlePlayerCards[index].isHidden = false
+                        }
+                    } else {
+                        self.playerDeckTopCard[index].isHidden = false
+                    }
+                } else {
+                    self.playerDeckBottomCard[index].isHidden = false
+                }
+            }
+        }
+    }
 }
 
 //MARK:- GameService Session Delegate Methods
 extension GameViewController: GameServiceSessionDelegate {
+    
     func connectedWithPeer(peerID: MCPeerID) {
         print("Connected with peer: ", peerID.displayName)
         if let index = connectedPlayers.firstIndex(of: peerID) {
@@ -329,6 +375,7 @@ extension GameViewController: GameServiceSessionDelegate {
 
 //MARK:- GameService Advertiser Delegate Methods
 extension GameViewController: GameServiceAdvertiserDelegate {
+    
     func invitationWasReceived(fromPeer: String, handler: @escaping (Bool, MCSession?) -> Void, session: MCSession) {
         self.alert(title: "Invitation to Connect", message: "\(fromPeer) wants to connect.") { (response) in
             if response {
@@ -370,11 +417,11 @@ extension GameViewController: GameManagerDelegate {
     }
         
     func nextPlayerTurn(playerName: String) {
-        DispatchQueue.main.async { [unowned self] in
-            self.playersTurnLabel.isHidden = false
-            self.playersTurnLabel.text = "\(playerName)'s turn"
-            if self.connectedPlayers[0].displayName == playerName {
-                self.enablePlayer()
+        DispatchQueue.main.async { [weak self] in
+            self?.playersTurnLabel.isHidden = false
+            self?.playersTurnLabel.text = "\(playerName)'s turn"
+            if self?.connectedPlayers[0].displayName == playerName {
+                self?.enablePlayer()
             }
         }
     }

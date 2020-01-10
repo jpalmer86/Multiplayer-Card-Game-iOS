@@ -184,7 +184,6 @@ class MessageService {
         
     //MARK:- Private Methods
     private func send(message: String, completion: @escaping (Result<Data,Error>) -> Void) {
-        
         let data = message.data(using: .utf8)!
         if session.connectedPeers.count > 0 {
             do {

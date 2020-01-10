@@ -200,7 +200,9 @@ class GameManager {
         }
         
         if cardsForPlayer[currentPlayerIndex].count == 0 {
-            updateNextPlayer()
+            let winner = getGameWinner()
+            delegate?.gameWinner(winner: winner)
+            gameService.messageService.sendWinnerMessage(bout: .GameWinnerMessage, player: winner.displayName)
         }
     }
     private func startTimer() {

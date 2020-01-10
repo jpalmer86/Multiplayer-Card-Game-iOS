@@ -22,8 +22,8 @@ class PlayerCardsViewController: UIViewController {
     
     //MARK:- Lifecycle Hooks
     override func viewDidLoad() {
-        gameManager.cardsDelegate = self
         super.viewDidLoad()
+        gameManager.cardsDelegate = self
         let value = UIInterfaceOrientation.landscapeLeft.rawValue
         UIDevice.current.setValue(value, forKey: "orientation")
         
