@@ -94,6 +94,13 @@ class MessageService {
         }
     }
     
+    func sendClientGameOverToHost() {
+        let message = "\(MessageType.GameOverClientMessage.rawValue)\(seperator)\(GameState.gameOver)"
+        sendToHost(message: message) { (result) in
+            //
+        }
+    }
+    
     //MARK:- Retrieval Methods
     func cardExchangeData(data: Data) -> [String:Card] {
         let message = String(data: data, encoding: .utf8)!

@@ -26,7 +26,10 @@ class JoinGameViewController: UIViewController {
     var game: Game!
     var availableDevices = [MCPeerID]() {
         didSet {
-            lobbiesTableView.reloadData()
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.lobbiesTableView.reloadData()
+            }
         }
     }
     
@@ -57,7 +60,6 @@ class JoinGameViewController: UIViewController {
             if let tabBarVC = segue.destination as? UITabBarController, let gameVC = tabBarVC.viewControllers?.first {
                 if let cell = sender as? UITableViewCell {
                     if let gameVC = gameVC as? GameViewController {
-                        gameService.stopBrowsingForPeers()
                         gameVC.game = game
                     }
                 }
@@ -100,13 +102,8 @@ extension JoinGameViewController: UITableViewDataSource {
 
 //MARK:- GameService Browser Delegate Methods
 extension JoinGameViewController: GameServiceBrowserDelegate {
-    func foundPeer(peers: [MCPeerID]) {
-        availableDevices = peers
-    }
     
-    func lostPeer(peerID: MCPeerID) {
-        if let index = availableDevices.firstIndex(of: peerID) {
-            availableDevices.remove(at: index)
-        }
+    func updatedPeers(peers: [MCPeerID]) {
+        availableDevices = peers
     }
 }

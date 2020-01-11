@@ -17,6 +17,7 @@ protocol GameManagerDelegate {
     func playerTurnedCard(player: MCPeerID, card: Card)
     func nextPlayerTurn(playerName: String)
     func roundsWonPerPlayer(wonCountArray: [Int])
+    func quit()
 }
 
 protocol GameCardManagerDelegate {
@@ -66,7 +67,9 @@ class GameManager {
     var playerCount = 1
     var cardsForPlayer: [[Card]]! {
         didSet {
-            cardsDelegate?.cardsSwapped(updatedCards: cardsForPlayer[0])
+            if cardsForPlayer.count > 0 {
+                cardsDelegate?.cardsSwapped(updatedCards: cardsForPlayer[0])
+            }
         }
     }
     var cardsInCentre: [Card]! {
@@ -327,5 +330,9 @@ extension GameManager: GameServiceGameHostDelegate {
         let playerIndex = playerNames.firstIndex(of: byPlayer)!
         let player = players[playerIndex]
         swapCard(player: player, index: index)
+    }
+    
+    func clientGameOverMessage() {
+        delegate?.quit()
     }
 }

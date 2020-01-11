@@ -54,8 +54,8 @@ class GameViewController: UIViewController {
         didSet {
             for index in 0..<playerDeckTopCard.count {
                 if index == 1 || index == 3 {
-                    let rotationDirection: CGFloat = index == 1 ? -1 : 1
-                    self.playerDeckTopCard[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
+//                    let rotationDirection: CGFloat = index == 1 ? -1 : 1
+//                    self.playerDeckTopCard[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
                 }
             }
         }
@@ -86,7 +86,7 @@ class GameViewController: UIViewController {
     
     private var gameState: GameState! {
         didSet {
-            if isHost || gameState == GameState.gameOver {
+            if isHost {
                 gameService.messageService.sendGameStateMessage(state: gameState)
             }
             switch gameState {
@@ -97,7 +97,9 @@ class GameViewController: UIViewController {
                     self.centreDeckTopCard.isHidden = false
                     self.centreDeckBottomCard.isHidden = false
                     self.title = "Game"
-                    gameService.stopAdvertisingToPeers()
+                    if self.isHost {
+                        gameService.stopAdvertisingToPeers()
+                    }
                     for index in 0..<self.connectedPlayers.count {
                         self.roundsWonLabel[index].isHidden = false
                     }
@@ -106,7 +108,6 @@ class GameViewController: UIViewController {
             case .decidingRoundWinner:
                 print("round winner decided")
             case .playing:
-                let cards = gameManager.cardsForPlayer[0]
                 print("play the game turn by turn")
                 DispatchQueue.main.async { [unowned self] in
                     self.playersTurnLabel.isHidden = false
@@ -120,12 +121,12 @@ class GameViewController: UIViewController {
                         let value = UIInterfaceOrientation.portrait.rawValue
                         UIDevice.current.setValue(value, forKey: "orientation")
                         gameService.disconnectSession()
-                        if !self.isHost {
-                            gameService.joinSession()
-                        } else {
+                        if self.isHost {
                             gameService.stopAdvertisingToPeers()
+                            self.gameManager.endGame()
+                        } else {
+                            gameService.joinSession()
                         }
-                        self.gameManager.endGame()
                     }
                 }
             case .none:
@@ -154,10 +155,15 @@ class GameViewController: UIViewController {
             showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded) players to start the game")
         }
     }
+    
     @IBAction func quit(_ sender: Any) {
         alert(title: "Confirm disconnection:", message: "Are you sure you want to end the game?") { response in
             if response {
-                self.gameState = .gameOver
+                if self.isHost || self.gameState == GameState.waitingForPlayers {
+                    self.gameState = .gameOver
+                } else {
+                    gameService.messageService.sendClientGameOverToHost()
+                }
             }
         }
     }
@@ -273,7 +279,9 @@ class GameViewController: UIViewController {
                     self.playerThrownCards[index].suit = card.suit.description
                     self.playerThrownCards[index].isHidden = false
                     self.middlePlayerCards[index].transform = .identity
-                    self.gameState = .playing
+                    if self.isHost {
+                        self.gameState = .playing
+                    }
                 })
             }
         }
@@ -301,9 +309,11 @@ class GameViewController: UIViewController {
                         cardView.transform = .identity
                     }
                     self.playerCardsWon[index].isHidden = false
-                    self.playerCardsWon[index].suit = self.playerThrownCards[0].suit
-                    self.playerCardsWon[index].rank = self.playerThrownCards[0].rank
-                    self.gameState = .playing
+                    self.playerCardsWon[index].suit = self.playerThrownCards[index].suit
+                    self.playerCardsWon[index].rank = self.playerThrownCards[index].rank
+                    if self.isHost {
+                        self.gameState = .playing
+                    }
                 })
             }
         }
@@ -346,14 +356,12 @@ extension GameViewController: GameServiceSessionDelegate {
         } else {
             connectedPlayers.append(peerID)
         }
-        print(connectedPlayers)
-        if !isHost {
-            gameService.stopBrowsingForPeers()
-        } else {
+        if isHost {
             if connectedPlayers.count == 4 {
                 gameService.stopAdvertisingToPeers()
             }
         }
+        
         DispatchQueue.main.async {
             self.connectingAlert?.dismiss(animated: true, completion: nil)
         }
@@ -362,9 +370,11 @@ extension GameViewController: GameServiceSessionDelegate {
     
     func connectionFailed(peerID: MCPeerID) {
         DispatchQueue.main.async { [weak self] in
-            self?.connectingAlert?.dismiss(animated: true, completion: nil)
-            self?.gameManager.endGame()
-            self?.navigationController?.popViewController(animated: true)
+            guard let self = self else { return }
+            self.connectedPlayers.removeAll(where: {$0 == peerID})
+            if self.gameState == GameState.waitingForPlayers && self.isHost {
+                self.showOnlyAlert(title: "\(peerID.displayName) Left", message: "\(peerID.displayName) disconnected from the game.")
+            }
         }
     }
     
@@ -437,5 +447,9 @@ extension GameViewController: GameManagerDelegate {
                 self.roundsWonLabel[index].text = "Won: \(roundsWon)"
             }
         }
+    }
+    
+    func quit() {
+        gameState = .gameOver
     }
 }

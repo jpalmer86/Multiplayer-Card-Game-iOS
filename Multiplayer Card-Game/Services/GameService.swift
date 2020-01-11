@@ -11,8 +11,7 @@ import MultipeerConnectivity
 
 //MARK:- Protocols
 protocol GameServiceBrowserDelegate {
-    func foundPeer(peers: [MCPeerID])
-    func lostPeer(peerID: MCPeerID)
+    func updatedPeers(peers: [MCPeerID])
 }
 
 protocol GameServiceAdvertiserDelegate {
@@ -40,6 +39,7 @@ protocol GameServiceGameClientDelegate {
 protocol GameServiceGameHostDelegate {
     func clientPlayerTurnedCard(playerName: String, card: Card)
     func clientCardsSwapped(byPlayer: String, index: Int)
+    func clientGameOverMessage()
 }
 
 //MARK:- Service Class
@@ -62,7 +62,13 @@ class GameService: NSObject {
     private var advertiser: MCNearbyServiceAdvertiser!
     private var browser: MCNearbyServiceBrowser!
     private var serviceType = ""
-    private var foundPeers = [MCPeerID]()
+    
+    private var foundPeers = [MCPeerID]() {
+        didSet {
+            print(foundPeers)
+            browserDelegate?.updatedPeers(peers: foundPeers)
+        }
+    }
         
     //MARK:- Constructor
     private override init() {
@@ -95,6 +101,7 @@ class GameService: NSObject {
     
     func stopBrowsingForPeers() {
         browser.stopBrowsingForPeers()
+        foundPeers = []
     }
     
     func stopAdvertisingToPeers() {
@@ -114,6 +121,15 @@ class GameService: NSObject {
             browser.delegate = self
         }
     }
+    
+    private func removePeer(id: MCPeerID) {
+        for (index, aPeer) in foundPeers.enumerated() {
+            if aPeer.displayName == id.displayName {
+                foundPeers.remove(at: index)
+                break
+            }
+        }
+    }
 }
 
 //MARK:- MCSession Delegate Methods
@@ -128,6 +144,7 @@ extension GameService: MCSessionDelegate {
         case .notConnected:
           print("Not Connected: \(peerID.displayName)")
           sessionDelegate?.connectionFailed(peerID: peerID)
+          removePeer(id: peerID)
         @unknown default:
           print("fatal error")
         }
@@ -144,6 +161,8 @@ extension GameService: MCSessionDelegate {
         case .GameStateChange:
             let state = messageService.gameStateData(data: data)
             sessionDelegate?.stateChanged(newState: state)
+        case .GameOverClientMessage:
+            gameHostDelegate?.clientGameOverMessage()
         case .GameWinnerMessage:
             let gameWinnerName = messageService.winnerData(data: data)
             gameClientDelegate?.winner(playerName: gameWinnerName)
@@ -206,17 +225,10 @@ extension GameService: MCNearbyServiceBrowserDelegate {
             foundPeers.append(peerID)
         }
         print(foundPeers)
-        browserDelegate?.foundPeer(peers: foundPeers)
     }
 
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
-        for (index, aPeer) in foundPeers.enumerated() {
-            if aPeer == peerID {
-                foundPeers.remove(at: index)
-                break
-            }
-        }
-        browserDelegate?.lostPeer(peerID: peerID)
+        removePeer(id: peerID)
     }
 
     func browser(_ browser: MCNearbyServiceBrowser, didNotStartBrowsingForPeers error: Error) {
