@@ -106,6 +106,7 @@ class GameViewController: UIViewController {
                 title = "Waiting for Players..."
             case .dealing:
                 DispatchQueue.main.async { [unowned self] in
+                    self.startGameButton.isHidden = true
                     self.centreDeckTopCard.isHidden = false
                     self.centreDeckBottomCard.isHidden = false
                     self.title = "Game"
@@ -163,7 +164,6 @@ class GameViewController: UIViewController {
             gameManager.sendHostID(name: gameService.getPeerID().displayName)
             gameState = .dealing
             startGame()
-            startGameButton.isHidden = true
         } else {
             showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded) players to start the game")
         }
@@ -187,11 +187,12 @@ class GameViewController: UIViewController {
         gameManager.delegate = self
         gameManager.setAsHost(host: isHost)
         if !isHost {
-            startGameButton.isHidden = true
+            startGameButton.setTitle("Waiting...", for: .normal)
             connectingAlert = loadingAlert(title: "Connecting ...")
             present(connectingAlert!, animated: true, completion: nil)
             gameService.stopBrowsingForPeers()
         } else {
+            startGameButton.setTitle("Start Game", for: .normal)
             gameService.hostSession()
         }
         

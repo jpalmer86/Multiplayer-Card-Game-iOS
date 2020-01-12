@@ -67,14 +67,14 @@ class PlayerCardsViewController: UIViewController {
         DispatchQueue.main.async { [unowned self] in
             guard let cards = self.cards else { return }
             for cardView in self.cardViews {
-                cardView.isHidden = true
+                cardView.alpha = 0
                 cardView.isUserInteractionEnabled = false
             }
             for (index,card) in cards.enumerated() {
                 self.cardViews[index].rank = card.rank.order
                 self.cardViews[index].suit = card.suit.description
                 self.cardViews[index].isFaceUp = true
-                self.cardViews[index].isHidden = false
+                self.cardViews[index].alpha = 1
                 self.cardViews[index].isUserInteractionEnabled = true
             }
         }
