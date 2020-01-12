@@ -468,6 +468,12 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connected:" textAlignment="justified" lineBreakMode="wordWrap" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E59-cy-he7">
+                                <rect key="frame" x="60" y="50.5" width="81" height="20"/>
+                                <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="18"/>
+                                <color key="textColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -508,6 +514,7 @@
                             <constraint firstItem="K8b-wM-uLN" firstAttribute="centerY" secondItem="Y3O-XW-7zQ" secondAttribute="centerY" id="UUh-Si-Fgx"/>
                             <constraint firstAttribute="trailing" secondItem="0R1-6u-iYC" secondAttribute="trailing" constant="24" id="V6P-C8-34a"/>
                             <constraint firstItem="dUt-Ae-arH" firstAttribute="leading" relation="lessThanOrEqual" secondItem="LXE-5C-53Z" secondAttribute="trailing" constant="16" id="VCm-Fq-qjd"/>
+                            <constraint firstItem="E59-cy-he7" firstAttribute="top" secondItem="0ZL-LF-T6o" secondAttribute="bottom" constant="8" id="VZl-A9-oe5"/>
                             <constraint firstItem="8Rf-34-nsV" firstAttribute="leading" secondItem="oft-WH-SNu" secondAttribute="trailing" constant="16" id="X0c-5x-IkB"/>
                             <constraint firstItem="oft-WH-SNu" firstAttribute="height" secondItem="E8Q-FX-5f2" secondAttribute="height" id="Zo0-Tv-rNm"/>
                             <constraint firstItem="LXE-5C-53Z" firstAttribute="height" secondItem="dUt-Ae-arH" secondAttribute="height" id="akL-cr-BaP"/>
@@ -559,6 +566,7 @@
                             <constraint firstItem="ZfU-7r-fkV" firstAttribute="centerX" secondItem="Y3O-XW-7zQ" secondAttribute="centerX" id="y3N-IU-y6y"/>
                             <constraint firstItem="5rv-5B-SMY" firstAttribute="leading" secondItem="dUt-Ae-arH" secondAttribute="trailing" constant="16" id="yJz-EO-hKo"/>
                             <constraint firstItem="dUt-Ae-arH" firstAttribute="top" relation="lessThanOrEqual" secondItem="K4B-uO-uLm" secondAttribute="bottom" constant="16" id="zqN-jm-7sP"/>
+                            <constraint firstItem="E59-cy-he7" firstAttribute="leading" secondItem="AN1-Jk-l6h" secondAttribute="leading" constant="16" id="zwR-Lg-van"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="AN1-Jk-l6h"/>
                     </view>
@@ -569,6 +577,7 @@
                     <connections>
                         <outlet property="centreDeckBottomCard" destination="ZfU-7r-fkV" id="Gxi-cD-iZo"/>
                         <outlet property="centreDeckTopCard" destination="RLX-br-lcM" id="3iT-gV-XfR"/>
+                        <outlet property="connectedPlayersLabel" destination="E59-cy-he7" id="hWE-JR-dUc"/>
                         <outlet property="playersTurnLabel" destination="0ZL-LF-T6o" id="RAP-V0-aCl"/>
                         <outlet property="startGameButton" destination="K4B-uO-uLm" id="XFn-1t-79i"/>
                         <outlet property="timeLabel" destination="BwQ-0L-Jfc" id="Pey-WJ-3Hl"/>

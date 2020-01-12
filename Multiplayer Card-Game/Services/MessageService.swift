@@ -46,7 +46,7 @@ class MessageService {
     }
     
     func sendGameStateMessage(state: GameState) {
-        let message = "\(MessageType.GameStateChange.rawValue)\(seperator)\(state)"
+        let message = "\(MessageType.GameStateChangeMessage.rawValue)\(seperator)\(state)"
         send(message: message) { (result) in
             //
         }
@@ -60,7 +60,7 @@ class MessageService {
     }
     
     func sendRemainingTime(timeString: String) {
-        let message = "\(MessageType.RemainingTime.rawValue)\(seperator)\(timeString)"
+        let message = "\(MessageType.RemainingTimeMessage.rawValue)\(seperator)\(timeString)"
         send(message: message) { result in
             //
         }
@@ -81,7 +81,7 @@ class MessageService {
     }
     
     func sendNextPlayerTurn(player: String) {
-        let message = "\(MessageType.NextPlayerTurn.rawValue)\(seperator)\(player)"
+        let message = "\(MessageType.NextPlayerTurnMessage.rawValue)\(seperator)\(player)"
         send(message: message) { result in
             //
         }
@@ -96,6 +96,13 @@ class MessageService {
     
     func sendClientGameOverToHost() {
         let message = "\(MessageType.GameOverClientMessage.rawValue)\(seperator)\(GameState.gameOver)"
+        sendToHost(message: message) { (result) in
+            //
+        }
+    }
+    
+    func sendClientPlayerNameToHost(name: String) {
+        let message = "\(MessageType.ClientNameMessage.rawValue)\(seperator)\(name)"
         sendToHost(message: message) { (result) in
             //
         }
@@ -181,6 +188,15 @@ class MessageService {
     }
     
     func getHostNameData(data: Data) -> String {
+        let message = String(data: data, encoding: .utf8)!
+        
+        let characterArray = message.split(separator: Character(seperator))
+        let messageArray = characterArray.map({ String($0) })
+        
+        return messageArray[1]
+    }
+    
+    func getClientPlayerName(data: Data) -> String {
         let message = String(data: data, encoding: .utf8)!
         
         let characterArray = message.split(separator: Character(seperator))

@@ -39,6 +39,7 @@ protocol GameServiceGameClientDelegate {
 protocol GameServiceGameHostDelegate {
     func clientPlayerTurnedCard(playerName: String, card: Card)
     func clientCardsSwapped(byPlayer: String, index: Int)
+    func clientPlayerName(playerName: String)
     func clientGameOverMessage()
 }
 
@@ -158,7 +159,7 @@ extension GameService: MCSessionDelegate {
         case .BoutWinnerMessage:
             let winnerName = messageService.winnerData(data: data)
             gameClientDelegate?.boutWinner(playerName: winnerName)
-        case .GameStateChange:
+        case .GameStateChangeMessage:
             let state = messageService.gameStateData(data: data)
             sessionDelegate?.stateChanged(newState: state)
         case .GameOverClientMessage:
@@ -166,7 +167,7 @@ extension GameService: MCSessionDelegate {
         case .GameWinnerMessage:
             let gameWinnerName = messageService.winnerData(data: data)
             gameClientDelegate?.winner(playerName: gameWinnerName)
-        case .GiveCardToPlayer:
+        case .GiveCardToPlayerMessage:
             let dict = messageService.cardExchangeData(data: data)
             let playerName = dict.keys.first!
             gameClientDelegate?.gaveCardToPlayer(card: dict[playerName]!, playerName: playerName)
@@ -178,7 +179,7 @@ extension GameService: MCSessionDelegate {
             let dict = messageService.cardExchangeData(data: data)
             let playerName = dict.keys.first!
             gameHostDelegate?.clientPlayerTurnedCard(playerName: playerName, card: dict[playerName]!)
-        case .RemainingTime:
+        case .RemainingTimeMessage:
             let time = messageService.timeData(data: data)
             gameClientDelegate?.remainingTime(time: time)
         case .CardsSwappedHostMessage:
@@ -191,13 +192,16 @@ extension GameService: MCSessionDelegate {
             let playerName = dict.keys.first!
             let index = dict[playerName]!
             gameHostDelegate?.clientCardsSwapped(byPlayer: playerName, index: index)
-        case .NextPlayerTurn:
+        case .NextPlayerTurnMessage:
             let nextPlayerName = messageService.nextPlaterData(data: data)
             gameClientDelegate?.nextPlayer(playerName: nextPlayerName)
         case .HostNameMessage:
             let hostName = messageService.getHostNameData(data: data)
             print("Game Host is:",hostName)
             gameClientDelegate?.gameHost(hostName: hostName)
+        case .ClientNameMessage:
+            let clientPlayerName = messageService.getClientPlayerName(data: data)
+            gameHostDelegate?.clientPlayerName(playerName: clientPlayerName)
         }
         
         sessionDelegate?.recievedData(data: message, fromPeerID: peerID)

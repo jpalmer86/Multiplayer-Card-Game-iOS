@@ -18,6 +18,7 @@ class GameViewController: UIViewController {
     @IBOutlet var startGameButton: UIButton!
     @IBOutlet var winnerDisplayLabel: UILabel!
     @IBOutlet var roundsWonLabel: [UILabel]!
+    @IBOutlet var connectedPlayersLabel: UILabel!
     
     @IBOutlet var middlePlayerCards: [CardView]! {
         didSet {
@@ -81,7 +82,18 @@ class GameViewController: UIViewController {
     }
     private var connectingAlert: UIAlertController?
     private let gameManager = GameManager.shared
-    private var playerNameArray: [String]!
+    private var playerNameArray: [String]! {
+        didSet {
+            var labelString = "Connected:\n"
+            for player in playerNameArray {
+                labelString += "\(player)\n"
+            }
+            DispatchQueue.main.async { [weak self] in
+                self?.connectedPlayersLabel?.text = labelString
+                self?.connectedPlayersLabel?.isHidden = false
+            }
+        }
+    }
     private let animationDuration = 0.8
     
     private var gameState: GameState! {
@@ -104,6 +116,7 @@ class GameViewController: UIViewController {
                         self.roundsWonLabel[index].isHidden = false
                     }
                     self.timeLabel.isHidden = false
+                    self.connectedPlayersLabel.isHidden = true
                 }
             case .decidingRoundWinner:
                 print("round winner decided")

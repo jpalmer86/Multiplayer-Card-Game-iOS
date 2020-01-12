@@ -107,3 +107,12 @@ extension JoinGameViewController: GameServiceBrowserDelegate {
         availableDevices = peers
     }
 }
+
+//MARK:- UITextField Delegate Methods
+extension JoinGameViewController: UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if let playerName = textField.text {
+            // set the player.playerName to this value
+        }
+    }
+}

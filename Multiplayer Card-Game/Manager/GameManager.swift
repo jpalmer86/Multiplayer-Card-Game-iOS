@@ -130,7 +130,7 @@ class GameManager {
             for playerIndex in 0..<players.count {
                 if let card = deck.draw() {
                     cardsForPlayer[playerIndex].append(card)
-                    gameService.messageService.sendCardExchangePlayerMessage(played: .GiveCardToPlayer, card: card, player: players[playerIndex].displayName)
+                    gameService.messageService.sendCardExchangePlayerMessage(played: .GiveCardToPlayerMessage, card: card, player: players[playerIndex].displayName)
                     uiHandler(.success((card,players[playerIndex])))
                 } else {
                     print("Error getting the card from the deck")
@@ -330,6 +330,10 @@ extension GameManager: GameServiceGameHostDelegate {
         let playerIndex = playerNames.firstIndex(of: byPlayer)!
         let player = players[playerIndex]
         swapCard(player: player, index: index)
+    }
+    
+    func clientPlayerName(playerName: String) {
+        // set the name of the player
     }
     
     func clientGameOverMessage() {
