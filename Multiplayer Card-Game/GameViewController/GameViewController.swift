@@ -20,57 +20,11 @@ class GameViewController: UIViewController {
     @IBOutlet var roundsWonLabel: [UILabel]!
     @IBOutlet var connectedPlayersLabel: UILabel!
     
-    @IBOutlet var middlePlayerCards: [CardView]! {
-        didSet {
-            for index in 0..<middlePlayerCards.count {
-                if index == 1 || index == 3 {
-                    let rotationDirection: CGFloat = index == 1 ? -1 : 1
-                    self.middlePlayerCards[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
-                }
-            }
-        }
-    }
-    
-    @IBOutlet var playerCardsWon: [CardView]! {
-        didSet {
-            for index in 0..<playerCardsWon.count {
-                if index == 1 || index == 3 {
-                    let rotationDirection: CGFloat = index == 1 ? -1 : 1
-                    self.playerCardsWon[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
-                }
-            }
-        }
-    }
-    @IBOutlet var playerDeckBottomCard: [CardView]! {
-        didSet {
-            for index in 0..<playerDeckBottomCard.count {
-                if index == 1 || index == 3 {
-                    let rotationDirection: CGFloat = index == 1 ? -1 : 1
-                    self.playerDeckBottomCard[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
-                }
-            }
-        }
-    }
-    @IBOutlet var playerDeckTopCard: [CardView]! {
-        didSet {
-            for index in 0..<playerDeckTopCard.count {
-                if index == 1 || index == 3 {
-//                    let rotationDirection: CGFloat = index == 1 ? -1 : 1
-//                    self.playerDeckTopCard[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
-                }
-            }
-        }
-    }
-    @IBOutlet var playerThrownCards: [CardView]! {
-        didSet {
-            for index in 0..<playerThrownCards.count {
-                if index == 1 || index == 3 {
-                    let rotationDirection: CGFloat = index == 1 ? -1 : 1
-                    self.playerThrownCards[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
-                }
-            }
-        }
-    }
+    @IBOutlet var middlePlayerCards: [CardView]!
+    @IBOutlet var playerCardsWon: [CardView]!
+    @IBOutlet var playerDeckBottomCard: [CardView]!
+    @IBOutlet var playerDeckTopCard: [CardView]!
+    @IBOutlet var playerThrownCards: [CardView]!
     
     //MARK:- Property variables
     private var connectedPlayers: [MCPeerID]! {
@@ -202,6 +156,8 @@ class GameViewController: UIViewController {
         gameState = .waitingForPlayers
         centreDeckTopCard.isHidden = true
         centreDeckBottomCard.isHidden = true
+        
+        rotateCardViewArray(cardViewsArray: [playerCardsWon, playerDeckBottomCard, middlePlayerCards])
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -266,7 +222,7 @@ class GameViewController: UIViewController {
                 let translateDistance = Constants.translateDistance[index]
                 let translationX: CGFloat = translateDirection.x * translateDistance.x
                 let translationY: CGFloat = translateDirection.y * translateDistance.y
-                UIView.animate(withDuration: 0.0 /*self.animationDuration*/, delay: 0.0, options: [.curveEaseIn], animations: {
+                UIView.animate(withDuration: 0.0 * self.animationDuration, delay: 0.0, options: [.curveEaseIn], animations: {
                     self.centreDeckTopCard.transform = .init(translationX: translationX, y: translationY)
                 },completion: { finish in
                         self.middlePlayerCards[index].isHidden = false
@@ -285,7 +241,7 @@ class GameViewController: UIViewController {
                 let translateDistance = Constants.translateDistance[index]
                 let translationX: CGFloat = translateDirection.x * translateDistance.x
                 let translationY: CGFloat = translateDirection.y * translateDistance.y
-                UIView.animate(withDuration: 0.5, delay: 0.0, options: [.curveEaseIn], animations: {
+                UIView.animate(withDuration: self.animationDuration - 0.2, delay: 0.0, options: [.curveEaseIn], animations: {
                     self.middlePlayerCards[index].transform = .init(translationX: -translationX, y: -translationY)
                 },completion: { finish in
                     self.middlePlayerCards[index].isFaceUp = false
@@ -293,6 +249,9 @@ class GameViewController: UIViewController {
                     self.playerThrownCards[index].suit = card.suit.description
                     self.playerThrownCards[index].isHidden = false
                     self.middlePlayerCards[index].transform = .identity
+                    if index == 1 || index == 3 {
+                        self.rotateCardViewArray(cardViewsArray: [self.middlePlayerCards])
+                    }
                     if self.isHost {
                         self.gameState = .playing
                     }
@@ -354,6 +313,17 @@ class GameViewController: UIViewController {
                     }
                 } else {
                     self.playerDeckBottomCard[index].isHidden = false
+                }
+            }
+        }
+    }
+    
+    private func rotateCardViewArray(cardViewsArray: [[CardView]]) {
+        for cardViewArray in cardViewsArray {
+            for index in 0..<cardViewArray.count {
+                if index == 1 || index == 3 {
+                    let rotationDirection: CGFloat = index == 1 ? -1 : 1
+                    cardViewArray[index].transform = .init(rotationAngle: rotationDirection * CGFloat.pi/2)
                 }
             }
         }

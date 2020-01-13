@@ -200,7 +200,7 @@ class GameManager {
     private func getBoutWinnerIndex() -> Int {
         var winnerIndex = 0
         for index in 1..<cardsInCentre.count {
-            if cardsInCentre[index].rank.order > cardsInCentre[winnerIndex].rank.order {
+            if cardsInCentre[index] > cardsInCentre[winnerIndex] {
                 winnerIndex = index
             }
         }
