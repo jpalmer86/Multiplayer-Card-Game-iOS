@@ -84,7 +84,7 @@ class GameViewController: UIViewController {
     private let gameManager = GameManager.shared
     private var playerNameArray: [String]! {
         didSet {
-            var labelString = "Connected:\n"
+            var labelString = "CONNECTED:\n"
             for player in playerNameArray {
                 labelString += "\(player)\n"
             }
