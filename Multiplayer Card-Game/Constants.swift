@@ -20,10 +20,10 @@ struct Constants {
     
     //MARK:- Other Constants
     static let distributeDirection = [CGPoint(x: 0.0, y: 1.0),CGPoint(x: 1.0, y: 0.0),CGPoint(x: 0.0, y: -1.0),CGPoint(x: -1.0, y: 0.0)]
-    static let translateDistance = [CGPoint(x: 0.0, y: 16.0),CGPoint(x: 128.0, y: 0.0),CGPoint(x: 0.0, y: -16.0),CGPoint(x: -128.0, y: 0.0)]
+    static let translateDistance = [CGPoint(x: 0.0, y: 32.0),CGPoint(x: 128.0, y: 0.0),CGPoint(x: 0.0, y: -32.0),CGPoint(x: -128.0, y: 0.0)]
     
     static let gameTime = [3 * 60]
-    static let minimumPlayersNeeded = [2]
+    static let minimumPlayersNeeded = [1]
     
     static let shadowColor = UIColor.black.cgColor
     static let shadowOffset = CGSize(width: 2, height: 2)
