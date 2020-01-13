@@ -57,7 +57,7 @@ class GameManager {
     var delegate: GameManagerDelegate?
     var cardsDelegate: GameCardManagerDelegate?
 
-    let minPlayersNeeded = 1
+    let minPlayersNeeded = Constants.minimumPlayersNeeded[0]
     var playerNames: [String]!
     var players: [MCPeerID]! {
         didSet {

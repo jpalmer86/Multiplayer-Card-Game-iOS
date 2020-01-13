@@ -23,6 +23,7 @@ struct Constants {
     static let translateDistance = [CGPoint(x: 0.0, y: 16.0),CGPoint(x: 128.0, y: 0.0),CGPoint(x: 0.0, y: -16.0),CGPoint(x: -128.0, y: 0.0)]
     
     static let gameTime = [3 * 60]
+    static let minimumPlayersNeeded = [2]
     
     static let shadowColor = UIColor.black.cgColor
     static let shadowOffset = CGSize(width: 2, height: 2)

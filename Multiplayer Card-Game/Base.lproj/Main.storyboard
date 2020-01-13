@@ -621,76 +621,76 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleAspectFit" axis="vertical" distribution="fillEqually" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="2Vb-Mh-3r0">
-                                <rect key="frame" x="275" y="22.5" width="561" height="299"/>
+                                <rect key="frame" x="314" y="56" width="522" height="232"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleAspectFit" distribution="fillEqually" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="e4w-5p-t2S">
-                                        <rect key="frame" x="0.0" y="0.0" width="561" height="145.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="522" height="112"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m6p-r5-Pcz" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="87" height="145.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="80.5" height="112"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="f5E-Yz-4ft" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                                <rect key="frame" x="95" y="0.0" width="86.5" height="145.5"/>
+                                                <rect key="frame" x="88.5" y="0.0" width="80" height="112"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9XT-ad-OIF" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                                <rect key="frame" x="189.5" y="0.0" width="87" height="145.5"/>
+                                                <rect key="frame" x="176.5" y="0.0" width="80.5" height="112"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ws7-Bo-gZ9" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                                <rect key="frame" x="284.5" y="0.0" width="87" height="145.5"/>
+                                                <rect key="frame" x="265" y="0.0" width="80.5" height="112"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SsF-nK-r0r" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                                <rect key="frame" x="379.5" y="0.0" width="86.5" height="145.5"/>
+                                                <rect key="frame" x="353.5" y="0.0" width="80" height="112"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NAJ-6W-sXH" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                                <rect key="frame" x="474" y="0.0" width="87" height="145.5"/>
+                                                <rect key="frame" x="441.5" y="0.0" width="80.5" height="112"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="xz5-to-TeF">
-                                        <rect key="frame" x="0.0" y="153.5" width="561" height="145.5"/>
+                                        <rect key="frame" x="0.0" y="120" width="522" height="112"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nwH-hz-lIF" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                                <rect key="frame" x="0.0" y="0.0" width="87" height="145.5"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="80.5" height="112"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9U3-FH-8Vj" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                                <rect key="frame" x="95" y="0.0" width="86.5" height="145.5"/>
+                                                <rect key="frame" x="88.5" y="0.0" width="80" height="112"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oZ0-T4-lWs" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                                <rect key="frame" x="189.5" y="0.0" width="87" height="145.5"/>
+                                                <rect key="frame" x="176.5" y="0.0" width="80.5" height="112"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7ME-0Y-RGJ" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                                <rect key="frame" x="284.5" y="0.0" width="87" height="145.5"/>
+                                                <rect key="frame" x="265" y="0.0" width="80.5" height="112"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fnh-8X-CRw" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                                <rect key="frame" x="379.5" y="0.0" width="86.5" height="145.5"/>
+                                                <rect key="frame" x="353.5" y="0.0" width="80" height="112"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pkQ-Kt-oaO" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                                <rect key="frame" x="474" y="0.0" width="87" height="145.5"/>
+                                                <rect key="frame" x="441.5" y="0.0" width="80.5" height="112"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                         </subviews>
                                     </stackView>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="2Vb-Mh-3r0" secondAttribute="height" multiplier="15:8" id="0EI-gp-Lkh"/>
+                                    <constraint firstAttribute="width" secondItem="2Vb-Mh-3r0" secondAttribute="height" multiplier="18:8" id="0EI-gp-Lkh"/>
                                 </constraints>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZVw-zV-TYo" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                <rect key="frame" x="64" y="16" width="195" height="312"/>
+                                <rect key="frame" x="64" y="16" width="234" height="312"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="ZVw-zV-TYo" secondAttribute="height" multiplier="2.5:4" id="YgZ-as-c6g"/>
+                                    <constraint firstAttribute="width" secondItem="ZVw-zV-TYo" secondAttribute="height" multiplier="3:4" id="YgZ-as-c6g"/>
                                 </constraints>
                             </view>
                         </subviews>

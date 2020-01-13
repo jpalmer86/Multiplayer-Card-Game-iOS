@@ -241,7 +241,7 @@ class GameViewController: UIViewController {
                 let translateDistance = Constants.translateDistance[index]
                 let translationX: CGFloat = translateDirection.x * translateDistance.x
                 let translationY: CGFloat = translateDirection.y * translateDistance.y
-                UIView.animate(withDuration: self.animationDuration - 0.2, delay: 0.0, options: [.curveEaseIn], animations: {
+                UIView.animate(withDuration: self.animationDuration / 2, delay: 0.0, options: [.curveEaseIn], animations: {
                     self.middlePlayerCards[index].transform = .init(translationX: -translationX, y: -translationY)
                 },completion: { finish in
                     self.middlePlayerCards[index].isFaceUp = false
