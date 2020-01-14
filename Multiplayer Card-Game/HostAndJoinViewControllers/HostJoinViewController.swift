@@ -10,6 +10,7 @@ import UIKit
 
 class HostJoinViewController: UIViewController {
     //MARK:- IBOutlets
+    
     @IBOutlet var joinGameButton: UIButton! {
         didSet {
             joinGameButton.layer.cornerRadius = 10
@@ -30,11 +31,13 @@ class HostJoinViewController: UIViewController {
     }
     
     //MARK:- Property variables
+    
     var game: Game!
     let joinSegueIdentifier = "Active Game segue"
     let startGameSegureIdentifier = "Start Game segue"
     
     //MARK:- Lifecycle Hooks
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Play"
@@ -55,6 +58,7 @@ class HostJoinViewController: UIViewController {
     }
 
     // MARK: - Navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == joinSegueIdentifier {
             if let joinVC = segue.destination as? JoinGameViewController {
@@ -71,6 +75,7 @@ class HostJoinViewController: UIViewController {
     }
     
     //MARK:- ViewController Methods
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
             return .lightContent
       }

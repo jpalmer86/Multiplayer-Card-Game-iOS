@@ -10,6 +10,7 @@ import UIKit
 
 class GameTableViewController: UIViewController {
     //MARK:- IBOutlets
+    
     @IBOutlet var tableView: UITableView! {
         didSet {
             tableView.delegate = self
@@ -19,6 +20,7 @@ class GameTableViewController: UIViewController {
     }
     
     //MARK:- Member Variables
+    
     var games = [Game]() {
         didSet {
             tableView?.reloadData()
@@ -27,6 +29,7 @@ class GameTableViewController: UIViewController {
     private let segueIdentifier = "Host Join Game"
     
     //MARK:- Lifecycle Hooks
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         registerTableViewCell()
@@ -48,6 +51,7 @@ class GameTableViewController: UIViewController {
     }
     
     // MARK: - Navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == segueIdentifier {
             if let hostJoinVC = segue.destination as? HostJoinViewController {
@@ -59,11 +63,13 @@ class GameTableViewController: UIViewController {
     }
     
     //MARK:- ViewController Methods
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
           return .lightContent
     }
     
     //MARK:- Custom Methods
+    
     private func registerTableViewCell() {
         let tableViewCell = UINib(nibName: "GameTableViewCell", bundle: nil)
         self.tableView?.register(tableViewCell, forCellReuseIdentifier: "GameTableViewCell")
@@ -71,6 +77,7 @@ class GameTableViewController: UIViewController {
 }
 
 //MARK:- UITableViewDelegate Methods
+
 extension GameTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: segueIdentifier, sender: tableView.cellForRow(at: indexPath))
@@ -82,6 +89,7 @@ extension GameTableViewController: UITableViewDelegate {
 }
 
 //MARK:- UITableViewDataSource Methods
+
 extension GameTableViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return games.count
@@ -101,6 +109,7 @@ extension GameTableViewController: UITableViewDataSource {
 }
 
 //MARK:- NavigationController Status Bar Extension
+
 extension UINavigationController {
    open override var preferredStatusBarStyle: UIStatusBarStyle {
       return topViewController?.preferredStatusBarStyle ?? .default

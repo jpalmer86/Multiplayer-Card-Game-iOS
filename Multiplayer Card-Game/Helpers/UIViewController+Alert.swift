@@ -9,6 +9,7 @@
 import UIKit
 
 //MARK:- UIViewController Extension
+
 extension UIViewController
 {
     func alert(title: String?, message: String?, completion: @escaping (Bool) -> Void)

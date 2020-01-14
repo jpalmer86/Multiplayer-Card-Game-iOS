@@ -10,10 +10,12 @@ import Foundation
 
 struct Deck {
     //MARK:- Property Variables
+    
     //private(set) means that we can view the variable outside the class but can't set it's value
     private(set) var cards = [Card]()
 
     //MARK:- Initializers
+    
     init() {
         for suit in Card.Suit.allSuits {
             for rank in Card.Rank.allRanks {
@@ -27,6 +29,7 @@ struct Deck {
 //    }
         
     //MARK:- Member Functions
+    
     mutating func draw() -> Card? {
         if cards.count > 0{
             return cards.remove(at : cards.count.random)

@@ -12,6 +12,7 @@ import MultipeerConnectivity
 class MessageService {
     
     //MARK:- Property Variables
+    
     static let shared = MessageService()
     private var hostPeerID: MCPeerID!
     private let seperator = "-"
@@ -19,9 +20,11 @@ class MessageService {
     private var session: MCSession!
     
     //MARK:- Initializers
+    
     private init() { }
     
     //MARK:- Member Methods
+    
     func setSession(mcSession: MCSession) {
         self.session = mcSession
     }
@@ -31,6 +34,7 @@ class MessageService {
     }
     
     //MARK:- Sending Methods
+    
     func sendCardExchangePlayerMessage(played: MessageType, card: Card, player: String) {
         let message = "\(played.rawValue)\(seperator)\(card)\(seperator)\(player)"
         
@@ -109,6 +113,7 @@ class MessageService {
     }
     
     //MARK:- Retrieval Methods
+    
     func cardExchangeData(data: Data) -> [String:Card] {
         let message = String(data: data, encoding: .utf8)!
          
@@ -206,6 +211,7 @@ class MessageService {
     }
         
     //MARK:- Private Methods
+    
     private func send(message: String, completion: @escaping (Result<Data,Error>) -> Void) {
         let data = message.data(using: .utf8)!
         if session.connectedPeers.count > 0 {

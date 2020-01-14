@@ -11,6 +11,7 @@ import MultipeerConnectivity
 
 class GameViewController: UIViewController {
     //MARK:- IBOutlets
+    
     @IBOutlet var timeLabel: UILabel!
     @IBOutlet var playersTurnLabel: UILabel!
     @IBOutlet var centreDeckTopCard: CardView!
@@ -27,6 +28,7 @@ class GameViewController: UIViewController {
     @IBOutlet var playerThrownCards: [CardView]!
     
     //MARK:- Property variables
+    
     private var connectedPlayers: [MCPeerID]! {
         didSet {
             playerNameArray = connectedPlayers.map({ $0.displayName })
@@ -113,6 +115,7 @@ class GameViewController: UIViewController {
     var isHost = false
 
     //MARK:- IBAction Methods
+    
     @IBAction func startNewGame(_ sender: UIButton) {
         if connectedPlayers.count >= gameManager.minPlayersNeeded {
             gameManager.sendHostID(name: gameService.getPeerID().displayName)
@@ -136,6 +139,7 @@ class GameViewController: UIViewController {
     }
     
     //MARK:- Lifecycle Hooks
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         gameManager.delegate = self
@@ -171,6 +175,7 @@ class GameViewController: UIViewController {
     }
     
     //MARK:- ViewController Methods
+    
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .landscapeLeft
     }
@@ -184,6 +189,7 @@ class GameViewController: UIViewController {
       }
     
     //MARK:- Custom Methods
+    
     private func startGame() {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
@@ -331,6 +337,7 @@ class GameViewController: UIViewController {
 }
 
 //MARK:- GameService Session Delegate Methods
+
 extension GameViewController: GameServiceSessionDelegate {
     
     func connectedWithPeer(peerID: MCPeerID) {
@@ -372,6 +379,7 @@ extension GameViewController: GameServiceSessionDelegate {
 }
 
 //MARK:- GameService Advertiser Delegate Methods
+
 extension GameViewController: GameServiceAdvertiserDelegate {
     
     func invitationWasReceived(fromPeer: String, handler: @escaping (Bool, MCSession?) -> Void, session: MCSession) {
@@ -385,6 +393,7 @@ extension GameViewController: GameServiceAdvertiserDelegate {
 }
 
 //MARK:- GameManager Delegate Methods
+
 extension GameViewController: GameManagerDelegate {
 
     func roundWinner(winner: MCPeerID) {
@@ -426,9 +435,9 @@ extension GameViewController: GameManagerDelegate {
     }
     
     func roundsWonPerPlayer(wonCountArray: [Int]) {
-        DispatchQueue.main.async { [unowned self] in
+        DispatchQueue.main.async { [weak self] in
             for (index,roundsWon) in wonCountArray.enumerated() {
-                self.roundsWonLabel[index].text = "Won: \(roundsWon)"
+                self?.roundsWonLabel[index].text = "Won: \(roundsWon)"
             }
         }
     }

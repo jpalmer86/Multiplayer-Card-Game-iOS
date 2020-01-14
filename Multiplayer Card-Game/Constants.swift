@@ -12,6 +12,7 @@ var gameService = GameService.shared
 
 struct Constants {
     //MARK:- Games
+    
     static private let CRAZY8S = Game(name: "Crazy 8's",
                                       serviceType: "crazy8-service",
                                       image: UIImage(imageLiteralResourceName: "c8i"),
@@ -19,6 +20,7 @@ struct Constants {
                                       gameDescription: "A game where the first person to get rid of all their cards win!")
     
     //MARK:- Other Constants
+    
     static let distributeDirection = [CGPoint(x: 0.0, y: 1.0),CGPoint(x: 1.0, y: 0.0),CGPoint(x: 0.0, y: -1.0),CGPoint(x: -1.0, y: 0.0)]
     static let translateDistance = [CGPoint(x: 0.0, y: 32.0),CGPoint(x: 128.0, y: 0.0),CGPoint(x: 0.0, y: -32.0),CGPoint(x: -128.0, y: 0.0)]
     
@@ -32,7 +34,8 @@ struct Constants {
     
     static let gameCardRadius: CGFloat = 42
     
-    //MARK:- Method to get information of all games 
+    //MARK:- Method to get information of all games
+    
     static func getAllGamesInfo() -> [Game] {
         var games = [Game]()
         games.append(CRAZY8S)

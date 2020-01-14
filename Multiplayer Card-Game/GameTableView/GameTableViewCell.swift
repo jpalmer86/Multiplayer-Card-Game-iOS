@@ -11,6 +11,7 @@ import UIKit
 class GameTableViewCell: UITableViewCell {
 
     //MARK:- IBOutlets
+    
     @IBOutlet var gameNameLabel: UILabel! {
         didSet {
             gameNameLabel.font = UIFont(name:"HelveticaNeue-Bold", size: gameNameLabel.font.pointSize)
@@ -25,6 +26,7 @@ class GameTableViewCell: UITableViewCell {
     @IBOutlet var gameImageView: UIImageView!
     
     //MARK:- Property variables
+    
     var game: Game! {
         didSet {
             gameNameLabel?.text = game.name
@@ -39,6 +41,7 @@ class GameTableViewCell: UITableViewCell {
     }
     
     //MARK:- Lifecycle Hooks
+    
     override func awakeFromNib() {
         super.awakeFromNib()
 

@@ -10,9 +10,11 @@ import UIKit
 
 class PlayerCardsViewController: UIViewController {
     //MARK:- IBOutlets
+    
     @IBOutlet var cardViews: [CardView]!
     
     //MARK:- Property Variables
+    
     private let gameManager = GameManager.shared
     var cards: [Card]? {
         didSet {
@@ -21,6 +23,7 @@ class PlayerCardsViewController: UIViewController {
     }
     
     //MARK:- Lifecycle Hooks
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         gameManager.cardsDelegate = self
@@ -50,6 +53,7 @@ class PlayerCardsViewController: UIViewController {
     }
     
     //MARK:- ViewController Methods
+    
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .landscapeLeft
     }
@@ -63,6 +67,7 @@ class PlayerCardsViewController: UIViewController {
       }
     
     //MARK:- Custom Methods
+    
     private func updateUI() {
         DispatchQueue.main.async { [unowned self] in
             guard let cards = self.cards else { return }
@@ -88,6 +93,7 @@ class PlayerCardsViewController: UIViewController {
 }
 
 //MARK:- GameCard Manager Delegate Methods
+
 extension PlayerCardsViewController: GameCardManagerDelegate {
     func cardsSwapped(updatedCards: [Card]) {
         cards = updatedCards

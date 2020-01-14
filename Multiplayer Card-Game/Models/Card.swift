@@ -9,12 +9,14 @@
 struct Card : CustomStringConvertible, Comparable {
     
     //MARK:- Property Variables
+    
     var suit: Suit
     var rank: Rank
     
     var description: String{ return "\(rank) \(suit)"}
     
     //MARK:- Enum Suit
+    
     enum Suit : String, CustomStringConvertible, Equatable {
 
         var description: String {
@@ -30,6 +32,7 @@ struct Card : CustomStringConvertible, Comparable {
     }
     
     //MARK:- Enum Rank
+    
     enum Rank: CustomStringConvertible, Comparable {
         
         var description: String {

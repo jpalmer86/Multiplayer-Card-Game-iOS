@@ -16,6 +16,7 @@ class CardView: UIView {
     //    setNeedDisplay is called to redraw the view
     
     //MARK:- PlayingCardView member variables
+    
     @IBInspectable
     var rank : Int = 11 {didSet{setNeedsLayout() ; setNeedsDisplay()}}
     
@@ -41,6 +42,7 @@ class CardView: UIView {
     
     
     //MARK:- PlayingCardView member functions
+    
     @objc func adjustFaceCardScale(byHandlingGestureRecognizedBy recognizer :UIPinchGestureRecognizer) {
         switch recognizer.state {
         case .changed,.ended:
@@ -192,6 +194,7 @@ class CardView: UIView {
 }
 
 //MARK:- PlayingCardView extensions
+
 extension CardView {
     
     private struct sizeRatio {

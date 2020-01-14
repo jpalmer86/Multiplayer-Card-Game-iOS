@@ -9,6 +9,7 @@
 import MultipeerConnectivity
 
 //MARK:- GameManager Protocol
+
 protocol GameManagerDelegate {
     func roundWinner(winner: MCPeerID)
     func gameWinner(winner: MCPeerID)
@@ -26,6 +27,7 @@ protocol GameCardManagerDelegate {
 
 class GameManager {
     //MARK:- Property Variables
+    
     static var shared = GameManager()
     private var deck: Deck!
     private let numberOfCardsPerPlayer = 13
@@ -93,9 +95,11 @@ class GameManager {
     }
     
     //MARK:- Initializers
+    
     private init() {  }
     
     //MARK:- Member Methods
+    
     func setAsHost(host: Bool) {
         isHost = host
         if isHost {
@@ -179,6 +183,7 @@ class GameManager {
     }
     
     //MARK:- Private Methods
+    
     private func throwCardInCenterClient(player: MCPeerID, card: Card) {
         cardsInCentre.append(card)
         let playerIndex = players.firstIndex(of: player)!
@@ -268,6 +273,7 @@ class GameManager {
 }
 
 //MARK:- GameService Game Client Delegate Methods
+
 extension GameManager: GameServiceGameClientDelegate {
     func gameHost(hostName: String) {
         let hostID = players[playerNames.firstIndex(of: hostName)!]
@@ -320,6 +326,7 @@ extension GameManager: GameServiceGameClientDelegate {
 }
 
 //MARK:- GameService Game Host Delegate Methods
+
 extension GameManager: GameServiceGameHostDelegate {
     func clientPlayerTurnedCard(playerName: String, card: Card) {
         let playerID = players[playerNames.firstIndex(of: playerName)!]

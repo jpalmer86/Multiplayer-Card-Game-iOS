@@ -8,6 +8,7 @@
 
 import UIKit
 //MARK:- CGRect extensions
+
 extension CGRect {
     var leftHalf : CGRect {
         return CGRect(x: minX ,y: minY, width: width/2, height: height)

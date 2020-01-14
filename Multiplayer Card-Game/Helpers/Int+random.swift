@@ -9,6 +9,7 @@
 import Foundation
 
 //MARK:- Int Extension
+
 extension Int {
     var random : Int {
         if self > 0 {

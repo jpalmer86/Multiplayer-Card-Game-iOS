@@ -12,6 +12,7 @@ import MultipeerConnectivity
 class JoinGameViewController: UIViewController {
 
     //MARK:- IBOutlets
+    
     @IBOutlet var playerNameTextField: UITextField!
     @IBOutlet var lobbiesTableView: UITableView! {
         didSet {
@@ -22,6 +23,7 @@ class JoinGameViewController: UIViewController {
     }
     
     //MARK:- Property Variables
+    
     let segueIdentifier = "Join Existing Segue"
     var game: Game!
     var availableDevices = [MCPeerID]() {
@@ -34,6 +36,7 @@ class JoinGameViewController: UIViewController {
     }
     
     //MARK:- Lifecycle Hooks
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         gameService.browserDelegate = self
@@ -55,6 +58,7 @@ class JoinGameViewController: UIViewController {
     }
     
     // MARK: - Navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == segueIdentifier {
             if let tabBarVC = segue.destination as? UITabBarController, let gameVC = tabBarVC.viewControllers?.first {
@@ -68,12 +72,14 @@ class JoinGameViewController: UIViewController {
     }
     
     //MARK:- ViewController Methods
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
             return .lightContent
       }
 }
 
 //MARK:- UITableView Delegate Methods
+
 extension JoinGameViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         gameService.invitePeer(peerID: availableDevices[indexPath.item])
@@ -82,6 +88,7 @@ extension JoinGameViewController: UITableViewDelegate {
 }
 
 //MARK:- UITableView Datasource Delegate
+
 extension JoinGameViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return availableDevices.count
@@ -101,6 +108,7 @@ extension JoinGameViewController: UITableViewDataSource {
 }
 
 //MARK:- GameService Browser Delegate Methods
+
 extension JoinGameViewController: GameServiceBrowserDelegate {
     
     func updatedPeers(peers: [MCPeerID]) {
@@ -109,6 +117,7 @@ extension JoinGameViewController: GameServiceBrowserDelegate {
 }
 
 //MARK:- UITextField Delegate Methods
+
 extension JoinGameViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         if let playerName = textField.text {

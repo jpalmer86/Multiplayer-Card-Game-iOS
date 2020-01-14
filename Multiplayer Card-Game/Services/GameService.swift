@@ -10,6 +10,7 @@
 import MultipeerConnectivity
 
 //MARK:- Protocols
+
 protocol GameServiceBrowserDelegate {
     func updatedPeers(peers: [MCPeerID])
 }
@@ -44,8 +45,10 @@ protocol GameServiceGameHostDelegate {
 }
 
 //MARK:- Service Class
+
 class GameService: NSObject {
     // MARK:- Property Variables
+    
     static var shared = GameService()
     var browserDelegate: GameServiceBrowserDelegate?
     var advertiserDelegate: GameServiceAdvertiserDelegate?
@@ -72,6 +75,7 @@ class GameService: NSObject {
     }
         
     //MARK:- Constructor
+    
     private override init() {
         super.init()
         myPeerID = MCPeerID(displayName: UIDevice.current.name)
@@ -79,6 +83,7 @@ class GameService: NSObject {
     }
     
     //MARK:- Member Methods
+    
     func setServiceType(serviceType: String) {
         self.serviceType = serviceType
         setUpService()
@@ -114,6 +119,7 @@ class GameService: NSObject {
     }
     
     //MARK:- Private methods
+    
     private func setUpService() {
         if serviceType != "" {
             advertiser = MCNearbyServiceAdvertiser(peer: myPeerID, discoveryInfo: nil, serviceType: serviceType)
