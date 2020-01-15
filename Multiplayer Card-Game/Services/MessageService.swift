@@ -172,7 +172,7 @@ class MessageService {
         return [playerName: index]
     }
     
-    func nextPlaterData(data: Data) -> String {
+    func nextPlayerData(data: Data) -> String {
         let message = String(data: data, encoding: .utf8)!
         
         let characterArray = message.split(separator: Character(seperator))

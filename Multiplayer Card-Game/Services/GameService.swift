@@ -199,7 +199,7 @@ extension GameService: MCSessionDelegate {
             let index = dict[playerName]!
             gameHostDelegate?.clientCardsSwapped(byPlayer: playerName, index: index)
         case .NextPlayerTurnMessage:
-            let nextPlayerName = messageService.nextPlaterData(data: data)
+            let nextPlayerName = messageService.nextPlayerData(data: data)
             gameClientDelegate?.nextPlayer(playerName: nextPlayerName)
         case .HostNameMessage:
             let hostName = messageService.getHostNameData(data: data)

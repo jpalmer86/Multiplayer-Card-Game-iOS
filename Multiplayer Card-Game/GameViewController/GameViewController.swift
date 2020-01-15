@@ -33,7 +33,7 @@ class GameViewController: UIViewController {
         didSet {
             playerNameArray = connectedPlayers.map({ $0.displayName })
             print(playerNameArray)
-            self.gameManager.newGame(playersArray: self.connectedPlayers)
+            self.gameManager.newGame(playersArray: self.connectedPlayers, newGame: game)
         }
     }
     private var connectingAlert: UIAlertController?

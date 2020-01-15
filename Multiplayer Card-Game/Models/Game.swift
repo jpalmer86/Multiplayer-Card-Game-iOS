@@ -14,4 +14,6 @@ struct Game {
     let image: UIImage
     let playerDescription: String
     let gameDescription: String
+    let minPlayers: Int
+    let gameTime: Int
 }

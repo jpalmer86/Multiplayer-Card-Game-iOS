@@ -40,7 +40,7 @@ class GameManager {
         }
     }
     private var timer: Timer? = nil
-    private var timeLeft = Constants.gameTime[0] {
+    private var timeLeft = 0 {
         didSet {
             self.delegate?.timeRemaining(timeString: self.getTimeString())
             if timeLeft == 0 {
@@ -49,17 +49,19 @@ class GameManager {
                     gameService.messageService.sendWinnerMessage(bout: .GameWinnerMessage, player: winner.displayName)
                     delegate?.gameWinner(winner: winner)
                     self.stopTimer()
-                    timeLeft = Constants.gameTime[0]
+                    timeLeft = game.gameTime
                 }
             }
         }
     }
     private var isHost = true
     
+    private var game: Game!
+    
     var delegate: GameManagerDelegate?
     var cardsDelegate: GameCardManagerDelegate?
 
-    let minPlayersNeeded = Constants.minimumPlayersNeeded[0]
+    var minPlayersNeeded = 0
     var playerNames: [String]!
     var players: [MCPeerID]! {
         didSet {
@@ -113,14 +115,16 @@ class GameManager {
         gameService.messageService.sendHostName(player: name)
     }
     
-    func newGame(playersArray: [MCPeerID]) {
+    func newGame(playersArray: [MCPeerID], newGame: Game) {
+        game = newGame
+        minPlayersNeeded = game.minPlayers
         players = playersArray
         playerCount = players.count
         deck = Deck()
         cardsInCentre = [Card]()
         cardsForPlayer = [[Card]]()
         cardsWonPerPlayer = [[Card]]()
-        timeLeft = Constants.gameTime[0]
+        timeLeft = game.gameTime
         roundsWonPerPlayer = [Int]()
         for _ in 0..<players.count {
             cardsForPlayer.append([Card]())
@@ -293,7 +297,7 @@ extension GameManager: GameServiceGameClientDelegate {
         let winner = players[playerIndex]
         delegate?.gameWinner(winner: winner)
         self.stopTimer()
-        timeLeft = Constants.gameTime[0]
+        timeLeft = game.gameTime
         print("Winner is: ", playerName)
     }
     
