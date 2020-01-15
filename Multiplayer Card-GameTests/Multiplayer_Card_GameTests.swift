@@ -72,11 +72,10 @@ class Multiplayer_Card_GameTests: XCTestCase {
     
     func test_DistributedCards() {
         XCTAssertEqual(sut1.cardsForPlayer[0].count, 0, "CardsForPlayer Array not initialized")
-        var distributedCards = 0
         sut1.distributeCards { (result) in
             switch result {
             case .success(_, _):
-                distributedCards += 1
+                print("distributedCards + 1")
             case .failure(let error):
                 print("Failed to get the card, Error: \(error.localizedDescription)")
             }

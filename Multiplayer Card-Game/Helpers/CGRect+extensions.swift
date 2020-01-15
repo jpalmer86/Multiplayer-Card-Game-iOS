@@ -30,5 +30,4 @@ extension CGRect {
         //        a +ve sign of the dx means decrease in size ,and -ve means an increase in size
         return insetBy(dx: (width - newWidth)/2, dy: (height - newHeight)/2)
     }
-    
 }

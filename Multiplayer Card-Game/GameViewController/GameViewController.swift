@@ -365,6 +365,8 @@ extension GameViewController: GameServiceSessionDelegate {
             self.connectedPlayers.removeAll(where: {$0 == peerID})
             if self.gameState == GameState.waitingForPlayers && self.isHost {
                 self.showOnlyAlert(title: "\(peerID.displayName) Left", message: "\(peerID.displayName) disconnected from the game.")
+            } else if !self.isHost {
+                self.dismiss(animated: true, completion: nil)
             }
         }
     }
@@ -384,9 +386,6 @@ extension GameViewController: GameServiceAdvertiserDelegate {
     
     func invitationWasReceived(fromPeer: String, handler: @escaping (Bool, MCSession?) -> Void, session: MCSession) {
         self.alert(title: "Invitation to Connect", message: "\(fromPeer) wants to connect.") { (response) in
-            if response {
-                
-            }
             handler(response,session)
         }
     }
