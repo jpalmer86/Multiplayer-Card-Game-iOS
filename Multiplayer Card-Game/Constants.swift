@@ -29,10 +29,11 @@ struct Constants {
         static let crazy8Pink = UIColor(red: 149, green: 0, blue: 83, alpha: 1)
         static let crazy8Yellow = UIColor(red: 248, green: 171, blue: 0, alpha: 1)
         static let crazy8Red = UIColor(red: 248, green: 40, blue: 53, alpha: 1)
-        static let crazy8Grey = UIColor(red: 214, green: 213, blue: 213, alpha: 1)
+        static let crazy8LightGrey = UIColor(red: 214, green: 213, blue: 213, alpha: 1)
+        static let crazy8DarkGrey = UIColor(red: 94, green: 94, blue: 94, alpha: 1)
         
         static func getAllColors() -> [UIColor] {
-            let allColors = [crazy8Green, crazy8Blue, crazy8Pink, crazy8Yellow, crazy8Red, crazy8Grey]
+            let allColors = [crazy8Green, crazy8Blue, crazy8Pink, crazy8Yellow, crazy8Red, crazy8LightGrey, crazy8DarkGrey]
             return allColors
         }
     }
