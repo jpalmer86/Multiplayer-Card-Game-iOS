@@ -13,20 +13,14 @@ class HostJoinViewController: UIViewController {
     
     @IBOutlet var joinGameButton: UIButton! {
         didSet {
-            joinGameButton.layer.cornerRadius = 10
-            joinGameButton.layer.shadowColor = Constants.shadowColor
-            joinGameButton.layer.shadowOffset = Constants.shadowOffset
-            joinGameButton.layer.shadowRadius = Constants.shadowRadius
-            joinGameButton.layer.shadowOpacity = Constants.shadowOpacity
+            joinGameButton.layer.cornerRadius = Constants.buttonCornerRadius
+            joinGameButton.addShadow(color: Constants.shadowColor, opacity: Constants.shadowOpacity, radius: Constants.shadowRadius, offset: Constants.shadowOffset)
         }
     }
     @IBOutlet var startgameButton: UIButton! {
         didSet {
-            startgameButton.layer.cornerRadius = 10
-            startgameButton.layer.shadowColor = Constants.shadowColor
-            startgameButton.layer.shadowOffset = Constants.shadowOffset
-            startgameButton.layer.shadowRadius = Constants.shadowRadius
-            startgameButton.layer.shadowOpacity = Constants.shadowOpacity
+            startgameButton.layer.cornerRadius = Constants.buttonCornerRadius
+            startgameButton.addShadow(color: Constants.shadowColor, opacity: Constants.shadowOpacity, radius: Constants.shadowRadius, offset: Constants.shadowOffset)
         }
     }
     
