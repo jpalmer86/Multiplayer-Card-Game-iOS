@@ -8,9 +8,15 @@
 
 import XCTest
 
+@testable import Multiplayer_Card_Game
+
 class Multiplayer_Card_GameUITests: XCTestCase {
+    
+    var app: XCUIApplication!
 
     override func setUp() {
+        app = XCUIApplication()
+        app.launch()
         // Put setup code here. This method is called before the invocation of each test method in the class.
 
         // In UI tests it is usually best to stop immediately when a failure occurs.
@@ -25,9 +31,7 @@ class Multiplayer_Card_GameUITests: XCTestCase {
 
     func testExample() {
         // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-        app.launch()
-
+        
         // Use recording to get started writing UI tests.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
     }

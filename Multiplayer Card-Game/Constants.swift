@@ -37,14 +37,13 @@ struct Constants {
         }
         
         static let color: [String: UIColor] = [
-            Crazy8.green.rawValue: UIColor(red: 0, green: 127, blue: 120, alpha: 1),
-            Crazy8.blue.rawValue: UIColor(red: 0, green: 73, blue: 132, alpha: 1),
-            Crazy8.pink.rawValue: UIColor(red: 149, green: 0, blue: 83, alpha: 1),
-            Crazy8.yellow.rawValue: UIColor(red: 248, green: 171, blue: 0, alpha: 1),
-            Crazy8.red.rawValue: UIColor(red: 248, green: 40, blue: 53, alpha: 1),
-            Crazy8.lightGrey.rawValue: UIColor(red: 214, green: 213, blue: 213, alpha: 1),
-            Crazy8.darkGrey.rawValue: UIColor(red: 94, green: 94, blue: 94, alpha: 1)
-        ]
+            Crazy8.green.rawValue: UIColor(red: 0 / 255.0, green: 127 / 255.0, blue: 120 / 255.0, alpha: 1),
+            Crazy8.blue.rawValue: UIColor(red: 0 / 255.0, green: 73 / 255.0, blue: 132 / 255.0, alpha: 1),
+            Crazy8.pink.rawValue: UIColor(red: 149 / 255.0, green: 0 / 255.0, blue: 83 / 255.0, alpha: 1),
+            Crazy8.yellow.rawValue: UIColor(red: 248 / 255.0, green: 171 / 255.0, blue: 0 / 255.0, alpha: 1),
+            Crazy8.red.rawValue: UIColor(red: 248 / 255.0, green: 60 / 255.0, blue: 70 / 255.0, alpha: 1),
+            Crazy8.lightGrey.rawValue: UIColor(red: 214 / 255.0, green: 213 / 255.0, blue: 213 / 255.0, alpha: 1),
+            Crazy8.darkGrey.rawValue: UIColor(red: 94 / 255.0, green: 94 / 255.0, blue: 94 / 255.0, alpha: 1)        ]
 
     }
     
@@ -58,6 +57,7 @@ struct Constants {
         
     static let shadowColor = UIColor.black
     static let shadowOffset = CGSize(width: 2, height: 2)
+    static let shadowOffsetCard = CGSize(width: -3, height: 0)
     static let shadowRadius: CGFloat = 3
     static let shadowOpacity: Float = 0.5
     
