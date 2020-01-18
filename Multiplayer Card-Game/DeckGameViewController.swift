@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MultipeerConnectivity
 
 //MARK:- Enum CardState
 
@@ -27,6 +28,7 @@ class DeckGameViewController: UIViewController {
         }
     }
     @IBOutlet var gameStateLabel: UILabel!
+    @IBOutlet var connectedPlayersLabel: UILabel!
     
     @IBOutlet var stackViewDeck: UIStackView!
     @IBOutlet var deckRightView: UIView!
@@ -46,7 +48,10 @@ class DeckGameViewController: UIViewController {
     
     @IBOutlet var playerNameLabel: [UILabel]!
     
+    @IBOutlet var timeLabel: UILabel!
+    @IBOutlet var playersTurnLabel: UILabel!
     
+    @IBOutlet var roundsWonLabel: [UILabel]!
     
     //MARK:- Property Variables
     var isHost: Bool = true ////  this should be set by the previous viewcontroller
@@ -96,12 +101,93 @@ class DeckGameViewController: UIViewController {
             }
         }
     }
+    
+    private var connectedPlayers: [MCPeerID]! {
+        didSet {
+            playerNameArray = connectedPlayers.map({ $0.displayName })
+            print(playerNameArray)
+            self.gameManager.newGame(playersArray: self.connectedPlayers, newGame: game)
+        }
+    }
+    private var connectingAlert: UIAlertController?
+    private let gameManager = GameManager.shared
+    private var playerNameArray: [String]! {
+        didSet {
+            var labelString = "CONNECTED:\n"
+            for player in playerNameArray {
+                labelString += "\(player)\n"
+            }
+            DispatchQueue.main.async { [weak self] in
+                
+            }
+        }
+    }
+    private let animationDuration = 0.8
+    
+    private var gameState: GameState! {
+        didSet {
+            if isHost {
+                gameService.messageService.sendGameStateMessage(state: gameState)
+            }
+            switch gameState {
+            case .waitingForPlayers:
+                title = "Waiting for Players..."
+            case .dealing:
+                DispatchQueue.main.async { [unowned self] in
+                    
+                    self.title = "Game"
+                    if self.isHost {
+                        gameService.stopAdvertisingToPeers()
+                    }
+                    for index in 0..<self.connectedPlayers.count {
+                        self.roundsWonLabel[index].isHidden = false
+                    }
+                    self.timeLabel.isHidden = false
+                    self.connectedPlayersLabel.isHidden = true
+                }
+            case .decidingRoundWinner:
+                print("round winner decided")
+            case .playing:
+                print("play the game turn by turn")
+                DispatchQueue.main.async { [unowned self] in
+                    self.playersTurnLabel.isHidden = false
+                    
+                }
+            case .gameOver:
+                DispatchQueue.main.async { [unowned self] in
+                    self.dismiss(animated: true) {
+                        AppUtility.lockOrientation(.all)
+                        let value = UIInterfaceOrientation.portrait.rawValue
+                        UIDevice.current.setValue(value, forKey: "orientation")
+                        gameService.disconnectSession()
+                        if self.isHost {
+                            gameService.stopAdvertisingToPeers()
+                            self.gameManager.endGame()
+                        } else {
+                            gameService.joinSession()
+                        }
+                    }
+                }
+            case .none:
+                print("Do nothing")
+            }
+        }
+    }
+    
+    var game: Game! {
+        didSet {
+            gameService.advertiserDelegate = self
+            gameService.sessionDelegate = self
+            connectedPlayers = [gameService.getPeerID()]
+        }
+    }
 
     
     //MARK:- IBActions
     
     @IBAction func startGameOrOptions(_ sender: UIButton) {
         print("Start Game")
+        startGame()
     }
     
     
@@ -144,6 +230,32 @@ class DeckGameViewController: UIViewController {
                 cardViews[playerIndex][cardIndex].addGestureRecognizer(tapRecognizer)
             }
         }
+        
+        gameManager.delegate = self
+        gameManager.setAsHost(host: isHost)
+        
+        if !isHost {
+            startGameAndOptionsButton.setTitle("Waiting...", for: .normal)
+            connectingAlert = loadingAlert(title: "Connecting ...")
+            present(connectingAlert!, animated: true, completion: nil)
+            gameService.stopBrowsingForPeers()
+        } else {
+            startGameAndOptionsButton.setTitle("Start Game", for: .normal)
+            gameService.hostSession()
+        }
+        
+        gameState = .waitingForPlayers
+
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
     }
     
     //MARK:- Custom Methods
@@ -219,16 +331,39 @@ class DeckGameViewController: UIViewController {
         }
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    private func enablePlayer() {
+        //enable player for drag gesture
     }
-    */
-
+    
+    private func quit(_ sender: Any) {
+        alert(title: "Confirm disconnection:", message: "Are you sure you want to end the game?") { response in
+            if response {
+                if self.isHost || self.gameState == GameState.waitingForPlayers {
+                    self.gameState = .gameOver
+                } else {
+                    gameService.messageService.sendClientGameOverToHost()
+                }
+            }
+        }
+    }
+    
+    private func startGame() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.timeLabel.isHidden = false
+            self.gameManager.distributeCards { [weak self] result in
+                guard let self = self else {
+                    return
+                }
+                switch result {
+                case .success((let card, let player)):
+                    print("gave \(card) to \(player)")
+                case .failure(let error):
+                    print("Error getting card: ",error)
+                }
+            }
+        }
+    }
 }
 
 //MARK:- Gesture Recognizer Delegate Methods
@@ -238,3 +373,110 @@ class DeckGameViewController: UIViewController {
 //        return true
 //    }
 //}
+
+//MARK:- GameService Session Delegate Methods
+
+extension DeckGameViewController: GameServiceSessionDelegate {
+    
+    func connectedWithPeer(peerID: MCPeerID) {
+        print("Connected with peer: ", peerID.displayName)
+        if let index = connectedPlayers.firstIndex(of: peerID) {
+            connectedPlayers[index] = peerID
+        } else {
+            connectedPlayers.append(peerID)
+        }
+        if isHost {
+            if connectedPlayers.count == 4 {
+                gameService.stopAdvertisingToPeers()
+            }
+        }
+        
+        DispatchQueue.main.async {
+            self.connectingAlert?.dismiss(animated: true, completion: nil)
+        }
+        showOnlyAlert(title: "Connected", message: "Successfully connected with \(peerID.displayName)")
+    }
+    
+    func connectionFailed(peerID: MCPeerID) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.connectedPlayers.removeAll(where: {$0 == peerID})
+            if self.gameState == GameState.waitingForPlayers && self.isHost {
+                self.showOnlyAlert(title: "\(peerID.displayName) Left", message: "\(peerID.displayName) disconnected from the game.")
+            } else if !self.isHost {
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
+    
+    func recievedData(data: String, fromPeerID: MCPeerID) {
+        print("Recieved data: ",data)
+    }
+    
+    func stateChanged(newState: GameState) {
+        gameState = newState
+    }
+}
+
+//MARK:- GameService Advertiser Delegate Methods
+
+extension DeckGameViewController: GameServiceAdvertiserDelegate {
+    
+    func invitationWasReceived(fromPeer: String, handler: @escaping (Bool, MCSession?) -> Void, session: MCSession) {
+        self.alert(title: "Invitation to Connect", message: "\(fromPeer) wants to connect.") { (response) in
+            handler(response,session)
+        }
+    }
+}
+
+//MARK:- GameManager Delegate Methods
+
+extension DeckGameViewController: GameManagerDelegate {
+
+    func roundWinner(winner: MCPeerID) {
+        gameState = .decidingRoundWinner
+        gameState = .playing
+    }
+    
+    func gameWinner(winner: MCPeerID) {
+        alert(title: "Game Over", message: "\(winner.displayName) won the game") { _ in
+            self.gameState = .gameOver
+        }
+    }
+    
+    func timeRemaining(timeString: String) {
+        DispatchQueue.main.async { [weak self] in
+            self?.timeLabel.text = timeString
+        }
+    }
+    
+    func gaveCardToPlayer(card: Card, playerName: String) {
+        let playerID = connectedPlayers[playerNameArray.firstIndex(of: playerName)!]
+        print("gave \(card) to player: ",playerID.displayName)
+    }
+    
+    func playerTurnedCard(player: MCPeerID, card: Card) {
+    }
+        
+    func nextPlayerTurn(playerName: String) {
+        DispatchQueue.main.async { [weak self] in
+            self?.playersTurnLabel.isHidden = false
+            self?.playersTurnLabel.text = "\(playerName)'s turn"
+            if self?.connectedPlayers[0].displayName == playerName {
+                self?.enablePlayer()
+            }
+        }
+    }
+    
+    func roundsWonPerPlayer(wonCountArray: [Int]) {
+        DispatchQueue.main.async { [weak self] in
+            for (index,roundsWon) in wonCountArray.enumerated() {
+                self?.roundsWonLabel[index].text = "Won: \(roundsWon)"
+            }
+        }
+    }
+    
+    func quit() {
+        gameState = .gameOver
+    }
+}

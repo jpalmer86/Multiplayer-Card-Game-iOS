@@ -63,7 +63,7 @@ class JoinGameViewController: UIViewController {
         if segue.identifier == segueIdentifier {
             if let tabBarVC = segue.destination as? UITabBarController, let gameVC = tabBarVC.viewControllers?.first {
                 if let cell = sender as? UITableViewCell {
-                    if let gameVC = gameVC as? GameViewController {
+                    if let gameVC = gameVC as? DeckGameViewController {
                         gameVC.game = game
                     }
                 }
