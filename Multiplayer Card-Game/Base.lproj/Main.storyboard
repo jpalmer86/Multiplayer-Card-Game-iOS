@@ -74,7 +74,7 @@
                                                     </attributedString>
                                                 </state>
                                                 <connections>
-                                                    <segue destination="WPg-mh-Ovj" kind="show" identifier="Start Game segue" id="K7c-Uc-GUy"/>
+                                                    <segue destination="uki-ix-de4" kind="presentation" identifier="Start Game segue" modalPresentationStyle="fullScreen" id="7GO-F7-g8b"/>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Begin a new game." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YBl-U8-6QF">
@@ -135,6 +135,16 @@
             </objects>
             <point key="canvasLocation" x="1857.9710144927537" y="129.91071428571428"/>
         </scene>
+        <!--Game Page View Controller-->
+        <scene sceneID="dFk-Sk-mTH">
+            <objects>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="uki-ix-de4" customClass="GamePageViewController" customModule="Multiplayer_Card_Game" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Ssu-9i-N7W"/>
+                </pageViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Y7X-C2-NHP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1832" y="1298"/>
+        </scene>
         <!--Join Game View Controller-->
         <scene sceneID="s3P-zR-Fje">
             <objects>
@@ -179,6 +189,9 @@
                                                 </label>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="uki-ix-de4" kind="presentation" identifier="Join Existing Segue" modalPresentationStyle="fullScreen" id="jyU-ve-oEG"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -207,7 +220,6 @@
                     <connections>
                         <outlet property="lobbiesTableView" destination="Jih-RS-4Hg" id="l8j-Ex-6b7"/>
                         <outlet property="playerNameTextField" destination="TlX-Ru-8IW" id="bTP-yL-T0I"/>
-                        <segue destination="WPg-mh-Ovj" kind="presentation" identifier="Join Existing Segue" id="bUK-IY-X5K"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6zO-LM-iGC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -217,7 +229,7 @@
         <!--Item-->
         <scene sceneID="eFJ-I2-qhf">
             <objects>
-                <viewController id="dkB-eb-8MW" customClass="DeckGameViewController" customModule="Multiplayer_Card_Game" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DeckGameViewController" id="dkB-eb-8MW" customClass="DeckGameViewController" customModule="Multiplayer_Card_Game" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Nft-kP-Lfy">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -248,7 +260,7 @@
                                 <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
                             <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DNB-0f-5vp">
-                                <rect key="frame" x="136" y="216" width="142.5" height="71.5"/>
+                                <rect key="frame" x="136" y="172" width="142.5" height="71.5"/>
                                 <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="DNB-0f-5vp" secondAttribute="height" multiplier="2:1" id="AJ2-EP-0V8"/>
@@ -463,7 +475,7 @@
                                 </constraints>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00" textAlignment="justified" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jwd-LM-kfi">
-                                <rect key="frame" x="188" y="120" width="38" height="21.5"/>
+                                <rect key="frame" x="188" y="76" width="38" height="21.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -475,7 +487,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connected:" textAlignment="justified" lineBreakMode="wordWrap" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hmc-EY-t7x">
-                                <rect key="frame" x="32" y="120" width="81" height="20"/>
+                                <rect key="frame" x="32" y="76" width="81" height="20"/>
                                 <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="18"/>
                                 <color key="textColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -487,7 +499,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Won: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z3F-Av-i4h">
-                                <rect key="frame" x="180" y="187.5" width="54" height="20.5"/>
+                                <rect key="frame" x="180" y="143.5" width="54" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -638,7 +650,134 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N7W-in-O0C" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3441" y="927"/>
+            <point key="canvasLocation" x="2810" y="1298"/>
+        </scene>
+        <!--Player Card Deck View Controller-->
+        <scene sceneID="xEw-ep-mRd">
+            <objects>
+                <viewController storyboardIdentifier="PlayerCardDeckViewController" id="T8e-0i-oLn" customClass="PlayerCardDeckViewController" customModule="Multiplayer_Card_Game" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Tl4-vi-ypg">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleAspectFill" ambiguous="YES" axis="vertical" distribution="fillEqually" alignment="top" spacing="-32" translatesAutoresizingMaskIntoConstraints="NO" id="Jok-eW-gOG">
+                                <rect key="frame" x="179.5" y="420" width="55" height="571.5"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pIu-e5-AzT" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="55" height="73.5"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="OEX-Ne-EM0"/>
+                                            <constraint firstAttribute="width" secondItem="pIu-e5-AzT" secondAttribute="height" multiplier="3:4" id="XI7-d4-O3p"/>
+                                        </constraints>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vJs-p6-zLo" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="41.5" width="55" height="73.5"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oiu-7z-9Zz" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="83" width="55" height="73.5"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tnA-uH-0Nl" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="124.5" width="55" height="73.5"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L8I-Aq-nrR" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="166" width="55" height="73.5"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NDJ-04-1nL" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="207.5" width="55" height="73.5"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="M0D-Es-bAJ" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="249" width="55" height="73.5"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5VU-fZ-iiU" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="290.5" width="55" height="73.5"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="agv-JZ-Yjv" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="332" width="55" height="73.5"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b2M-AT-Vri" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="373.5" width="55" height="73.5"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xS0-Aq-zgx" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="415" width="55" height="73.5"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ezk-bs-IfD" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="456.5" width="55" height="73.5"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LAf-wI-k7L" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="498" width="55" height="73.5"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="vJs-p6-zLo" firstAttribute="height" secondItem="pIu-e5-AzT" secondAttribute="height" id="1UE-bx-Zli"/>
+                                    <constraint firstItem="NDJ-04-1nL" firstAttribute="width" secondItem="pIu-e5-AzT" secondAttribute="width" id="4oe-5P-EqE"/>
+                                    <constraint firstItem="xS0-Aq-zgx" firstAttribute="width" secondItem="pIu-e5-AzT" secondAttribute="width" id="Avr-OS-MWW"/>
+                                    <constraint firstItem="oiu-7z-9Zz" firstAttribute="width" secondItem="pIu-e5-AzT" secondAttribute="width" id="GUb-hU-guk"/>
+                                    <constraint firstItem="tnA-uH-0Nl" firstAttribute="width" secondItem="pIu-e5-AzT" secondAttribute="width" id="J6c-SQ-e87"/>
+                                    <constraint firstItem="LAf-wI-k7L" firstAttribute="height" secondItem="pIu-e5-AzT" secondAttribute="height" id="NH5-yb-223"/>
+                                    <constraint firstItem="agv-JZ-Yjv" firstAttribute="height" secondItem="pIu-e5-AzT" secondAttribute="height" id="Nzh-uh-gYb"/>
+                                    <constraint firstItem="xS0-Aq-zgx" firstAttribute="height" secondItem="pIu-e5-AzT" secondAttribute="height" id="SVy-o0-SMr"/>
+                                    <constraint firstItem="5VU-fZ-iiU" firstAttribute="width" secondItem="pIu-e5-AzT" secondAttribute="width" id="X5U-uw-byJ"/>
+                                    <constraint firstItem="agv-JZ-Yjv" firstAttribute="width" secondItem="pIu-e5-AzT" secondAttribute="width" id="Y37-Gv-dSK"/>
+                                    <constraint firstItem="tnA-uH-0Nl" firstAttribute="height" secondItem="pIu-e5-AzT" secondAttribute="height" id="a6u-eo-BA0"/>
+                                    <constraint firstItem="Ezk-bs-IfD" firstAttribute="width" secondItem="pIu-e5-AzT" secondAttribute="width" id="d6f-Z3-02f"/>
+                                    <constraint firstItem="NDJ-04-1nL" firstAttribute="height" secondItem="pIu-e5-AzT" secondAttribute="height" id="ega-uF-1UD"/>
+                                    <constraint firstItem="L8I-Aq-nrR" firstAttribute="height" secondItem="pIu-e5-AzT" secondAttribute="height" id="eqc-i4-fpS"/>
+                                    <constraint firstItem="oiu-7z-9Zz" firstAttribute="height" secondItem="pIu-e5-AzT" secondAttribute="height" id="grT-JE-waT"/>
+                                    <constraint firstItem="vJs-p6-zLo" firstAttribute="width" secondItem="pIu-e5-AzT" secondAttribute="width" id="gwe-3D-ZhT"/>
+                                    <constraint firstItem="b2M-AT-Vri" firstAttribute="height" secondItem="pIu-e5-AzT" secondAttribute="height" id="hiu-bZ-oWN"/>
+                                    <constraint firstItem="LAf-wI-k7L" firstAttribute="width" secondItem="pIu-e5-AzT" secondAttribute="width" id="kQw-55-V9L"/>
+                                    <constraint firstItem="b2M-AT-Vri" firstAttribute="width" secondItem="pIu-e5-AzT" secondAttribute="width" id="lXK-a9-k6b"/>
+                                    <constraint firstItem="L8I-Aq-nrR" firstAttribute="width" secondItem="pIu-e5-AzT" secondAttribute="width" id="mTH-YE-yuH"/>
+                                    <constraint firstItem="Ezk-bs-IfD" firstAttribute="height" secondItem="pIu-e5-AzT" secondAttribute="height" id="oOZ-2p-z0i"/>
+                                    <constraint firstItem="5VU-fZ-iiU" firstAttribute="height" secondItem="pIu-e5-AzT" secondAttribute="height" id="p4N-8T-tgR"/>
+                                    <constraint firstItem="M0D-Es-bAJ" firstAttribute="width" secondItem="pIu-e5-AzT" secondAttribute="width" id="pWH-oH-Owm"/>
+                                    <constraint firstItem="M0D-Es-bAJ" firstAttribute="height" secondItem="pIu-e5-AzT" secondAttribute="height" id="pn4-F9-nnS"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="gXI-EE-R27" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Jok-eW-gOG" secondAttribute="bottom" constant="32" id="7FY-k5-Bts"/>
+                            <constraint firstItem="Jok-eW-gOG" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="gXI-EE-R27" secondAttribute="leading" constant="32" id="H4k-XG-fFb"/>
+                            <constraint firstItem="Jok-eW-gOG" firstAttribute="centerX" secondItem="Tl4-vi-ypg" secondAttribute="centerX" id="dHe-ly-c4r"/>
+                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Jok-eW-gOG" secondAttribute="trailing" constant="32" id="iUj-cz-5h9"/>
+                            <constraint firstItem="Jok-eW-gOG" firstAttribute="top" relation="greaterThanOrEqual" secondItem="gXI-EE-R27" secondAttribute="top" constant="32" id="oCU-D4-P9V"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="gXI-EE-R27"/>
+                    </view>
+                    <connections>
+                        <outlet property="cardStackView" destination="Jok-eW-gOG" id="Ibb-yy-uZh"/>
+                        <outletCollection property="cardViews" destination="pIu-e5-AzT" collectionClass="NSMutableArray" id="MSt-Vl-dQ2"/>
+                        <outletCollection property="cardViews" destination="vJs-p6-zLo" collectionClass="NSMutableArray" id="HSc-gq-hNC"/>
+                        <outletCollection property="cardViews" destination="oiu-7z-9Zz" collectionClass="NSMutableArray" id="x7w-gx-glT"/>
+                        <outletCollection property="cardViews" destination="tnA-uH-0Nl" collectionClass="NSMutableArray" id="ZNb-sy-unf"/>
+                        <outletCollection property="cardViews" destination="L8I-Aq-nrR" collectionClass="NSMutableArray" id="Dj5-MH-vcV"/>
+                        <outletCollection property="cardViews" destination="NDJ-04-1nL" collectionClass="NSMutableArray" id="1IU-m2-0Bc"/>
+                        <outletCollection property="cardViews" destination="M0D-Es-bAJ" collectionClass="NSMutableArray" id="572-nH-wOT"/>
+                        <outletCollection property="cardViews" destination="5VU-fZ-iiU" collectionClass="NSMutableArray" id="t5g-ag-YQK"/>
+                        <outletCollection property="cardViews" destination="agv-JZ-Yjv" collectionClass="NSMutableArray" id="5Ac-g9-Dky"/>
+                        <outletCollection property="cardViews" destination="b2M-AT-Vri" collectionClass="NSMutableArray" id="gvx-eZ-q8t"/>
+                        <outletCollection property="cardViews" destination="xS0-Aq-zgx" collectionClass="NSMutableArray" id="Lo6-5Q-6Ih"/>
+                        <outletCollection property="cardViews" destination="Ezk-bs-IfD" collectionClass="NSMutableArray" id="91Z-rY-oIf"/>
+                        <outletCollection property="cardViews" destination="LAf-wI-k7L" collectionClass="NSMutableArray" id="GTe-vc-hhD"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2Tu-dh-K4o" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3647.826086956522" y="1297.7678571428571"/>
         </scene>
         <!--Game-->
         <scene sceneID="9mi-03-JwK">
@@ -871,13 +1010,13 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Won: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UKm-pv-gBE">
-                                <rect key="frame" x="301" y="809" width="54" height="21"/>
+                                <rect key="frame" x="301" y="760" width="54" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Won: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zhg-HN-VNB">
-                                <rect key="frame" x="32" y="809" width="54" height="21"/>
+                                <rect key="frame" x="32" y="760" width="54" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -1041,7 +1180,7 @@
         <!--Cards-->
         <scene sceneID="9gn-7K-Kn5">
             <objects>
-                <viewController id="2Hv-bR-JJQ" customClass="PlayerCardsViewController" customModule="Multiplayer_Card_Game" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PlayerCardsViewController" id="2Hv-bR-JJQ" customClass="PlayerCardsViewController" customModule="Multiplayer_Card_Game" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="YC4-xc-Ifd">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1113,7 +1252,7 @@
                                 </constraints>
                             </stackView>
                             <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZVw-zV-TYo" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                <rect key="frame" x="64" y="104" width="234" height="693"/>
+                                <rect key="frame" x="64" y="60" width="234" height="737"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="ZVw-zV-TYo" secondAttribute="height" multiplier="3:4" id="YgZ-as-c6g"/>
@@ -1203,8 +1342,8 @@
                         <color key="barTintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="dkB-eb-8MW" kind="relationship" relationship="viewControllers" id="oz2-FX-pYt"/>
-                        <segue destination="2Hv-bR-JJQ" kind="relationship" relationship="viewControllers" id="Yjo-ZR-eWp"/>
+                        <segue destination="h49-9T-XZB" kind="relationship" relationship="viewControllers" id="YL4-3Z-KI2"/>
+                        <segue destination="2Hv-bR-JJQ" kind="relationship" relationship="viewControllers" id="Qjc-db-eRE"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zPh-23-fa2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -1218,6 +1357,6 @@
         <image name="quit" width="512" height="512"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="K7c-Uc-GUy"/>
+        <segue reference="jyU-ve-oEG"/>
     </inferredMetricsTieBreakers>
 </document>

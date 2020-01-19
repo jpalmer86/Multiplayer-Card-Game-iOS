@@ -54,7 +54,7 @@ class DeckGameViewController: UIViewController {
     @IBOutlet var roundsWonLabel: [UILabel]!
     
     //MARK:- Property Variables
-    var isHost: Bool = true ////  this should be set by the previous viewcontroller
+    var isHost: Bool! ////  this should be set by the previous viewcontroller
     var indexToPlay = 0 //// This should be set by the gameManager
     
     private var cardViews: [[UIView]]!
@@ -256,6 +256,8 @@ class DeckGameViewController: UIViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        
+        AppUtility.lockOrientation(.all)
     }
     
     //MARK:- Custom Methods

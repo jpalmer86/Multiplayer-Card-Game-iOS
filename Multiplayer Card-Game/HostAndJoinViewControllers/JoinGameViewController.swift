@@ -6,6 +6,7 @@
 //  Copyright © 2019 Hot Cocoa Software. All rights reserved.
 //
 
+import Foundation
 import UIKit
 import MultipeerConnectivity
 
@@ -28,6 +29,7 @@ class JoinGameViewController: UIViewController {
     var game: Game!
     var availableDevices = [MCPeerID]() {
         didSet {
+            print(availableDevices)
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.lobbiesTableView.reloadData()
@@ -61,11 +63,14 @@ class JoinGameViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == segueIdentifier {
-            if let tabBarVC = segue.destination as? UITabBarController, let gameVC = tabBarVC.viewControllers?.first {
+//            if let tabBarVC = segue.destination as? UITabBarController, let gameVC = tabBarVC.viewControllers?.first {
+            if let pageVC = segue.destination as? GamePageViewController {
                 if let cell = sender as? UITableViewCell {
-                    if let gameVC = gameVC as? DeckGameViewController {
-                        gameVC.game = game
-                    }
+                    pageVC.isHost = false
+                    pageVC.game = game
+//                    if let gameVC = gameVC as? DeckGameViewController {
+//                        gameVC.game = game
+//                    }
                 }
             }
         }
