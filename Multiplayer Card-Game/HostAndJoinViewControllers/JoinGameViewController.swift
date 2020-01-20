@@ -64,13 +64,11 @@ class JoinGameViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == segueIdentifier {
             if let pageVC = segue.destination as? GamePageViewController {
-                if let cell = sender as? UITableViewCell {
                     pageVC.isHost = false
                     pageVC.game = game
                     if let indexPath = lobbiesTableView.indexPathForSelectedRow {
                         gameService.invitePeer(peerID: availableDevices[indexPath.item])
                     }
-                }
             }
         }
     }
@@ -86,8 +84,7 @@ class JoinGameViewController: UIViewController {
 
 extension JoinGameViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        gameService.invitePeer(peerID: availableDevices[indexPath.item])
-//        performSegue(withIdentifier: segueIdentifier, sender: tableView.cellForRow(at: indexPath))
+        //// extra things you want to do when the tableviewcell is selected
     }
 }
 
@@ -125,7 +122,7 @@ extension JoinGameViewController: GameServiceBrowserDelegate {
 extension JoinGameViewController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         if let playerName = textField.text {
-            // set the player.playerName to this value
+            ////  set the player.playerName to this value
         }
     }
 }

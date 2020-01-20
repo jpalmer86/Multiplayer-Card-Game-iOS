@@ -33,7 +33,7 @@ class GameViewController: UIViewController {
         didSet {
             playerNameArray = connectedPlayers.map({ $0.displayName })
             print(playerNameArray)
-            self.gameManager.newGame(playersArray: self.connectedPlayers, newGame: game)
+            self.gameManager.newGame(/*playersArray: self.connectedPlayers,*/ newGame: game)
         }
     }
     private var connectingAlert: UIAlertController?
@@ -394,6 +394,14 @@ extension GameViewController: GameServiceAdvertiserDelegate {
 //MARK:- GameManager Delegate Methods
 
 extension GameViewController: GameManagerDelegate {
+    func playerColorIndex(index: Int) {
+        //
+    }
+    
+    func playerList(playerList: [MCPeerID]) {
+        print(playerList)
+    }
+    
 
     func roundWinner(winner: MCPeerID) {
         gameState = .decidingRoundWinner

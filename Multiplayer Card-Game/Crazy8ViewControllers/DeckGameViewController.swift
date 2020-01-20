@@ -54,8 +54,16 @@ class DeckGameViewController: UIViewController {
     @IBOutlet var roundsWonLabel: [UILabel]!
     
     //MARK:- Property Variables
-    var isHost: Bool! ////  this should be set by the previous viewcontroller
-    var indexToPlay = 0 //// This should be set by the gameManager
+    var isHost: Bool! {
+        didSet {
+            gameManager.setAsHost(host: isHost)
+        }
+    }
+    var indexToPlay = 0 {
+        didSet {
+            selectedColor = Constants.Colors.color[colorKey[indexToPlay]!]!
+        }
+    }
     
     private var cardViews: [[UIView]]!
 
@@ -68,6 +76,15 @@ class DeckGameViewController: UIViewController {
     ]
     private let unSelectColor = Constants.Colors.color[Constants.Colors.Crazy8.lightGrey.rawValue]!
     private let takenColor = Constants.Colors.color[Constants.Colors.Crazy8.darkGrey.rawValue]!
+    private var selectedColor: UIColor! {
+        didSet {
+            DispatchQueue.main.async { [weak self] in
+                self?.startGameAndOptionsButton?.backgroundColor = self?.selectedColor
+                self?.gameStateLabel?.textColor = self?.selectedColor
+            }
+        }
+    }
+    
     private var cardViewsState: [CardsState]! {
         didSet {
             for index in 0..<cardViewsState.count {
@@ -81,14 +98,13 @@ class DeckGameViewController: UIViewController {
                     }
                     playerNameLabel[index].textColor = unSelectColor
                 case .selected:
-                    let color = Constants.Colors.color[colorKey[indexToPlay]!]!
                     if index == 0 {
-                        setViewColor(viewsArray: [cardViews[index][0]], color: color)
-                        addBorderToViews(viewArrays: [[cardViews[index][1]]], color: color)
+                        setViewColor(viewsArray: [cardViews[index][0]], color: selectedColor)
+                        addBorderToViews(viewArrays: [[cardViews[index][1]]], color: selectedColor)
                     } else {
-                        setViewColor(viewsArray: cardViews[index], color: color)
+                        setViewColor(viewsArray: cardViews[index], color: selectedColor)
                     }
-                    playerNameLabel[index].textColor = Constants.Colors.color[colorKey[indexToPlay]!]!
+                    playerNameLabel[index].textColor = selectedColor
                 case .taken:
                     if index == 0 {
                         setViewColor(viewsArray: [cardViews[index][0]], color: takenColor)
@@ -105,8 +121,7 @@ class DeckGameViewController: UIViewController {
     private var connectedPlayers: [MCPeerID]! {
         didSet {
             playerNameArray = connectedPlayers.map({ $0.displayName })
-            print(playerNameArray)
-            self.gameManager.newGame(playersArray: self.connectedPlayers, newGame: game)
+            self.gameManager.newGame(/*playersArray: self.connectedPlayers,*/ newGame: game)
         }
     }
     private var connectingAlert: UIAlertController?
@@ -179,6 +194,7 @@ class DeckGameViewController: UIViewController {
             gameService.advertiserDelegate = self
             gameService.sessionDelegate = self
             connectedPlayers = [gameService.getPeerID()]
+            selectedColor = Constants.Colors.color[colorKey[indexToPlay]!]!
         }
     }
 
@@ -196,9 +212,6 @@ class DeckGameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        startGameAndOptionsButton.backgroundColor = Constants.Colors.color[colorKey[indexToPlay]!]!
-        gameStateLabel.textColor = Constants.Colors.color[colorKey[indexToPlay]!]!
-        
         cardViews =  [[deckLeftView, deckRightView], player1Cards, player2Cards, player3Cards, player4Cards]
         
         cardViewsState = [.unselected, .unselected, .unselected, .unselected, .unselected]
@@ -215,6 +228,9 @@ class DeckGameViewController: UIViewController {
         }
         
         if isHost {
+            startGameAndOptionsButton.setTitle("Start Game", for: .normal)
+            gameService.hostSession()
+            
             stackViewDeck.isUserInteractionEnabled = true
             let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(selectDeck(_:)))
             stackViewDeck.addGestureRecognizer(tapRecognizer)
@@ -222,6 +238,11 @@ class DeckGameViewController: UIViewController {
                 let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(selectDeck(_:)))
                 deckView.addGestureRecognizer(tapRecognizer)
             }
+        } else {
+            startGameAndOptionsButton.setTitle("Waiting...", for: .normal)
+            connectingAlert = loadingAlert(title: "Connecting ...")
+            present(connectingAlert!, animated: true, completion: nil)
+            gameService.stopBrowsingForPeers()
         }
 
         for playerIndex in 1..<cardViews.count {
@@ -232,17 +253,6 @@ class DeckGameViewController: UIViewController {
         }
         
         gameManager.delegate = self
-        gameManager.setAsHost(host: isHost)
-        
-        if !isHost {
-            startGameAndOptionsButton.setTitle("Waiting...", for: .normal)
-            connectingAlert = loadingAlert(title: "Connecting ...")
-            present(connectingAlert!, animated: true, completion: nil)
-            gameService.stopBrowsingForPeers()
-        } else {
-            startGameAndOptionsButton.setTitle("Start Game", for: .normal)
-            gameService.hostSession()
-        }
         
         gameState = .waitingForPlayers
 
@@ -434,7 +444,16 @@ extension DeckGameViewController: GameServiceAdvertiserDelegate {
 //MARK:- GameManager Delegate Methods
 
 extension DeckGameViewController: GameManagerDelegate {
-
+    
+    func playerColorIndex(index: Int) {
+        indexToPlay = index
+    }
+    
+    func playerList(playerList: [MCPeerID]) {
+        connectedPlayers = playerList
+        print("player list from host",connectedPlayers)
+    }
+    
     func roundWinner(winner: MCPeerID) {
         gameState = .decidingRoundWinner
         gameState = .playing

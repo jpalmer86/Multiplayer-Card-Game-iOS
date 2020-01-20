@@ -112,7 +112,51 @@ class MessageService {
         }
     }
     
+    func sendPlayerListData(names: [String]) {
+        var message = "\(MessageType.PlayerNameListMessage.rawValue)\(seperator)\(names[0])"
+        for i in 1..<names.count {
+            message = "\(message)\(seperator)\(names[i])"
+        }
+        send(message: message) { (result) in
+            //
+        }
+    }
+    
+    func sendPlayerIndex(peerID:MCPeerID, index: Int) {
+        let message = "\(MessageType.PlayerIndexMessage.rawValue)\(seperator)\(index)"
+        sendToPeer(message: message, peerID: peerID) { (result) in
+            //
+        }
+    }
+    
+    func sendPlayerSelectedPosition(playerName: String, position: Int, toHost: Bool) {
+        
+        if toHost {
+            let message = "\(MessageType.SelectedPositionClientMessage.rawValue)\(seperator)\(playerName)\(seperator)\(position)"
+            sendToHost(message: message) { (result) in
+                //
+            }
+        } else {
+            let message = "\(MessageType.SelectedPositionHostMessage.rawValue)\(seperator)\(playerName)\(seperator)\(position)"
+            send(message: message) { (result) in
+                //
+            }
+        }
+    }
+    
     //MARK:- Retrieval Methods
+    
+    
+    func getMessageType(data: Data) -> MessageType {
+        let message = String(data: data, encoding: .utf8)!
+        
+        let characterArray = message.split(separator: Character(seperator))
+        let messageArray = characterArray.map({ String($0) })
+        
+        let messageType = MessageType.messageType(number: Int(messageArray[0])!)
+        
+        return messageType
+    }
     
     func cardExchangeData(data: Data) -> [String:Card] {
         let message = String(data: data, encoding: .utf8)!
@@ -181,17 +225,6 @@ class MessageService {
         return messageArray[1]
     }
     
-    func getMessageType(data: Data) -> MessageType {
-        let message = String(data: data, encoding: .utf8)!
-        
-        let characterArray = message.split(separator: Character(seperator))
-        let messageArray = characterArray.map({ String($0) })
-        
-        let messageType = MessageType.messageType(number: Int(messageArray[0])!)
-        
-        return messageType
-    }
-    
     func getHostNameData(data: Data) -> String {
         let message = String(data: data, encoding: .utf8)!
         
@@ -208,6 +241,43 @@ class MessageService {
         let messageArray = characterArray.map({ String($0) })
         
         return messageArray[1]
+    }
+    
+    func getPlayerNameList(data: Data) -> [String] {
+        let message = String(data: data, encoding: .utf8)!
+        
+        let characterArray = message.split(separator: Character(seperator))
+        let messageArray = characterArray.map({ String($0) })
+        
+        var playerNameArray = [String]()
+        
+        for i in 1..<messageArray.count {
+            playerNameArray.append(messageArray[i])
+        }
+        
+        return playerNameArray
+    }
+    
+    func getPlayerIndex(data: Data) -> Int {
+        let message = String(data: data, encoding: .utf8)!
+        
+        let characterArray = message.split(separator: Character(seperator))
+        let messageArray = characterArray.map({ String($0) })
+        
+        return Int(messageArray[1])!
+    }
+    
+    func getSelectedPositionData(data: Data) -> [String: Int] {
+        let message = String(data: data, encoding: .utf8)!
+         
+        let characterArray = message.split(separator: Character(seperator))
+        let messageArray = characterArray.map({ String($0) })
+                
+        let playerName = messageArray[1]
+        
+        let index = Int(messageArray[2])!
+                
+        return [playerName: index]
     }
         
     //MARK:- Private Methods
@@ -231,6 +301,20 @@ class MessageService {
         if session.connectedPeers.count > 0 {
             do {
                 try self.session.send(data, toPeers: [hostPeerID], with: .reliable)
+                completion(.success(data))
+            }
+            catch {
+                print("Error sending message: ",error.localizedDescription)
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    private func sendToPeer(message: String, peerID: MCPeerID, completion: @escaping (Result<Data,Error>) -> Void) {
+        let data = message.data(using: .utf8)!
+        if session.connectedPeers.count > 0 {
+            do {
+                try self.session.send(data, toPeers: [peerID], with: .reliable)
                 completion(.success(data))
             }
             catch {

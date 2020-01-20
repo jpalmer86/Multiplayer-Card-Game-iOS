@@ -18,6 +18,9 @@ protocol GameManagerDelegate {
     func playerTurnedCard(player: MCPeerID, card: Card)
     func nextPlayerTurn(playerName: String)
     func roundsWonPerPlayer(wonCountArray: [Int])
+    func playerList(playerList: [MCPeerID])
+    func playerColorIndex(index: Int)
+//    func cardStateUpdated(index: Int, state: CardsState)
     func quit()
 }
 
@@ -55,20 +58,31 @@ class GameManager {
         }
     }
     private var isHost = true
-    
+    private let myPeerID = gameService.getPeerID()
+    private var colorIndex = 0 {
+        didSet {
+            delegate?.playerColorIndex(index: colorIndex)
+        }
+    }
     private var game: Game!
     
     var delegate: GameManagerDelegate?
     var cardsDelegate: GameCardManagerDelegate?
 
-    var minPlayersNeeded = 0
-    var playerNames: [String]!
-    var players: [MCPeerID]! {
+    var minPlayersNeeded = 1
+    var playerNames: [String]! {
+        didSet {
+            if isHost {
+                gameService.messageService.sendPlayerListData(names: playerNames)
+            }
+        }
+    }
+    var players: [MCPeerID] = [] {
         didSet {
             playerNames = players.map({ $0.displayName })
         }
     }
-    var playerCount = 1
+    var playerCount: Int!
     var cardsForPlayer: [[Card]]! {
         didSet {
             if cardsForPlayer.count > 0 {
@@ -78,7 +92,7 @@ class GameManager {
     }
     var cardsInCentre: [Card]! {
         didSet {
-            if cardsInCentre.count == playerCount {
+            if cardsInCentre.count == playerCount && playerCount > 0 {
                 let roundWinnerIndex = getBoutWinnerIndex()
                 let winner = players[roundWinnerIndex]
                 if isHost {
@@ -93,6 +107,12 @@ class GameManager {
     var roundsWonPerPlayer: [Int]! {
         didSet {
             delegate?.roundsWonPerPlayer(wonCountArray: roundsWonPerPlayer)
+        }
+    }
+    
+    var playerCardState: [CardsState] = [.unselected, .unselected, .unselected, .unselected, .unselected] {
+        didSet {
+//            delegate?.cardStateUpdated(state: playerCardState)
         }
     }
     
@@ -115,10 +135,9 @@ class GameManager {
         gameService.messageService.sendHostName(player: name)
     }
     
-    func newGame(playersArray: [MCPeerID], newGame: Game) {
+    func newGame(/*playersArray: [MCPeerID],*/ newGame: Game) {
         game = newGame
         minPlayersNeeded = game.minPlayers
-        players = playersArray
         playerCount = players.count
         deck = Deck()
         cardsInCentre = [Card]()
@@ -208,7 +227,7 @@ class GameManager {
     
     private func getBoutWinnerIndex() -> Int {
         var winnerIndex = 0
-        for index in 1..<cardsInCentre.count {
+        for (index,_) in cardsInCentre.enumerated() {
             if cardsInCentre[index] > cardsInCentre[winnerIndex] {
                 winnerIndex = index
             }
@@ -274,14 +293,36 @@ class GameManager {
         let roundWinnerIndex = players.firstIndex(of: player)!
         roundsWonPerPlayer[roundWinnerIndex] += 1
     }
+    
 }
 
 //MARK:- GameService Game Client Delegate Methods
 
 extension GameManager: GameServiceGameClientDelegate {
+    func playerColorIndex(index: Int) {
+        colorIndex = index
+    }
+    
+    func connectedPlayersClient(connectedPlayers: [MCPeerID]) {
+        players = connectedPlayers
+    }
+    
     func gameHost(hostName: String) {
         let hostID = players[playerNames.firstIndex(of: hostName)!]
         gameService.messageService.setHost(hostID: hostID)
+    }
+    
+    func playerListFromHost(playerNameList: [String]) {
+        var hostConnectedPlayerList = [MCPeerID]()
+        for name in playerNameList {
+            if let index = playerNames.firstIndex(of: name) {
+                hostConnectedPlayerList.append(players[index])
+            }
+        }
+        players = hostConnectedPlayerList
+        if !isHost {
+            delegate?.playerList(playerList: players)
+        }
     }
     
     func boutWinner(playerName: String) {
@@ -327,11 +368,23 @@ extension GameManager: GameServiceGameClientDelegate {
         let player = players[playerIndex]
         swapCardWithFirst(player: player, index: index)
     }
+    
+    func playerSelectedPosition(playerName: String, index: Int) {
+        
+    }
 }
 
 //MARK:- GameService Game Host Delegate Methods
 
 extension GameManager: GameServiceGameHostDelegate {
+    func clientPlayerSelectedPosition(playerName: String, index: Int) {
+        
+    }
+    
+    func connectedPlayersHost(connectedPlayers: [MCPeerID]) {
+        players = connectedPlayers
+    }
+    
     func clientPlayerTurnedCard(playerName: String, card: Card) {
         let playerID = players[playerNames.firstIndex(of: playerName)!]
         throwCardInCenter(player: playerID, card: card)
@@ -344,7 +397,7 @@ extension GameManager: GameServiceGameHostDelegate {
     }
     
     func clientPlayerName(playerName: String) {
-        // set the name of the player
+        ////  set the name of the player
     }
     
     func clientGameOverMessage() {

@@ -35,6 +35,10 @@ protocol GameServiceGameClientDelegate {
     func remainingTime(time: Int)
     func cardsSwapped(byPlayer: String, index: Int)
     func gameHost(hostName: String)
+    func playerListFromHost(playerNameList: [String])
+    func connectedPlayersClient(connectedPlayers: [MCPeerID])
+    func playerColorIndex(index: Int)
+    func playerSelectedPosition(playerName: String, index: Int)
 }
 
 protocol GameServiceGameHostDelegate {
@@ -42,6 +46,8 @@ protocol GameServiceGameHostDelegate {
     func clientCardsSwapped(byPlayer: String, index: Int)
     func clientPlayerName(playerName: String)
     func clientGameOverMessage()
+    func connectedPlayersHost(connectedPlayers: [MCPeerID])
+    func clientPlayerSelectedPosition(playerName: String, index: Int)
 }
 
 //MARK:- Service Class
@@ -69,8 +75,15 @@ class GameService: NSObject {
     
     private var foundPeers = [MCPeerID]() {
         didSet {
-            print(foundPeers)
             browserDelegate?.updatedPeers(peers: foundPeers)
+        }
+    }
+    var isHost: Bool!
+    
+    private var connectedPeers: [MCPeerID]! = [] {
+        didSet {
+            gameHostDelegate?.connectedPlayersHost(connectedPlayers: connectedPeers)
+            gameClientDelegate?.connectedPlayersClient(connectedPlayers: connectedPeers)
         }
     }
         
@@ -94,10 +107,13 @@ class GameService: NSObject {
     }
 
     func hostSession() {
+        isHost = true
+        connectedPeers.append(myPeerID)
         advertiser.startAdvertisingPeer()
     }
     
     func joinSession() {
+        isHost = false
         browser.startBrowsingForPeers()
     }
     
@@ -116,6 +132,7 @@ class GameService: NSObject {
     
     func disconnectSession() {
         session.disconnect()
+        connectedPeers = []
     }
     
     //MARK:- Private methods
@@ -146,12 +163,22 @@ extension GameService: MCSessionDelegate {
         case .connected:
           print("Connected: \(peerID.displayName)")
           sessionDelegate?.connectedWithPeer(peerID: peerID)
+          if let index = connectedPeers.firstIndex(of: peerID) {
+              connectedPeers[index] = peerID
+          } else {
+              connectedPeers.append(peerID)
+          }
+          if isHost {
+            let playerIndex = connectedPeers.firstIndex(of: peerID)!
+            messageService.sendPlayerIndex(peerID: peerID, index: playerIndex)
+          }
         case .connecting:
           print("Connecting: \(peerID.displayName)")
         case .notConnected:
           print("Not Connected: \(peerID.displayName)")
           sessionDelegate?.connectionFailed(peerID: peerID)
           removePeer(id: peerID)
+          connectedPeers.removeAll(where: { $0.displayName == peerID.displayName })
         @unknown default:
           print("fatal error")
         }
@@ -208,6 +235,23 @@ extension GameService: MCSessionDelegate {
         case .ClientNameMessage:
             let clientPlayerName = messageService.getClientPlayerName(data: data)
             gameHostDelegate?.clientPlayerName(playerName: clientPlayerName)
+        case .PlayerNameListMessage:
+            let playerNameList = messageService.getPlayerNameList(data: data)
+//            gameClientDelegate?.playerListFromHost(playerNameList: playerNameList)
+        case .PlayerIndexMessage:
+            let playerIndex = messageService.getPlayerIndex(data: data)
+            gameClientDelegate?.playerColorIndex(index: playerIndex)
+            print("indexToPlay in service", playerIndex)
+        case .SelectedPositionHostMessage:
+            let dict = messageService.getSelectedPositionData(data: data)
+            let playerName = dict.keys.first!
+            let index = dict[playerName]!
+            gameClientDelegate?.playerSelectedPosition(playerName: playerName, index: index)
+        case .SelectedPositionClientMessage:
+            let dict = messageService.getSelectedPositionData(data: data)
+            let playerName = dict.keys.first!
+            let index = dict[playerName]!
+            gameHostDelegate?.clientPlayerSelectedPosition(playerName: playerName, index: index)
         }
         
         sessionDelegate?.recievedData(data: message, fromPeerID: peerID)

@@ -9,6 +9,8 @@
 import Foundation
 
 enum MessageType: Int {
+    //// HostMessage:- sent by host
+    //// ClientMessage:- sent by client
     case GameStateChangeMessage = 1
     case GameOverClientMessage = 2
     case GiveCardToPlayerMessage = 3
@@ -28,7 +30,14 @@ enum MessageType: Int {
     case HostNameMessage = 12
     case ClientNameMessage = 13
     
-    static let allMessageType = [MessageType.GameStateChangeMessage, .GameOverClientMessage, .GiveCardToPlayerMessage, .PlayerTurnedCardClientMessage, .PlayerTurnedCardHostMessage, .BoutWinnerMessage, .GameWinnerMessage, .RemainingTimeMessage, .CardsSwappedClientMessage, .CardsSwappedHostMessage, .NextPlayerTurnMessage, .HostNameMessage, .ClientNameMessage]
+    case PlayerNameListMessage = 14
+    
+    case PlayerIndexMessage = 15
+    
+    case SelectedPositionHostMessage = 16
+    case SelectedPositionClientMessage = 17
+    
+    static let allMessageType = [MessageType.GameStateChangeMessage, .GameOverClientMessage, .GiveCardToPlayerMessage, .PlayerTurnedCardClientMessage, .PlayerTurnedCardHostMessage, .BoutWinnerMessage, .GameWinnerMessage, .RemainingTimeMessage, .CardsSwappedClientMessage, .CardsSwappedHostMessage, .NextPlayerTurnMessage, .HostNameMessage, .ClientNameMessage, .PlayerNameListMessage, .PlayerIndexMessage, .SelectedPositionHostMessage, .SelectedPositionClientMessage]
     
     static func messageType(number: Int) -> MessageType {
         let messageTypeArray = allMessageType.map({ $0.rawValue })
