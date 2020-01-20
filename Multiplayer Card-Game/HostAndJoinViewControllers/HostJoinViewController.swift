@@ -63,12 +63,6 @@ class HostJoinViewController: UIViewController {
                 pageVC.isHost = true
                 pageVC.game = game
             }
-//            if let tabBarVC = segue.destination as? UITabBarController, let gameVC = tabBarVC.viewControllers?.first {
-//                if let gameVC = gameVC as? DeckGameViewController {
-//                    gameVC.game = game
-//                    gameVC.isHost = true
-//                }
-//            }
         }
     }
     

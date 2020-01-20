@@ -74,7 +74,7 @@
                                                     </attributedString>
                                                 </state>
                                                 <connections>
-                                                    <segue destination="uki-ix-de4" kind="presentation" identifier="Start Game segue" modalPresentationStyle="fullScreen" id="7GO-F7-g8b"/>
+                                                    <segue destination="uki-ix-de4" kind="presentation" identifier="Start Game segue" modalPresentationStyle="fullScreen" modalTransitionStyle="flipHorizontal" id="7GO-F7-g8b"/>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Begin a new game." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YBl-U8-6QF">
@@ -190,7 +190,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="uki-ix-de4" kind="presentation" identifier="Join Existing Segue" modalPresentationStyle="fullScreen" id="jyU-ve-oEG"/>
+                                            <segue destination="uki-ix-de4" kind="presentation" identifier="Join Existing Segue" modalPresentationStyle="fullScreen" modalTransitionStyle="flipHorizontal" id="Dkn-8u-LxE"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -1357,6 +1357,6 @@
         <image name="quit" width="512" height="512"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="jyU-ve-oEG"/>
+        <segue reference="Dkn-8u-LxE"/>
     </inferredMetricsTieBreakers>
 </document>

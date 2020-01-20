@@ -63,14 +63,13 @@ class JoinGameViewController: UIViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == segueIdentifier {
-//            if let tabBarVC = segue.destination as? UITabBarController, let gameVC = tabBarVC.viewControllers?.first {
             if let pageVC = segue.destination as? GamePageViewController {
                 if let cell = sender as? UITableViewCell {
                     pageVC.isHost = false
                     pageVC.game = game
-//                    if let gameVC = gameVC as? DeckGameViewController {
-//                        gameVC.game = game
-//                    }
+                    if let indexPath = lobbiesTableView.indexPathForSelectedRow {
+                        gameService.invitePeer(peerID: availableDevices[indexPath.item])
+                    }
                 }
             }
         }
@@ -87,8 +86,8 @@ class JoinGameViewController: UIViewController {
 
 extension JoinGameViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        gameService.invitePeer(peerID: availableDevices[indexPath.item])
-        performSegue(withIdentifier: segueIdentifier, sender: tableView.cellForRow(at: indexPath))
+//        gameService.invitePeer(peerID: availableDevices[indexPath.item])
+//        performSegue(withIdentifier: segueIdentifier, sender: tableView.cellForRow(at: indexPath))
     }
 }
 
