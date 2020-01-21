@@ -84,6 +84,11 @@ class GameManager {
             newGame(/*playersArray: self.connectedPlayers,*/ newGame: game)
         }
     }
+    var playersConnected: [MCPeerID] = [] {
+        didSet {
+            
+        }
+    }
     var playerCount: Int!
     var cardsForPlayer: [[Card]]! {
         didSet {
@@ -117,6 +122,14 @@ class GameManager {
             delegate?.cardStateUpdated(state: playerIndexState)
         }
     }
+    
+    let colorKey: [Int: String] = [
+        0: Constants.Colors.Crazy8.green.rawValue,
+        1: Constants.Colors.Crazy8.blue.rawValue,
+        2: Constants.Colors.Crazy8.pink.rawValue,
+        3: Constants.Colors.Crazy8.yellow.rawValue,
+        4: Constants.Colors.Crazy8.red.rawValue,
+    ]
     
     //MARK:- Initializers
     
@@ -320,6 +333,7 @@ extension GameManager: GameServiceGameClientDelegate {
     }
     
     func connectedPlayersClient(connectedPlayers: [MCPeerID]) {
+        playersConnected = connectedPlayers
         players = connectedPlayers
     }
     
@@ -398,7 +412,9 @@ extension GameManager: GameServiceGameHostDelegate {
     }
     
     func connectedPlayersHost(connectedPlayers: [MCPeerID]) {
+        playersConnected = connectedPlayers
         players = connectedPlayers
+        gameService.messageService.sendPlayerPositionState(positionState: playerIndexState, toHost: !isHost)
     }
     
     func clientPlayerTurnedCard(playerName: String, card: Card) {

@@ -14,12 +14,14 @@ class GamePageViewController: UIPageViewController {
     
     //// Crazy 8 viewcontrollers
     lazy var orderedViewControllers: [UIViewController] = {
-        return [self.newVc(viewController: "DeckGameViewController"),
-                self.newVc(viewController: "PlayerCardDeckViewController")]
+        let controller1 = newVc(viewController: "DeckGameViewController")
+        let controller2 = newVc(viewController: "PlayerCardDeckViewController")
+        return [controller1, controller2]
     }()
     var pageControl = UIPageControl()
     var isHost: Bool!
     var game: Game!
+    var deckController: DeckGameViewController!
 
     //MARK:- Lifecycle Hooks
     
@@ -47,31 +49,23 @@ class GamePageViewController: UIPageViewController {
         if let gameVC = vc as? DeckGameViewController {
             gameVC.game = game
             gameVC.isHost = isHost
+            deckController = gameVC
+        } else if let gameVC = vc as? PlayerCardDeckViewController {
+            gameVC.getColor = deckController.getColor
         }
         return vc
     }
 
     private func configurePageControl() {
-        // The total number of pages that are available is based on how many available colors we have.
         pageControl = UIPageControl(frame: CGRect(x: 0, y: UIScreen.main.bounds.maxY - 50, width: UIScreen.main.bounds.width, height: 50))
-        self.pageControl.numberOfPages = orderedViewControllers.count
-        self.pageControl.currentPage = 0
-        self.pageControl.tintColor = UIColor.black
-        self.pageControl.pageIndicatorTintColor = UIColor.white
-        self.pageControl.currentPageIndicatorTintColor = UIColor.black
-        self.view.addSubview(pageControl)
+        pageControl.numberOfPages = orderedViewControllers.count
+        pageControl.currentPage = 0
+        pageControl.tintColor = UIColor.black
+        pageControl.pageIndicatorTintColor = UIColor.white
+        pageControl.backgroundColor = UIColor.black
+        pageControl.currentPageIndicatorTintColor = UIColor.black
+        view.addSubview(pageControl)
     }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 
 //MARK:- UIPageViewController DataSource
@@ -126,6 +120,7 @@ extension GamePageViewController: UIPageViewControllerDataSource {
 extension GamePageViewController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         let pageContentViewController = pageViewController.viewControllers![0]
-        self.pageControl.currentPage = orderedViewControllers.firstIndex(of: pageContentViewController)!
+        pageControl.currentPage = orderedViewControllers.firstIndex(of: pageContentViewController)!
+        pageControl.currentPageIndicatorTintColor = Constants.Colors.color[GameManager.shared.colorKey[gameService.colorIndex]!]!
     }
 }

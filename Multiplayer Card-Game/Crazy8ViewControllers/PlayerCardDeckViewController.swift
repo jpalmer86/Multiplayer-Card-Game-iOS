@@ -21,21 +21,17 @@ class PlayerCardDeckViewController: UIViewController {
     var cards: [Card]? {
         didSet {
             updateUI()
+            
         }
     }
-    var indexToPlay = 0 //// This should be set by the gameManager
-    private let colorKey: [Int: String] = [
-        0: Constants.Colors.Crazy8.green.rawValue,
-        1: Constants.Colors.Crazy8.blue.rawValue,
-        2: Constants.Colors.Crazy8.pink.rawValue,
-        3: Constants.Colors.Crazy8.yellow.rawValue,
-        4: Constants.Colors.Crazy8.red.rawValue,
-    ]
+    private var selectedColor: UIColor!
+    var getColor: (() -> UIColor)!
     
     //MARK:- Lifecycle Hooks
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        selectedColor = getColor()
         gameManager.cardsDelegate = self
                 
         if let index = gameManager.players.firstIndex(of: GameService.shared.getPeerID()) {
@@ -62,13 +58,14 @@ class PlayerCardDeckViewController: UIViewController {
     //MARK:- Custom Methods
     
     private func updateUI() {
+        
         DispatchQueue.main.async { [unowned self] in
             guard let cards = self.cards else { return }
             for cardView in self.cardViews {
                 cardView.alpha = 0
                 cardView.isUserInteractionEnabled = false
                 cardView.addShadow()
-                cardView.addBorder(color: Constants.Colors.color[self.colorKey[self.indexToPlay]!]!)
+                cardView.addBorder(color: self.selectedColor)
             }
             for (index,card) in cards.enumerated() {
                 self.cardViews[index].rank = card.rank.order

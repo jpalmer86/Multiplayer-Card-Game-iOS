@@ -79,6 +79,7 @@ class GameService: NSObject {
         }
     }
     var isHost: Bool!
+    var colorIndex = 0
     
     private var connectedPeers: [MCPeerID]! = [] {
         didSet {
@@ -111,7 +112,6 @@ class GameService: NSObject {
 
     func hostSession() {
         isHost = true
-        connectedPeers.append(myPeerID)
         advertiser.startAdvertisingPeer()
     }
     
@@ -135,7 +135,7 @@ class GameService: NSObject {
     
     func disconnectSession() {
         session.disconnect()
-        connectedPeers = []
+        connectedPeers = [myPeerID]
     }
     
     //MARK:- Private methods
@@ -146,6 +146,7 @@ class GameService: NSObject {
             advertiser.delegate = self
             browser = MCNearbyServiceBrowser(peer: myPeerID, serviceType: serviceType)
             browser.delegate = self
+            connectedPeers = [myPeerID]
         }
     }
     
@@ -244,7 +245,7 @@ extension GameService: MCSessionDelegate {
         case .PlayerIndexMessage:
             let playerIndex = messageService.getPlayerIndex(data: data)
             gameClientDelegate?.playerColorIndex(index: playerIndex)
-            print("indexToPlay in service", playerIndex)
+            colorIndex = playerIndex
         case .PositionStateHostMessage:
             let positionArray = messageService.getSelectedPositionData(data: data)
             gameClientDelegate?.hostPositionStateChanged(stateArray: positionArray)

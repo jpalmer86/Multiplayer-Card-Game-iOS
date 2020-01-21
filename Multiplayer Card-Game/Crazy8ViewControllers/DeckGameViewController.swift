@@ -67,13 +67,7 @@ class DeckGameViewController: UIViewController {
     
     private var cardViews: [[UIView]]!
     private var noPlayer = Constants.noplayer
-    private let colorKey: [Int: String] = [
-        0: Constants.Colors.Crazy8.green.rawValue,
-        1: Constants.Colors.Crazy8.blue.rawValue,
-        2: Constants.Colors.Crazy8.pink.rawValue,
-        3: Constants.Colors.Crazy8.yellow.rawValue,
-        4: Constants.Colors.Crazy8.red.rawValue,
-    ]
+    private var colorKey: [Int: String]!
     private let unSelectColor = Constants.Colors.color[Constants.Colors.Crazy8.lightGrey.rawValue]!
     private let takenColor = Constants.Colors.color[Constants.Colors.Crazy8.darkGrey.rawValue]!
     private var selectedColor: UIColor! {
@@ -159,19 +153,33 @@ class DeckGameViewController: UIViewController {
             }
             switch gameState {
             case .waitingForPlayers:
-                title = "Waiting for Players..."
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.title = "Waiting for Players..."
+                    var gameStateDescription = ""
+                    if self.isHost {
+                        gameStateDescription = "Start the game or wait for more devices"
+                    } else {
+                       gameStateDescription = "Will begin when host taps Start Game"
+                    }
+                    self.gameStateLabel.text = gameStateDescription
+                }
             case .dealing:
                 DispatchQueue.main.async { [unowned self] in
-                    
                     self.title = "Game"
                     if self.isHost {
                         gameService.stopAdvertisingToPeers()
                     }
-                    for index in 0..<self.connectedPlayers.count {
-                        self.roundsWonLabel[index].isHidden = false
+                    for index in 0..<self.playerIndexState.count {
+                        if self.playerIndexState[index] != self.noPlayer {
+                            self.roundsWonLabel[index].isHidden = false
+                        }
                     }
                     self.timeLabel.isHidden = false
                     self.connectedPlayersLabel.isHidden = true
+                    self.gameStateLabel.text = "Game has started"
+                    self.startGameAndOptionsButton.setTitle("Options", for: .normal)
+                    self.disableUserInteraction(viewArrays: self.cardViews)
                 }
             case .decidingRoundWinner:
                 print("round winner decided")
@@ -221,25 +229,26 @@ class DeckGameViewController: UIViewController {
             gameService.advertiserDelegate = self
             gameService.sessionDelegate = self
             connectedPlayers = [gameService.getPeerID()]
+            colorKey = gameManager.colorKey
             selectedColor = Constants.Colors.color[colorKey[indexToPlay]!]!
             gameManager.delegate = self
         }
     }
-
     
     //MARK:- IBActions
     
     @IBAction func startGameOrOptions(_ sender: UIButton) {
         if connectedPlayers.count >= gameManager.minPlayersNeeded {
-            gameState = .dealing
-            print("Start Game")
-            startGame()
-            disableUserInteraction(viewArrays: cardViews)
+            if getSelectedPlayerCount() > 1 {
+                gameState = .dealing
+                startGame()
+            } else {
+                showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded) players to start the game")
+            }
         } else {
             showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded) players to start the game")
         }
     }
-    
     
     //MARK:- Lifecycle Hooks
 
@@ -273,7 +282,7 @@ class DeckGameViewController: UIViewController {
                 deckView.addGestureRecognizer(tapRecognizer)
             }
         } else {
-            startGameAndOptionsButton.setTitle("Waiting...", for: .normal)
+            startGameAndOptionsButton.setTitle("Waiting for Game Start", for: .normal)
             connectingAlert = loadingAlert(title: "Connecting ...")
             present(connectingAlert!, animated: true, completion: nil)
             gameService.stopBrowsingForPeers()
@@ -326,6 +335,22 @@ class DeckGameViewController: UIViewController {
             newPlayerIndexState[0] = myName
             gameManager.changeplayerIndexState(state: newPlayerIndexState)
         }
+    }
+    
+    func getColor() -> UIColor {
+        return selectedColor
+    }
+    
+    //MARK:- Private Methods
+    
+    private func getSelectedPlayerCount() -> Int {
+        var count = 0
+        for playerName in playerIndexState {
+            if playerName != noPlayer {
+                count += 1
+            }
+        }
+        return count
     }
     
     private func getPlayerIndexOf(cardView: UIView) -> Int? {
