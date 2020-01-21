@@ -129,15 +129,20 @@ class MessageService {
         }
     }
     
-    func sendPlayerSelectedPosition(playerName: String, position: Int, toHost: Bool) {
-        
+    func sendPlayerPositionState(positionState: [String], toHost: Bool) {
         if toHost {
-            let message = "\(MessageType.SelectedPositionClientMessage.rawValue)\(seperator)\(playerName)\(seperator)\(position)"
+            var message = "\(MessageType.PositionStateClientMessage.rawValue)\(seperator)\(positionState[0])"
+            for i in 1..<positionState.count {
+                message = "\(message),\(positionState[i])"
+            }
             sendToHost(message: message) { (result) in
                 //
             }
         } else {
-            let message = "\(MessageType.SelectedPositionHostMessage.rawValue)\(seperator)\(playerName)\(seperator)\(position)"
+            var message = "\(MessageType.PositionStateHostMessage.rawValue)\(seperator)\(positionState[0])"
+            for i in 1..<positionState.count {
+                message = "\(message),\(positionState[i])"
+            }
             send(message: message) { (result) in
                 //
             }
@@ -267,17 +272,18 @@ class MessageService {
         return Int(messageArray[1])!
     }
     
-    func getSelectedPositionData(data: Data) -> [String: Int] {
+    func getSelectedPositionData(data: Data) -> [String] {
         let message = String(data: data, encoding: .utf8)!
          
         let characterArray = message.split(separator: Character(seperator))
         let messageArray = characterArray.map({ String($0) })
                 
-        let playerName = messageArray[1]
+        let positionStateArray = messageArray[1]
         
-        let index = Int(messageArray[2])!
-                
-        return [playerName: index]
+        let positionStateCharacterArray = positionStateArray.split(separator: Character(","))
+        let positionArray = positionStateCharacterArray.map({ String($0) })
+                        
+        return positionArray
     }
         
     //MARK:- Private Methods

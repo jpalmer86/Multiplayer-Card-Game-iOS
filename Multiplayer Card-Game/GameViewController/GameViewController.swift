@@ -394,6 +394,10 @@ extension GameViewController: GameServiceAdvertiserDelegate {
 //MARK:- GameManager Delegate Methods
 
 extension GameViewController: GameManagerDelegate {
+    func cardStateUpdated(state: [String]) {
+        //
+    }
+    
     func playerColorIndex(index: Int) {
         //
     }

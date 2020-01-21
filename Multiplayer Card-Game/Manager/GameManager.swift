@@ -20,7 +20,7 @@ protocol GameManagerDelegate {
     func roundsWonPerPlayer(wonCountArray: [Int])
     func playerList(playerList: [MCPeerID])
     func playerColorIndex(index: Int)
-//    func cardStateUpdated(index: Int, state: CardsState)
+    func cardStateUpdated(state: [String])
     func quit()
 }
 
@@ -34,6 +34,7 @@ class GameManager {
     static var shared = GameManager()
     private var deck: Deck!
     private let numberOfCardsPerPlayer = 13
+    private let noPlayer = Constants.noplayer
     private var currentPlayerIndex = 0 {
         didSet {
             delegate?.nextPlayerTurn(playerName: players[currentPlayerIndex].displayName)
@@ -80,6 +81,7 @@ class GameManager {
     var players: [MCPeerID] = [] {
         didSet {
             playerNames = players.map({ $0.displayName })
+            newGame(/*playersArray: self.connectedPlayers,*/ newGame: game)
         }
     }
     var playerCount: Int!
@@ -110,9 +112,9 @@ class GameManager {
         }
     }
     
-    var playerCardState: [CardsState] = [.unselected, .unselected, .unselected, .unselected, .unselected] {
+    var playerIndexState: [String] = ["noPlayer", "noPlayer", "noPlayer", "noPlayer", "noPlayer"] {
         didSet {
-//            delegate?.cardStateUpdated(state: playerCardState)
+            delegate?.cardStateUpdated(state: playerIndexState)
         }
     }
     
@@ -136,6 +138,11 @@ class GameManager {
     }
     
     func newGame(/*playersArray: [MCPeerID],*/ newGame: Game) {
+        
+        if isHost {
+            sendHostID(name: gameService.getPeerID().displayName)
+        }
+        
         game = newGame
         minPlayersNeeded = game.minPlayers
         playerCount = players.count
@@ -150,6 +157,8 @@ class GameManager {
             cardsWonPerPlayer.append([Card]())
             roundsWonPerPlayer.append(0)
         }
+        
+        playerIndexState = [noPlayer, noPlayer, noPlayer, noPlayer, noPlayer]
     }
     
     func distributeCards(uiHandler: @escaping (Result<(Card,MCPeerID),CardError>) -> Void) {
@@ -203,6 +212,13 @@ class GameManager {
     
     func endGame() {
         stopTimer()
+    }
+    
+    func changeplayerIndexState(state: [String]) {
+        if isHost {
+            playerIndexState = state
+        }
+        gameService.messageService.sendPlayerPositionState(positionState: state, toHost: !isHost)
     }
     
     //MARK:- Private Methods
@@ -369,16 +385,16 @@ extension GameManager: GameServiceGameClientDelegate {
         swapCardWithFirst(player: player, index: index)
     }
     
-    func playerSelectedPosition(playerName: String, index: Int) {
-        
+    func hostPositionStateChanged(stateArray: [String]) {
+        playerIndexState = stateArray
     }
 }
 
 //MARK:- GameService Game Host Delegate Methods
 
 extension GameManager: GameServiceGameHostDelegate {
-    func clientPlayerSelectedPosition(playerName: String, index: Int) {
-        
+    func clientPlayerPositionChanged(stateArray: [String]) {
+        changeplayerIndexState(state: stateArray)
     }
     
     func connectedPlayersHost(connectedPlayers: [MCPeerID]) {

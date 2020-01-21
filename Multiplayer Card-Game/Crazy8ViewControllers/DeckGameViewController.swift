@@ -66,7 +66,7 @@ class DeckGameViewController: UIViewController {
     }
     
     private var cardViews: [[UIView]]!
-
+    private var noPlayer = Constants.noplayer
     private let colorKey: [Int: String] = [
         0: Constants.Colors.Crazy8.green.rawValue,
         1: Constants.Colors.Crazy8.blue.rawValue,
@@ -87,32 +87,44 @@ class DeckGameViewController: UIViewController {
     
     private var cardViewsState: [CardsState]! {
         didSet {
-            for index in 0..<cardViewsState.count {
-                switch cardViewsState[index] {
-                case .unselected:
-                    if index == 0 {
-                        setViewColor(viewsArray: [cardViews[index][0]], color: unSelectColor)
-                        addBorderToViews(viewArrays: [[cardViews[index][1]]], color: UIColor.white)
-                    } else {
-                        setViewColor(viewsArray: cardViews[index], color: unSelectColor)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                
+                for index in 0..<self.cardViewsState.count {
+                    switch self.cardViewsState[index] {
+                    case .unselected:
+                        if index == 0 {
+                            self.setViewColor(viewsArray: [self.cardViews[index][0]], color: self.unSelectColor)
+                            self.addBorderToViews(viewArrays: [[self.cardViews[index][1]]], color: UIColor.white)
+                        } else {
+                            self.setViewColor(viewsArray: self.cardViews[index], color: self.unSelectColor)
+                        }
+                        self.playerNameLabel[index].textColor = self.unSelectColor
+                        var name = "Player \(index)"
+                        if index == 0 {
+                            name = "Deck"
+                        }
+                        self.playerNameLabel[index].text = name
+                    case .selected:
+                        if index == 0 {
+                            self.setViewColor(viewsArray: [self.cardViews[index][0]], color: self.selectedColor)
+                            self.addBorderToViews(viewArrays: [[self.cardViews[index][1]]], color: self.selectedColor)
+                        } else {
+                            self.setViewColor(viewsArray: self.cardViews[index], color: self.selectedColor)
+                        }
+                        self.playerNameLabel[index].textColor = self.selectedColor
+                        self.playerNameLabel[index].text = self.playerIndexState[index]
+                        print(self.playerIndexState[index])
+                    case .taken:
+                        if index == 0 {
+                            self.setViewColor(viewsArray: [self.cardViews[index][0]], color: self.takenColor)
+                            self.addBorderToViews(viewArrays: [[self.cardViews[index][1]]], color: self.takenColor)
+                        } else {
+                            self.setViewColor(viewsArray: self.cardViews[index], color: self.takenColor)
+                        }
+                        self.playerNameLabel[index].textColor = self.takenColor
+                        self.playerNameLabel[index].text = self.playerIndexState[index]
                     }
-                    playerNameLabel[index].textColor = unSelectColor
-                case .selected:
-                    if index == 0 {
-                        setViewColor(viewsArray: [cardViews[index][0]], color: selectedColor)
-                        addBorderToViews(viewArrays: [[cardViews[index][1]]], color: selectedColor)
-                    } else {
-                        setViewColor(viewsArray: cardViews[index], color: selectedColor)
-                    }
-                    playerNameLabel[index].textColor = selectedColor
-                case .taken:
-                    if index == 0 {
-                        setViewColor(viewsArray: [cardViews[index][0]], color: takenColor)
-                        addBorderToViews(viewArrays: [[cardViews[index][1]]], color: takenColor)
-                    } else {
-                        setViewColor(viewsArray: cardViews[index], color: takenColor)
-                    }
-                    playerNameLabel[index].textColor = takenColor
                 }
             }
         }
@@ -138,6 +150,7 @@ class DeckGameViewController: UIViewController {
         }
     }
     private let animationDuration = 0.8
+    private let myName = gameService.getPeerID().displayName
     
     private var gameState: GameState! {
         didSet {
@@ -189,12 +202,27 @@ class DeckGameViewController: UIViewController {
         }
     }
     
+    private var playerIndexState: [String] = ["noPlayer", "noPlayer", "noPlayer", "noPlayer", "noPlayer"] {
+        didSet {
+            for (i,playerName) in playerIndexState.enumerated() {
+                if playerName == noPlayer {
+                    cardViewsState[i] = .unselected
+                } else if playerName == myName {
+                    cardViewsState[i] = .selected
+                } else {
+                    cardViewsState[i] = .taken
+                }
+            }
+        }
+    }
+    
     var game: Game! {
         didSet {
             gameService.advertiserDelegate = self
             gameService.sessionDelegate = self
             connectedPlayers = [gameService.getPeerID()]
             selectedColor = Constants.Colors.color[colorKey[indexToPlay]!]!
+            gameManager.delegate = self
         }
     }
 
@@ -202,8 +230,14 @@ class DeckGameViewController: UIViewController {
     //MARK:- IBActions
     
     @IBAction func startGameOrOptions(_ sender: UIButton) {
-        print("Start Game")
-        startGame()
+        if connectedPlayers.count >= gameManager.minPlayersNeeded {
+            gameState = .dealing
+            print("Start Game")
+            startGame()
+            disableUserInteraction(viewArrays: cardViews)
+        } else {
+            showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded) players to start the game")
+        }
     }
     
     
@@ -221,7 +255,7 @@ class DeckGameViewController: UIViewController {
         addShadowToViews(viewArrays: [player1Cards, player2Cards, player3Cards, player4Cards], offset: Constants.shadowOffsetCard)
         
         addBorderToViews(viewArrays: [emptyPlayerView])
-        rotateViewArray(viewArrays: [[playerNameLabel[1], playerNameLabel[2], playerNameLabel[3], playerNameLabel[4]], emptyPlayerView, [player1StackView, player2StackView, player3StackView, player4StackView]])
+        rotateViewArray(viewArrays: [emptyPlayerView, [player1StackView, player2StackView, player3StackView, player4StackView]])
         
         for label in playerNameLabel {
             label.textColor = unSelectColor
@@ -252,8 +286,6 @@ class DeckGameViewController: UIViewController {
             }
         }
         
-        gameManager.delegate = self
-        
         gameState = .waitingForPlayers
 
     }
@@ -274,22 +306,26 @@ class DeckGameViewController: UIViewController {
     
     @objc func selectedPlayer(_ sender: UIGestureRecognizer) {
         if let tappedView = sender.view, let playerIndex = getPlayerIndexOf(cardView: tappedView) {
-            for index in 0..<cardViewsState.count {
-                if cardViewsState[index] == .selected {
-                    cardViewsState[index] = .unselected
+            var newPlayerIndexState = playerIndexState
+            if cardViewsState[playerIndex] == .unselected {
+                if let index = newPlayerIndexState.firstIndex(of: myName) {
+                    newPlayerIndexState[index] = noPlayer
                 }
+                newPlayerIndexState[playerIndex] = myName
+                gameManager.changeplayerIndexState(state: newPlayerIndexState)
             }
-            cardViewsState[playerIndex] = .selected
         }
     }
     
     @objc func selectDeck(_ sender: UIGestureRecognizer) {
-        for index in 0..<cardViewsState.count {
-            if cardViewsState[index] == .selected {
-                cardViewsState[index] = .unselected
+        var newPlayerIndexState = playerIndexState
+        if cardViewsState[0] == .unselected {
+            if let index = newPlayerIndexState.firstIndex(of: myName) {
+                newPlayerIndexState[index] = noPlayer
             }
+            newPlayerIndexState[0] = myName
+            gameManager.changeplayerIndexState(state: newPlayerIndexState)
         }
-        cardViewsState[0] = .selected
     }
     
     private func getPlayerIndexOf(cardView: UIView) -> Int? {
@@ -444,6 +480,9 @@ extension DeckGameViewController: GameServiceAdvertiserDelegate {
 //MARK:- GameManager Delegate Methods
 
 extension DeckGameViewController: GameManagerDelegate {
+    func cardStateUpdated(state: [String]) {
+        playerIndexState = state
+    }
     
     func playerColorIndex(index: Int) {
         indexToPlay = index

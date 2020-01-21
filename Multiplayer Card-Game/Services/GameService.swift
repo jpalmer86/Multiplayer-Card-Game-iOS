@@ -38,7 +38,7 @@ protocol GameServiceGameClientDelegate {
     func playerListFromHost(playerNameList: [String])
     func connectedPlayersClient(connectedPlayers: [MCPeerID])
     func playerColorIndex(index: Int)
-    func playerSelectedPosition(playerName: String, index: Int)
+    func hostPositionStateChanged(stateArray: [String])
 }
 
 protocol GameServiceGameHostDelegate {
@@ -47,7 +47,7 @@ protocol GameServiceGameHostDelegate {
     func clientPlayerName(playerName: String)
     func clientGameOverMessage()
     func connectedPlayersHost(connectedPlayers: [MCPeerID])
-    func clientPlayerSelectedPosition(playerName: String, index: Int)
+    func clientPlayerPositionChanged(stateArray: [String])
 }
 
 //MARK:- Service Class
@@ -84,6 +84,9 @@ class GameService: NSObject {
         didSet {
             gameHostDelegate?.connectedPlayersHost(connectedPlayers: connectedPeers)
             gameClientDelegate?.connectedPlayersClient(connectedPlayers: connectedPeers)
+            if connectedPeers.count > 1 {
+                messageService.setHost(hostID: connectedPeers[1])
+            }
         }
     }
         
@@ -242,16 +245,12 @@ extension GameService: MCSessionDelegate {
             let playerIndex = messageService.getPlayerIndex(data: data)
             gameClientDelegate?.playerColorIndex(index: playerIndex)
             print("indexToPlay in service", playerIndex)
-        case .SelectedPositionHostMessage:
-            let dict = messageService.getSelectedPositionData(data: data)
-            let playerName = dict.keys.first!
-            let index = dict[playerName]!
-            gameClientDelegate?.playerSelectedPosition(playerName: playerName, index: index)
-        case .SelectedPositionClientMessage:
-            let dict = messageService.getSelectedPositionData(data: data)
-            let playerName = dict.keys.first!
-            let index = dict[playerName]!
-            gameHostDelegate?.clientPlayerSelectedPosition(playerName: playerName, index: index)
+        case .PositionStateHostMessage:
+            let positionArray = messageService.getSelectedPositionData(data: data)
+            gameClientDelegate?.hostPositionStateChanged(stateArray: positionArray)
+        case .PositionStateClientMessage:
+            let positionArray = messageService.getSelectedPositionData(data: data)
+            gameHostDelegate?.clientPlayerPositionChanged(stateArray: positionArray)
         }
         
         sessionDelegate?.recievedData(data: message, fromPeerID: peerID)
