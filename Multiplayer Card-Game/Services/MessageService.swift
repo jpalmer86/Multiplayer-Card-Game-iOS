@@ -33,6 +33,10 @@ class MessageService {
         self.hostPeerID = hostID
     }
     
+    func getHost() -> MCPeerID {
+        return hostPeerID
+    }
+    
     //MARK:- Sending Methods
     
     func sendCardExchangePlayerMessage(played: MessageType, card: Card, player: String) {
@@ -113,12 +117,14 @@ class MessageService {
     }
     
     func sendPlayerListData(names: [String]) {
-        var message = "\(MessageType.PlayerNameListMessage.rawValue)\(seperator)\(names[0])"
-        for i in 1..<names.count {
+        var message = "\(MessageType.PlayerNameListMessage.rawValue)"
+        for i in 0..<names.count {
             message = "\(message)\(seperator)\(names[i])"
         }
-        send(message: message) { (result) in
-            //
+        if names.count > 0 {
+            send(message: message) { (result) in
+                //
+            }
         }
     }
     

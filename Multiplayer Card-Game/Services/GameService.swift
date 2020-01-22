@@ -34,7 +34,6 @@ protocol GameServiceGameClientDelegate {
     func playerTurnedCard(playerName: String, card: Card)
     func remainingTime(time: Int)
     func cardsSwapped(byPlayer: String, index: Int)
-    func gameHost(hostName: String)
     func playerListFromHost(playerNameList: [String])
     func connectedPlayersClient(connectedPlayers: [MCPeerID])
     func playerColorIndex(index: Int)
@@ -235,7 +234,6 @@ extension GameService: MCSessionDelegate {
         case .HostNameMessage:
             let hostName = messageService.getHostNameData(data: data)
             print("Game Host is:",hostName)
-            gameClientDelegate?.gameHost(hostName: hostName)
         case .ClientNameMessage:
             let clientPlayerName = messageService.getClientPlayerName(data: data)
             gameHostDelegate?.clientPlayerName(playerName: clientPlayerName)

@@ -14,18 +14,39 @@ class PlayerCardDeckViewController: UIViewController {
     
     @IBOutlet var cardViews: [CardView]!
     @IBOutlet var cardStackView: UIStackView!
+    @IBOutlet var deckStackView: UIStackView!
+    @IBOutlet var leftDeckView: CardView!
+    @IBOutlet var rightDeckView: UIView! {
+        didSet {
+            rightDeckTopCardView = CardView(frame: rightDeckView.frame)
+        }
+    }
     
     //MARK:- Property Variables
     
     private let gameManager = GameManager.shared
+    private var selectedColor: UIColor! = UIColor.white
+    private var isDeck = false {
+        didSet {
+            if isDeck {
+                deckStackView?.isHidden = false
+                cardStackView?.isHidden = true
+            } else {
+                deckStackView?.isHidden = true
+                cardStackView?.isHidden = false
+            }
+        }
+    }
+    private var isHost = false
+    
+    private var rightDeckTopCardView = CardView()
     var cards: [Card]? {
         didSet {
             updateUI()
-            
         }
     }
-    private var selectedColor: UIColor!
     var getColor: (() -> UIColor)!
+    private var enableInteraction: Bool!
     
     //MARK:- Lifecycle Hooks
     
@@ -38,11 +59,26 @@ class PlayerCardDeckViewController: UIViewController {
             cards = gameManager.cardsForPlayer[index]
         }
         
+        let dropInteraction = UIDropInteraction(delegate: self)
+        view.addInteraction(dropInteraction)
+        
         for cardView in cardViews {
+            cardView.addShadow()
             cardView.transform = .init(rotationAngle: -CGFloat.pi/2)
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectCard(_:)))
             cardView.addGestureRecognizer(tapGesture)
+            
+            let dragInteraction = UIDragInteraction(delegate: self)
+            dragInteraction.isEnabled = true
+            cardView.addInteraction(dragInteraction)
         }
+        
+        deckStackView.transform = .init(rotationAngle: -CGFloat.pi/2)
+        leftDeckView.addShadow()
+        rightDeckView.addShadow()
+        rightDeckView.addBorder(color: self.selectedColor)
+        rightDeckTopCardView.isHidden = true
+        rightDeckView.addSubview(rightDeckTopCardView)
     }
     
     //MARK:- ViewController Methods
@@ -57,29 +93,53 @@ class PlayerCardDeckViewController: UIViewController {
     
     //MARK:- Custom Methods
     
+    func setDeck(deck: Bool) {
+        isDeck = deck
+    }
+    
+    func enablePlayer(enable: Bool) {
+        enableInteraction = enable
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self, let cardViews = self.cardViews else { return }
+            for cardView in cardViews {
+                cardView.isUserInteractionEnabled = enable
+            }
+        }
+    }
+    
     private func updateUI() {
-        
         DispatchQueue.main.async { [unowned self] in
             guard let cards = self.cards else { return }
-            for cardView in self.cardViews {
-                cardView.alpha = 0
-                cardView.isUserInteractionEnabled = false
-                cardView.addShadow()
-                cardView.addBorder(color: self.selectedColor)
-            }
-            for (index,card) in cards.enumerated() {
-                self.cardViews[index].rank = card.rank.order
-                self.cardViews[index].suit = card.suit.description
-                self.cardViews[index].isFaceUp = true
-                self.cardViews[index].alpha = 1
-                self.cardViews[index].isUserInteractionEnabled = true
+            if self.isDeck {
+                if let cards = self.cards, cards.count > 0 {
+                    let card = cards.last!
+                    self.rightDeckTopCardView.rank = card.rank.order
+                    self.rightDeckTopCardView.suit = card.suit.description
+                    self.rightDeckTopCardView.isHidden = false
+                }
+            } else {
+                for cardView in self.cardViews {
+                    cardView.alpha = 0
+                    cardView.isFaceUp = true
+                    cardView.addShadow()
+                    cardView.addBorder(color: self.selectedColor)
+                    cardView.isUserInteractionEnabled = false
+                }
+                for (index,card) in cards.enumerated() {
+                    self.cardViews[index].rank = card.rank.order
+                    self.cardViews[index].suit = card.suit.description
+                    self.cardViews[index].isFaceUp = true
+                    self.cardViews[index].alpha = 1
+                    self.cardViews[index].isUserInteractionEnabled = self.enableInteraction
+                }
             }
         }
     }
     
     @objc func selectCard(_ sender: UITapGestureRecognizer? = nil) {
         if let senderView = sender?.view, let cardView = senderView as? CardView, let index = cardViews.firstIndex(of: cardView) {
-            gameManager.swapCard(player: gameService.getPeerID(),index: index)
+//            gameManager.swapCard(player: gameService.getPeerID(),index: index)
+            print("tap gesture working with drag interaction")
         }
     }
 }
@@ -87,7 +147,35 @@ class PlayerCardDeckViewController: UIViewController {
 //MARK:- GameCard Manager Delegate Methods
 
 extension PlayerCardDeckViewController: GameCardManagerDelegate {
-    func cardsSwapped(updatedCards: [Card]) {
+    func cardsSwapped(updatedCards: [Card], deck: Bool) {
         cards = updatedCards
+    }
+}
+
+//MARK:- UIDragInteraction Delegate Methods
+
+extension PlayerCardDeckViewController: UIDragInteractionDelegate {
+    func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
+        let rank = cardViews[0].rank
+        let suit = cardViews[0].suit
+        let object = "\(rank)-\(suit)"
+        let stringProvider = NSItemProvider(object: object as NSString)
+        return [UIDragItem(itemProvider: stringProvider)]
+    }
+}
+
+//MARK:- UIDropInteraction Delegate Methods
+
+extension PlayerCardDeckViewController: UIDropInteractionDelegate {
+    func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
+        return session.items.count == 1
+    }
+    
+    func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
+        return UIDropProposal(operation: .move)
+    }
+    
+    func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
+        gameManager.throwCardInCenter(player: gameManager.playersConnected[0], card: gameManager.cardsForPlayer[0][0])
     }
 }

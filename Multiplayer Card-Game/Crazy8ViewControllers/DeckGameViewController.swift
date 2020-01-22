@@ -170,7 +170,7 @@ class DeckGameViewController: UIViewController {
                     if self.isHost {
                         gameService.stopAdvertisingToPeers()
                     }
-                    for index in 0..<self.playerIndexState.count {
+                    for index in 1..<self.playerIndexState.count {
                         if self.playerIndexState[index] != self.noPlayer {
                             self.roundsWonLabel[index].isHidden = false
                         }
@@ -234,6 +234,9 @@ class DeckGameViewController: UIViewController {
             gameManager.delegate = self
         }
     }
+    
+    var setDeck: ((Bool) -> Void)!
+    var enablePlayer: ((Bool)->Void)!
     
     //MARK:- IBActions
     
@@ -404,10 +407,6 @@ class DeckGameViewController: UIViewController {
         }
     }
     
-    private func enablePlayer() {
-        //enable player for drag gesture
-    }
-    
     private func quit(_ sender: Any) {
         alert(title: "Confirm disconnection:", message: "Are you sure you want to end the game?") { response in
             if response {
@@ -548,17 +547,26 @@ extension DeckGameViewController: GameManagerDelegate {
             self?.playersTurnLabel.isHidden = false
             self?.playersTurnLabel.text = "\(playerName)'s turn"
             if self?.connectedPlayers[0].displayName == playerName {
-                self?.enablePlayer()
+                self?.enablePlayer(true)
+            } else {
+                self?.enablePlayer(false)
             }
         }
     }
     
-    func roundsWonPerPlayer(wonCountArray: [Int]) {
+    func roundsWonPerPlayer(playerArray: [String], wonCountArray: [Int]) {
         DispatchQueue.main.async { [weak self] in
-            for (index,roundsWon) in wonCountArray.enumerated() {
-                self?.roundsWonLabel[index].text = "Won: \(roundsWon)"
+            guard let self = self, wonCountArray.count > 0 else { return }
+            for (index,playername) in playerArray.enumerated() {
+                if let playerIndex = self.playerIndexState.firstIndex(of: playername) {
+                    self.roundsWonLabel[playerIndex].text = "Won: \(wonCountArray[index])"
+                }
             }
         }
+    }
+    
+    func setDeck(deck: Bool) {
+        setDeck(deck)
     }
     
     func quit() {

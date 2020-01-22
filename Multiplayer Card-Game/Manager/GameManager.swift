@@ -17,15 +17,16 @@ protocol GameManagerDelegate {
     func gaveCardToPlayer(card: Card, playerName: String)
     func playerTurnedCard(player: MCPeerID, card: Card)
     func nextPlayerTurn(playerName: String)
-    func roundsWonPerPlayer(wonCountArray: [Int])
+    func roundsWonPerPlayer(playerArray: [String],wonCountArray: [Int])
     func playerList(playerList: [MCPeerID])
     func playerColorIndex(index: Int)
     func cardStateUpdated(state: [String])
+    func setDeck(deck: Bool)
     func quit()
 }
 
 protocol GameCardManagerDelegate {
-    func cardsSwapped(updatedCards: [Card])
+    func cardsSwapped(updatedCards: [Card], deck: Bool)
 }
 
 class GameManager {
@@ -59,6 +60,10 @@ class GameManager {
         }
     }
     private var isHost = true
+    lazy var hostID: MCPeerID = {
+        let id = gameService.messageService.getHost()
+        return id
+    }()
     private let myPeerID = gameService.getPeerID()
     private var colorIndex = 0 {
         didSet {
@@ -66,12 +71,12 @@ class GameManager {
         }
     }
     private var game: Game!
-    
+
     var delegate: GameManagerDelegate?
     var cardsDelegate: GameCardManagerDelegate?
 
     var minPlayersNeeded = 1
-    var playerNames: [String]! {
+    var playerNames: [String]! = [] {
         didSet {
             if isHost {
                 gameService.messageService.sendPlayerListData(names: playerNames)
@@ -80,20 +85,23 @@ class GameManager {
     }
     var players: [MCPeerID] = [] {
         didSet {
-            playerNames = players.map({ $0.displayName })
             newGame(/*playersArray: self.connectedPlayers,*/ newGame: game)
         }
     }
     var playersConnected: [MCPeerID] = [] {
         didSet {
-            
+            players = playersConnected
         }
     }
     var playerCount: Int!
     var cardsForPlayer: [[Card]]! {
         didSet {
             if cardsForPlayer.count > 0 {
-                cardsDelegate?.cardsSwapped(updatedCards: cardsForPlayer[0])
+                if isHost && playerIndexState[0] == myPeerID.displayName {
+                    //// print("host is a deck, so no cards given from here")
+                } else {
+                    cardsDelegate?.cardsSwapped(updatedCards: cardsForPlayer[0], deck: false)
+                }
             }
         }
     }
@@ -106,6 +114,9 @@ class GameManager {
                     gameService.messageService.sendWinnerMessage(bout: .BoutWinnerMessage, player: winner.displayName)
                     delegate?.roundWinner(winner: winner)
                     updateWonRoundCountPerPlayer(player: winner)
+                    if playerIndexState[0] == myPeerID.displayName {
+                        cardsDelegate?.cardsSwapped(updatedCards: cardsInCentre, deck: true)
+                    }
                 }
             }
         }
@@ -113,13 +124,37 @@ class GameManager {
     var cardsWonPerPlayer: [[Card]]!
     var roundsWonPerPlayer: [Int]! {
         didSet {
-            delegate?.roundsWonPerPlayer(wonCountArray: roundsWonPerPlayer)
+            delegate?.roundsWonPerPlayer(playerArray: playerNames, wonCountArray: roundsWonPerPlayer)
         }
     }
     
     var playerIndexState: [String] = ["noPlayer", "noPlayer", "noPlayer", "noPlayer", "noPlayer"] {
         didSet {
             delegate?.cardStateUpdated(state: playerIndexState)
+            if isHost {
+                if playerIndexState[0] == myPeerID.displayName {
+                    delegate?.setDeck(deck: true)
+                    var updatedPlayers: [MCPeerID] = []
+                    for player in playersConnected {
+                        if player.displayName != playerIndexState[0] {
+                            updatedPlayers.append(player)
+                        }
+                    }
+                    players = updatedPlayers
+                } else {
+                    delegate?.setDeck(deck: false)
+                }
+            } else {
+                if  playerIndexState[0] != noPlayer {
+                    var updatedPlayers: [MCPeerID] = []
+                    for player in playersConnected {
+                        if player.displayName != playerIndexState[0] {
+                            updatedPlayers.append(player)
+                        }
+                    }
+                    players = updatedPlayers
+                }
+            }
         }
     }
     
@@ -147,7 +182,7 @@ class GameManager {
     }
     
     func sendHostID(name: String) {
-        gameService.messageService.sendHostName(player: name)
+//        gameService.messageService.sendHostName(player: name)
     }
     
     func newGame(/*playersArray: [MCPeerID],*/ newGame: Game) {
@@ -165,13 +200,13 @@ class GameManager {
         cardsWonPerPlayer = [[Card]]()
         timeLeft = game.gameTime
         roundsWonPerPlayer = [Int]()
-        for _ in 0..<players.count {
+        playerNames = [String]()
+        for i in 0..<players.count {
             cardsForPlayer.append([Card]())
             cardsWonPerPlayer.append([Card]())
             roundsWonPerPlayer.append(0)
+            playerNames.append(players[i].displayName)
         }
-        
-        playerIndexState = [noPlayer, noPlayer, noPlayer, noPlayer, noPlayer]
     }
     
     func distributeCards(uiHandler: @escaping (Result<(Card,MCPeerID),CardError>) -> Void) {
@@ -250,7 +285,7 @@ class GameManager {
         cardsForPlayer[playerIndex][0] = cardsForPlayer[playerIndex][index]
         cardsForPlayer[playerIndex][index] = card
         if player.displayName == gameService.getPeerID().displayName {
-            cardsDelegate?.cardsSwapped(updatedCards: cardsForPlayer[0])
+            cardsDelegate?.cardsSwapped(updatedCards: cardsForPlayer[0], deck: false)
         }
     }
     
@@ -274,7 +309,7 @@ class GameManager {
         } else {
             currentPlayerIndex += 1
         }
-        
+        print("nextPlayer turn: ",currentPlayerIndex, players)
         if cardsForPlayer[currentPlayerIndex].count == 0 {
             let winner = getGameWinner()
             delegate?.gameWinner(winner: winner)
@@ -334,12 +369,7 @@ extension GameManager: GameServiceGameClientDelegate {
     
     func connectedPlayersClient(connectedPlayers: [MCPeerID]) {
         playersConnected = connectedPlayers
-        players = connectedPlayers
-    }
-    
-    func gameHost(hostName: String) {
-        let hostID = players[playerNames.firstIndex(of: hostName)!]
-        gameService.messageService.setHost(hostID: hostID)
+//        players = connectedPlayers
     }
     
     func playerListFromHost(playerNameList: [String]) {
@@ -413,7 +443,7 @@ extension GameManager: GameServiceGameHostDelegate {
     
     func connectedPlayersHost(connectedPlayers: [MCPeerID]) {
         playersConnected = connectedPlayers
-        players = connectedPlayers
+//        players = connectedPlayers
         gameService.messageService.sendPlayerPositionState(positionState: playerIndexState, toHost: !isHost)
     }
     

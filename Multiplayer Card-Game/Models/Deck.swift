@@ -23,10 +23,6 @@ struct Deck {
             }
         }
     }
-//    
-//    init(cards: [Card]) {
-//        self.cards = cards
-//    }
         
     //MARK:- Member Functions
     

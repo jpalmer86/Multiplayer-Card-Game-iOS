@@ -445,12 +445,16 @@ extension GameViewController: GameManagerDelegate {
         }
     }
     
-    func roundsWonPerPlayer(wonCountArray: [Int]) {
+    func roundsWonPerPlayer(playerArray: [String], wonCountArray: [Int]) {
         DispatchQueue.main.async { [weak self] in
             for (index,roundsWon) in wonCountArray.enumerated() {
                 self?.roundsWonLabel[index].text = "Won: \(roundsWon)"
             }
         }
+    }
+    
+    func setDeck(deck: Bool) {
+        //
     }
     
     func quit() {

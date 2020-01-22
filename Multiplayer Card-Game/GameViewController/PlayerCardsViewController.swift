@@ -95,11 +95,7 @@ class PlayerCardsViewController: UIViewController {
 //MARK:- GameCard Manager Delegate Methods
 
 extension PlayerCardsViewController: GameCardManagerDelegate {
-    func playerColorIndex(index: Int) {
-        //
-    }
-    
-    func cardsSwapped(updatedCards: [Card]) {
+    func cardsSwapped(updatedCards: [Card], deck: Bool) {
         cards = updatedCards
     }
 }
