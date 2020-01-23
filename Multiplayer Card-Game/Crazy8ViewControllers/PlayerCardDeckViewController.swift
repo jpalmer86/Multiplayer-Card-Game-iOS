@@ -24,6 +24,13 @@ class PlayerCardDeckViewController: UIViewController {
     
     //MARK:- Property Variables
     
+    var cards: [Card]? {
+        didSet {
+            updateUI()
+        }
+    }
+    var swipeGestureEnabled: ((Bool)->Void)!
+    
     private let gameManager = GameManager.shared
     private var selectedColor: UIColor! = UIColor.white
     private var isDeck = false {
@@ -32,14 +39,10 @@ class PlayerCardDeckViewController: UIViewController {
         }
     }
     private var isHost = false
-    
     private var rightDeckTopCardView = CardView()
-    var cards: [Card]? {
-        didSet {
-            updateUI()
-        }
-    }
     private var enableInteraction = false
+    private var finalDropLocation: CGPoint?
+    private var cardViewIndex = 0
     
     //MARK:- Lifecycle Hooks
     
@@ -146,6 +149,7 @@ class PlayerCardDeckViewController: UIViewController {
         deckStackView?.isHidden = !isDeck
         cardStackView?.isHidden = isDeck
     }
+    
 }
 
 //MARK:- GameCard Manager Delegate Methods
@@ -164,6 +168,11 @@ extension PlayerCardDeckViewController: UIDragInteractionDelegate {
         let suit = cardViews[0].suit
         let object = "\(rank)-\(suit)"
         let stringProvider = NSItemProvider(object: object as NSString)
+        
+        if let cardView = interaction.view as? CardView, let index = cardViews.firstIndex(of: cardView) {
+            cardViewIndex = index
+        }
+
         return [UIDragItem(itemProvider: stringProvider)]
     }
 }
@@ -176,10 +185,17 @@ extension PlayerCardDeckViewController: UIDropInteractionDelegate {
     }
     
     func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
+        swipeGestureEnabled(false)
+        let dropLocation = session.location(in: view)
+        finalDropLocation = dropLocation
         return UIDropProposal(operation: .move)
     }
     
     func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
-        gameManager.throwCardInCenter(player: gameManager.playersConnected[0], card: gameManager.cardsForPlayer[0][0])
+        if let location = finalDropLocation, location.x < 25.0 {
+            gameManager.throwCardInCenter(player: gameManager.playersConnected[0], card: gameManager.cardsForPlayer[0][cardViewIndex])
+            finalDropLocation = nil
+        }
+        swipeGestureEnabled(true)
     }
 }

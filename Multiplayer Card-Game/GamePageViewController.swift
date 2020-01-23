@@ -44,6 +44,16 @@ class GamePageViewController: UIPageViewController {
     
     //MARK:- Custom Methods
     
+    func swipeGestureEnabled(enable: Bool) {
+        for view in self.view.subviews {
+            if let subView = view as? UIScrollView {
+                subView.isScrollEnabled = enable
+            }
+        }
+    }
+    
+    //MARK:- Private Methods
+    
     private func newVc(viewController: String) -> UIViewController {
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: viewController)
         if let gameVC = vc as? DeckGameViewController {
@@ -51,6 +61,7 @@ class GamePageViewController: UIPageViewController {
             gameVC.isHost = isHost
             deckController = gameVC
         } else if let gameVC = vc as? PlayerCardDeckViewController {
+            gameVC.swipeGestureEnabled = self.swipeGestureEnabled
             deckController.setDeck = gameVC.setDeck
             deckController.enablePlayer = gameVC.enablePlayer
             deckController.setColor = gameVC.setColor
