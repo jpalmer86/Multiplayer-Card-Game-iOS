@@ -811,13 +811,15 @@
                                         <subviews>
                                             <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ckg-1l-4wF" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
                                                 <rect key="frame" x="-0.5" y="0.0" width="122" height="163"/>
-                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                         </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
-                                            <constraint firstItem="ckg-1l-4wF" firstAttribute="width" secondItem="AoZ-5H-Ddl" secondAttribute="width" id="30V-Oe-p22"/>
-                                            <constraint firstItem="ckg-1l-4wF" firstAttribute="height" secondItem="AoZ-5H-Ddl" secondAttribute="height" id="n5R-Lf-GcF"/>
+                                            <constraint firstAttribute="bottom" secondItem="ckg-1l-4wF" secondAttribute="bottom" constant="4" id="071-PP-Pmb"/>
+                                            <constraint firstItem="ckg-1l-4wF" firstAttribute="leading" secondItem="AoZ-5H-Ddl" secondAttribute="leading" constant="4" id="SAs-C0-Tpj"/>
+                                            <constraint firstAttribute="trailing" secondItem="ckg-1l-4wF" secondAttribute="trailing" constant="4" id="ThQ-Un-GTw"/>
+                                            <constraint firstItem="ckg-1l-4wF" firstAttribute="top" secondItem="AoZ-5H-Ddl" secondAttribute="top" constant="4" id="qU6-KU-Fb8"/>
                                         </constraints>
                                     </view>
                                 </subviews>

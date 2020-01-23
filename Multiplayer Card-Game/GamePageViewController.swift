@@ -135,5 +135,6 @@ extension GamePageViewController: UIPageViewControllerDelegate {
         let pageContentViewController = pageViewController.viewControllers![0]
         pageControl.currentPage = orderedViewControllers.firstIndex(of: pageContentViewController)!
         pageControl.currentPageIndicatorTintColor = Constants.Colors.color[GameManager.shared.colorKey[gameService.colorIndex]!]!
+        swipeGestureEnabled(enable: true)
     }
 }

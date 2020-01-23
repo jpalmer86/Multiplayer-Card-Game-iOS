@@ -61,7 +61,6 @@ struct Constants {
     static let shadowRadius: CGFloat = 3
     static let shadowOpacity: Float = 0.5
     
-    static let gameCardRadius: CGFloat = 42
     static let noplayer = "noPlayer"
     
     //MARK:- Method to get information of all games

@@ -36,8 +36,13 @@ extension UIView {
     
     //MARK:- Add Border extension
     
-    @objc func addBorder(color: UIColor, borderWidth: CGFloat = Constants.borderWidth, cornerRadius: CGFloat = Constants.buttonCornerRadius) {
-        let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: self.cornerRadius)
+    func addBorder(color: UIColor, borderWidth: CGFloat = Constants.borderWidth, cornerRadius: CGFloat? = nil) {
+
+        var correctCornerRadius = cornerRadius
+        if correctCornerRadius == nil {
+            correctCornerRadius = self.cornerRadius
+        }
+        let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: correctCornerRadius!)
         roundedRect.addClip()
         
         let borderLayer = CAShapeLayer()
@@ -47,6 +52,7 @@ extension UIView {
         borderLayer.lineWidth = borderWidth
         borderLayer.frame = self.bounds
         self.layer.addSublayer(borderLayer)
+        self.layer.cornerRadius = correctCornerRadius!
     }
     
     //MARK:- Add Shadow
@@ -59,10 +65,6 @@ extension UIView {
     }
     
     func addRoundCorner() {
-        let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius)
-        roundedRect.addClip()
-        setNeedsDisplay()
-        setNeedsLayout()
+        layer.cornerRadius = cornerRadius
     }
-    
 }

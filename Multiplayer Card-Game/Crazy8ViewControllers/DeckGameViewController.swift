@@ -75,7 +75,7 @@ class DeckGameViewController: UIViewController {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.startGameAndOptionsButton?.backgroundColor = self.selectedColor
-                self.gameStateLabel.textColor = self.selectedColor
+                self.gameStateLabel?.textColor = self.selectedColor
                 self.setColor(self.selectedColor)
             }
         }
@@ -270,15 +270,17 @@ class DeckGameViewController: UIViewController {
     @IBAction func startGameOrOptions(_ sender: UIButton) {
         switch startOrOptionsButtonState {
         case .startOrWaiting:
-            if connectedPlayers.count >= gameManager.minPlayersNeeded {
-                if getSelectedPlayerCount() > 1 {
-                    gameState = .dealing
-                    startGame()
+            if isHost {
+                if connectedPlayers.count >= gameManager.minPlayersNeeded {
+                    if getSelectedPlayerCount() > 1 {
+                        gameState = .dealing
+                        startGame()
+                    } else {
+                        showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded) players to start the game")
+                    }
                 } else {
                     showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded) players to start the game")
                 }
-            } else {
-                showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded) players to start the game")
             }
         case .options:
             print("options selected")
@@ -331,7 +333,11 @@ class DeckGameViewController: UIViewController {
             }
         }
         
-        deckRightView.addRoundCorner()
+        for viewArray in cardViews {
+            for view in viewArray {
+                view.addRoundCorner()
+            }
+        }
         
         gameState = .waitingForPlayers
 
@@ -411,7 +417,6 @@ class DeckGameViewController: UIViewController {
         for viewArray in viewArrays {
             for index in 0..<viewArray.count {
                 viewArray[index].addShadow(offset: offset)
-                viewArray[index].layer.cornerRadius = Constants.buttonCornerRadius
             }
         }
     }

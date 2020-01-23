@@ -66,9 +66,6 @@ class PlayerCardDeckViewController: UIViewController {
         
         deckStackView.transform = .init(rotationAngle: -CGFloat.pi/2)
         leftDeckView.addShadow()
-        rightDeckView.addShadow()
-        rightDeckView.addBorder(color: self.selectedColor)
-        
         updateDeck()
     }
     
@@ -110,6 +107,12 @@ class PlayerCardDeckViewController: UIViewController {
     
     //MARK:- Private Methods
     
+    
+    private func updateDeck() {
+        deckStackView?.isHidden = !isDeck
+        cardStackView?.isHidden = isDeck
+    }
+    
     private func updateUI() {
         DispatchQueue.main.async { [unowned self] in
             guard let cards = self.cards else { return }
@@ -119,6 +122,8 @@ class PlayerCardDeckViewController: UIViewController {
                     self.rightDeckTopCard.rank = card.rank.order
                     self.rightDeckTopCard.suit = card.suit.description
                     self.rightDeckTopCard.isHidden = false
+                    self.rightDeckTopCard.addBorder(color: self.selectedColor)
+                    self.rightDeckTopCard.addShadow()
                 }
             } else {
                 for cardView in self.cardViews {
@@ -138,11 +143,6 @@ class PlayerCardDeckViewController: UIViewController {
             }
         }
     }
-    
-    private func updateDeck() {
-        deckStackView?.isHidden = !isDeck
-        cardStackView?.isHidden = isDeck
-    }
 }
 
 //MARK:- GameCard Manager Delegate Methods
@@ -157,6 +157,7 @@ extension PlayerCardDeckViewController: GameCardManagerDelegate {
 
 extension PlayerCardDeckViewController: UIDragInteractionDelegate {
     func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
+        swipeGestureEnabled(false)
         if let cardView = interaction.view as? CardView, let index = cardViews.firstIndex(of: cardView) {
             cardViewIndex = index
             let object = "\(cardView.rank)-\(cardView.suit)"
@@ -175,14 +176,13 @@ extension PlayerCardDeckViewController: UIDropInteractionDelegate {
     }
     
     func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
-        swipeGestureEnabled(false)
         let dropLocation = session.location(in: view)
         finalDropLocation = dropLocation
         return UIDropProposal(operation: .move)
     }
     
     func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
-        if let location = finalDropLocation, location.x < 25.0 {
+        if let location = finalDropLocation, location.x < 40.0 {
             gameManager.throwCardInCenter(player: gameManager.playersConnected[0], card: gameManager.cardsForPlayer[0][cardViewIndex])
             finalDropLocation = nil
         }
