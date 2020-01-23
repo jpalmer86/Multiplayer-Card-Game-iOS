@@ -107,6 +107,9 @@ class GameManager {
     }
     var cardsInCentre: [Card]! {
         didSet {
+            if isHost && playerIndexState[0] == myPeerID.displayName {
+                cardsDelegate?.cardsSwapped(updatedCards: cardsInCentre, deck: true)
+            }
             if cardsInCentre.count == playerCount && playerCount > 0 {
                 let roundWinnerIndex = getBoutWinnerIndex()
                 let winner = players[roundWinnerIndex]
@@ -114,9 +117,6 @@ class GameManager {
                     gameService.messageService.sendWinnerMessage(bout: .BoutWinnerMessage, player: winner.displayName)
                     delegate?.roundWinner(winner: winner)
                     updateWonRoundCountPerPlayer(player: winner)
-                    if playerIndexState[0] == myPeerID.displayName {
-                        cardsDelegate?.cardsSwapped(updatedCards: cardsInCentre, deck: true)
-                    }
                 }
             }
         }

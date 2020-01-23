@@ -11,10 +11,15 @@ import MultipeerConnectivity
 
 //MARK:- Enum CardState
 
-enum CardsState {
+fileprivate enum CardsState {
     case unselected
     case selected
     case taken
+}
+
+fileprivate enum StartButtonState {
+    case startOrWaiting
+    case options
 }
 
 class DeckGameViewController: UIViewController {
@@ -54,22 +59,17 @@ class DeckGameViewController: UIViewController {
     @IBOutlet var roundsWonLabel: [UILabel]!
     
     //MARK:- Property Variables
-    var isHost: Bool! {
-        didSet {
-            gameManager.setAsHost(host: isHost)
-        }
-    }
-    var indexToPlay = 0 {
-        didSet {
-            selectedColor = Constants.Colors.color[colorKey[indexToPlay]!]!
-        }
-    }
     
     private var cardViews: [[UIView]]!
     private var noPlayer = Constants.noplayer
     private var colorKey: [Int: String]!
     private let unSelectColor = Constants.Colors.color[Constants.Colors.Crazy8.lightGrey.rawValue]!
     private let takenColor = Constants.Colors.color[Constants.Colors.Crazy8.darkGrey.rawValue]!
+    private var connectingAlert: UIAlertController?
+    private let gameManager = GameManager.shared
+    private let animationDuration = 0.8
+    private let myName = gameService.getPeerID().displayName
+    
     private var selectedColor: UIColor! {
         didSet {
             DispatchQueue.main.async { [weak self] in
@@ -80,6 +80,21 @@ class DeckGameViewController: UIViewController {
             }
         }
     }
+    
+    private var startOrOptionsButtonState = StartButtonState.startOrWaiting {
+           didSet {
+               switch startOrOptionsButtonState {
+               case .startOrWaiting:
+                   if isHost{
+                       startGameAndOptionsButton.setTitle("Start Game", for: .normal)
+                   } else {
+                       startGameAndOptionsButton.setTitle("Waiting for Game Start", for: .normal)
+                   }
+               case .options:
+                   self.startGameAndOptionsButton.setTitle("Options", for: .normal)
+               }
+           }
+       }
     
     private var cardViewsState: [CardsState]! {
         didSet {
@@ -132,8 +147,6 @@ class DeckGameViewController: UIViewController {
             self.gameManager.newGame(/*playersArray: self.connectedPlayers,*/ newGame: game)
         }
     }
-    private var connectingAlert: UIAlertController?
-    private let gameManager = GameManager.shared
     private var playerNameArray: [String]! {
         didSet {
             var labelString = "CONNECTED:\n"
@@ -145,8 +158,6 @@ class DeckGameViewController: UIViewController {
             }
         }
     }
-    private let animationDuration = 0.8
-    private let myName = gameService.getPeerID().displayName
     
     private var gameState: GameState! {
         didSet {
@@ -180,7 +191,7 @@ class DeckGameViewController: UIViewController {
                     self.timeLabel.isHidden = false
                     self.connectedPlayersLabel.isHidden = true
                     self.gameStateLabel.text = "Game has started"
-                    self.startGameAndOptionsButton.setTitle("Options", for: .normal)
+                    self.startOrOptionsButtonState = .options
                     self.disableUserInteraction(viewArrays: self.cardViews)
                 }
             case .decidingRoundWinner:
@@ -226,6 +237,18 @@ class DeckGameViewController: UIViewController {
         }
     }
     
+    var isHost: Bool! {
+        didSet {
+            gameManager.setAsHost(host: isHost)
+        }
+    }
+    
+    var indexToPlay = 0 {
+        didSet {
+            selectedColor = Constants.Colors.color[colorKey[indexToPlay]!]!
+        }
+    }
+    
     var game: Game! {
         didSet {
             gameService.advertiserDelegate = self
@@ -245,16 +268,22 @@ class DeckGameViewController: UIViewController {
     //MARK:- IBActions
     
     @IBAction func startGameOrOptions(_ sender: UIButton) {
-        if connectedPlayers.count >= gameManager.minPlayersNeeded {
-            if getSelectedPlayerCount() > 1 {
-                gameState = .dealing
-                startGame()
+        switch startOrOptionsButtonState {
+        case .startOrWaiting:
+            if connectedPlayers.count >= gameManager.minPlayersNeeded {
+                if getSelectedPlayerCount() > 1 {
+                    gameState = .dealing
+                    startGame()
+                } else {
+                    showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded) players to start the game")
+                }
             } else {
                 showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded) players to start the game")
             }
-        } else {
-            showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded) players to start the game")
+        case .options:
+            print("options selected")
         }
+        
     }
     
     //MARK:- Lifecycle Hooks
@@ -277,8 +306,9 @@ class DeckGameViewController: UIViewController {
             label.textColor = unSelectColor
         }
         
+        startOrOptionsButtonState = .startOrWaiting
+        
         if isHost {
-            startGameAndOptionsButton.setTitle("Start Game", for: .normal)
             gameService.hostSession()
             
             stackViewDeck.isUserInteractionEnabled = true
@@ -289,7 +319,6 @@ class DeckGameViewController: UIViewController {
                 deckView.addGestureRecognizer(tapRecognizer)
             }
         } else {
-            startGameAndOptionsButton.setTitle("Waiting for Game Start", for: .normal)
             connectingAlert = loadingAlert(title: "Connecting ...")
             present(connectingAlert!, animated: true, completion: nil)
             gameService.stopBrowsingForPeers()
@@ -301,6 +330,8 @@ class DeckGameViewController: UIViewController {
                 cardViews[playerIndex][cardIndex].addGestureRecognizer(tapRecognizer)
             }
         }
+        
+        deckRightView.addRoundCorner()
         
         gameState = .waitingForPlayers
 

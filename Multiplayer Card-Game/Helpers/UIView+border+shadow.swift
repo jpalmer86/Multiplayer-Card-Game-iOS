@@ -17,7 +17,7 @@ extension UIView {
     
     struct sizeRatio {
         static let cornerFontSizeToBoundsHeight : CGFloat = 0.085
-        static let cornerRadiusToBoundsHeight : CGFloat = 0.06
+        static let cornerRadiusToBoundsHeight : CGFloat = 0.15
         static let cornerOffsetToCornerRadius : CGFloat = 0.33
         static let faceCardImageSizeToBoundSize : CGFloat = 0.75
     }
@@ -36,8 +36,8 @@ extension UIView {
     
     //MARK:- Add Border extension
     
-    func addBorder(color: UIColor, borderWidth: CGFloat = Constants.borderWidth, cornerRadius: CGFloat = Constants.buttonCornerRadius) {
-        let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius)
+    @objc func addBorder(color: UIColor, borderWidth: CGFloat = Constants.borderWidth, cornerRadius: CGFloat = Constants.buttonCornerRadius) {
+        let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: self.cornerRadius)
         roundedRect.addClip()
         
         let borderLayer = CAShapeLayer()
@@ -56,6 +56,13 @@ extension UIView {
         self.layer.shadowRadius = radius
         self.layer.shadowOffset = offset
         self.layer.shadowOpacity = opacity
+    }
+    
+    func addRoundCorner() {
+        let roundedRect = UIBezierPath(roundedRect: bounds, cornerRadius: cornerRadius)
+        roundedRect.addClip()
+        setNeedsDisplay()
+        setNeedsLayout()
     }
     
 }

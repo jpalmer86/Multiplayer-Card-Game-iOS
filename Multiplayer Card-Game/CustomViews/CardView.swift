@@ -41,38 +41,7 @@ class CardView: UIView {
     private lazy var lowerRightCornerLabel = createCornerLabel()
     
     
-    //MARK:- PlayingCardView member functions
-    
-    @objc func adjustFaceCardScale(byHandlingGestureRecognizedBy recognizer :UIPinchGestureRecognizer) {
-        switch recognizer.state {
-        case .changed,.ended:
-            faceCardScale*=recognizer.scale
-            recognizer.scale = 1.0
-        default:
-            break
-        }
-    }
-    
-    private func centeredAttributedString(_ string : String , _ fontSize : CGFloat) -> NSAttributedString {
-        ////  UIFont.preferredFont(forTextStyle: .body) vs UIFontMetrics(forTextStyle: .body)
-        ////        uifontmetrics was introduced on ios 11 to make the default font scale upto the new font given or scaled(via settings) by the user
-        var font = UIFont.preferredFont(forTextStyle: .body).withSize(fontSize)
-        font = UIFontMetrics(forTextStyle: .body).scaledFont(for: font)
-        
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.alignment = .center
-        
-        return NSAttributedString(string: string, attributes: [.paragraphStyle : paragraphStyle , .font : font])
-    }
-
-    private func createCornerLabel() -> UILabel {
-        let label = UILabel()
-        ////        0 means any number of lines
-        label.numberOfLines = 0
-        ////        adds label as a subview in our uiview
-        addSubview(label)
-        return label
-    }
+    //MARK:- PlayingCardView Member Functions
     
     ////    called by setNeedsLayout
     override func layoutSubviews() {
@@ -92,7 +61,6 @@ class CardView: UIView {
             .offsetBy(dx: -cornerOffset, dy: -cornerOffset)
             .offsetBy(dx: -lowerRightCornerLabel.frame.size.width, dy: -lowerRightCornerLabel.frame.size.height)
         
-        
     }
     
     ////    This func is called whenever there is a change in preferences
@@ -100,16 +68,6 @@ class CardView: UIView {
         setNeedsDisplay()
         setNeedsLayout()
     }
-    
-    private func configureCornerLabels(_ label : UILabel) {
-        label.attributedText = cornerString
-        
-        label.frame.size = CGSize.zero
-        //// zero = wrap content epand as much as the text is,take more space if needed by the text
-        label.sizeToFit()
-        label.isHidden = !isFaceUp
-    }
-    
     
     ////   A bezier path that is created by the above class cannot stand on its own. It needs a Core Graphics context where it can be rendered to. There are three ways to get a context like that:
     ////    1.To use a CGContext context.
@@ -136,6 +94,48 @@ class CardView: UIView {
             }
         }
         
+    }
+    
+    @objc func adjustFaceCardScale(byHandlingGestureRecognizedBy recognizer :UIPinchGestureRecognizer) {
+        switch recognizer.state {
+        case .changed,.ended:
+            faceCardScale*=recognizer.scale
+            recognizer.scale = 1.0
+        default:
+            break
+        }
+    }
+    
+    //MARK:- Private Methods
+    
+    private func centeredAttributedString(_ string : String , _ fontSize : CGFloat) -> NSAttributedString {
+        ////  UIFont.preferredFont(forTextStyle: .body) vs UIFontMetrics(forTextStyle: .body)
+        ////        uifontmetrics was introduced on ios 11 to make the default font scale upto the new font given or scaled(via settings) by the user
+        var font = UIFont.preferredFont(forTextStyle: .body).withSize(fontSize)
+        font = UIFontMetrics(forTextStyle: .body).scaledFont(for: font)
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+        
+        return NSAttributedString(string: string, attributes: [.paragraphStyle : paragraphStyle , .font : font])
+    }
+
+    private func createCornerLabel() -> UILabel {
+        let label = UILabel()
+        ////        0 means any number of lines
+        label.numberOfLines = 0
+        ////        adds label as a subview in our uiview
+        addSubview(label)
+        return label
+    }
+    
+    private func configureCornerLabels(_ label : UILabel) {
+        label.attributedText = cornerString
+        
+        label.frame.size = CGSize.zero
+        //// zero = wrap content epand as much as the text is,take more space if needed by the text
+        label.sizeToFit()
+        label.isHidden = !isFaceUp
     }
     
     private func drawpips() {

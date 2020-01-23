@@ -16,11 +16,8 @@ class PlayerCardDeckViewController: UIViewController {
     @IBOutlet var cardStackView: UIStackView!
     @IBOutlet var deckStackView: UIStackView!
     @IBOutlet var leftDeckView: CardView!
-    @IBOutlet var rightDeckView: UIView! {
-        didSet {
-            rightDeckTopCardView = CardView(frame: rightDeckView.frame)
-        }
-    }
+    @IBOutlet var rightDeckView: UIView!
+    @IBOutlet var rightDeckTopCard: CardView!
     
     //MARK:- Property Variables
     
@@ -39,7 +36,6 @@ class PlayerCardDeckViewController: UIViewController {
         }
     }
     private var isHost = false
-    private var rightDeckTopCardView = CardView()
     private var enableInteraction = false
     private var finalDropLocation: CGPoint?
     private var cardViewIndex = 0
@@ -72,8 +68,6 @@ class PlayerCardDeckViewController: UIViewController {
         leftDeckView.addShadow()
         rightDeckView.addShadow()
         rightDeckView.addBorder(color: self.selectedColor)
-        rightDeckTopCardView.isHidden = true
-        rightDeckView.addSubview(rightDeckTopCardView)
         
         updateDeck()
     }
@@ -122,9 +116,9 @@ class PlayerCardDeckViewController: UIViewController {
             if self.isDeck {
                 if let cards = self.cards, cards.count > 0 {
                     let card = cards.last!
-                    self.rightDeckTopCardView.rank = card.rank.order
-                    self.rightDeckTopCardView.suit = card.suit.description
-                    self.rightDeckTopCardView.isHidden = false
+                    self.rightDeckTopCard.rank = card.rank.order
+                    self.rightDeckTopCard.suit = card.suit.description
+                    self.rightDeckTopCard.isHidden = false
                 }
             } else {
                 for cardView in self.cardViews {
@@ -149,7 +143,6 @@ class PlayerCardDeckViewController: UIViewController {
         deckStackView?.isHidden = !isDeck
         cardStackView?.isHidden = isDeck
     }
-    
 }
 
 //MARK:- GameCard Manager Delegate Methods
@@ -164,16 +157,13 @@ extension PlayerCardDeckViewController: GameCardManagerDelegate {
 
 extension PlayerCardDeckViewController: UIDragInteractionDelegate {
     func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
-        let rank = cardViews[0].rank
-        let suit = cardViews[0].suit
-        let object = "\(rank)-\(suit)"
-        let stringProvider = NSItemProvider(object: object as NSString)
-        
         if let cardView = interaction.view as? CardView, let index = cardViews.firstIndex(of: cardView) {
             cardViewIndex = index
+            let object = "\(cardView.rank)-\(cardView.suit)"
+            let stringProvider = NSItemProvider(object: object as NSString)
+            return [UIDragItem(itemProvider: stringProvider)]
         }
-
-        return [UIDragItem(itemProvider: stringProvider)]
+        return []
     }
 }
 

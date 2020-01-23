@@ -793,10 +793,10 @@
                                 </constraints>
                             </stackView>
                             <stackView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" distribution="fillEqually" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="MeE-aO-A4c">
-                                <rect key="frame" x="131.5" y="76" width="350" height="228"/>
+                                <rect key="frame" x="131.5" y="76" width="253" height="163"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eid-HK-zm2" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="171" height="228"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="122.5" height="163"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="100" id="UwL-5J-RFn"/>
@@ -807,8 +807,18 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AoZ-5H-Ddl">
-                                        <rect key="frame" x="179" y="0.0" width="171" height="228"/>
+                                        <rect key="frame" x="130.5" y="0.0" width="122.5" height="163"/>
+                                        <subviews>
+                                            <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ckg-1l-4wF" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
+                                                <rect key="frame" x="-0.5" y="0.0" width="122" height="163"/>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                            </view>
+                                        </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstItem="ckg-1l-4wF" firstAttribute="width" secondItem="AoZ-5H-Ddl" secondAttribute="width" id="30V-Oe-p22"/>
+                                            <constraint firstItem="ckg-1l-4wF" firstAttribute="height" secondItem="AoZ-5H-Ddl" secondAttribute="height" id="n5R-Lf-GcF"/>
+                                        </constraints>
                                     </view>
                                 </subviews>
                                 <constraints>
@@ -836,6 +846,7 @@
                         <outlet property="cardStackView" destination="Jok-eW-gOG" id="Ibb-yy-uZh"/>
                         <outlet property="deckStackView" destination="MeE-aO-A4c" id="uWT-Sn-3JT"/>
                         <outlet property="leftDeckView" destination="Eid-HK-zm2" id="4ot-Ze-UaL"/>
+                        <outlet property="rightDeckTopCard" destination="ckg-1l-4wF" id="dwV-a8-k4W"/>
                         <outlet property="rightDeckView" destination="AoZ-5H-Ddl" id="tL0-b8-xwZ"/>
                         <outletCollection property="cardViews" destination="pIu-e5-AzT" collectionClass="NSMutableArray" id="MSt-Vl-dQ2"/>
                         <outletCollection property="cardViews" destination="vJs-p6-zLo" collectionClass="NSMutableArray" id="HSc-gq-hNC"/>
