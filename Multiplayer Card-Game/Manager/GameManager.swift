@@ -132,28 +132,23 @@ class GameManager {
         didSet {
             delegate?.cardStateUpdated(state: playerIndexState)
             if isHost {
-                if playerIndexState[0] == myPeerID.displayName {
-                    delegate?.setDeck(deck: true)
-                    var updatedPlayers: [MCPeerID] = []
-                    for player in playersConnected {
-                        if player.displayName != playerIndexState[0] {
-                            updatedPlayers.append(player)
-                        }
+                delegate?.setDeck(deck: playerIndexState[0] == myPeerID.displayName)
+                var updatedPlayers: [MCPeerID] = []
+                for player in playersConnected {
+                    if player.displayName != playerIndexState[0] {
+                        updatedPlayers.append(player)
                     }
-                    players = updatedPlayers
-                } else {
-                    delegate?.setDeck(deck: false)
                 }
+                players = updatedPlayers
+                
             } else {
-                if  playerIndexState[0] != noPlayer {
-                    var updatedPlayers: [MCPeerID] = []
-                    for player in playersConnected {
-                        if player.displayName != playerIndexState[0] {
-                            updatedPlayers.append(player)
-                        }
+                var updatedPlayers: [MCPeerID] = []
+                for player in playersConnected {
+                    if player.displayName != playerIndexState[0] {
+                        updatedPlayers.append(player)
                     }
-                    players = updatedPlayers
                 }
+                players = updatedPlayers
             }
         }
     }
@@ -163,7 +158,7 @@ class GameManager {
         1: Constants.Colors.Crazy8.blue.rawValue,
         2: Constants.Colors.Crazy8.pink.rawValue,
         3: Constants.Colors.Crazy8.yellow.rawValue,
-        4: Constants.Colors.Crazy8.red.rawValue,
+        4: Constants.Colors.Crazy8.red.rawValue
     ]
     
     //MARK:- Initializers
@@ -223,7 +218,9 @@ class GameManager {
             }
         }
         startTimer()
-        currentPlayerIndex = 0
+        if  playerCount > 0 {
+            currentPlayerIndex = 0
+        }
     }
     
     func throwCardInCenter(player: MCPeerID, card: Card) {
@@ -309,7 +306,6 @@ class GameManager {
         } else {
             currentPlayerIndex += 1
         }
-        print("nextPlayer turn: ",currentPlayerIndex, players)
         if cardsForPlayer[currentPlayerIndex].count == 0 {
             let winner = getGameWinner()
             delegate?.gameWinner(winner: winner)
@@ -390,7 +386,6 @@ extension GameManager: GameServiceGameClientDelegate {
         let boutWinner = players[playerIndex]
         delegate?.roundWinner(winner: boutWinner)
         updateWonRoundCountPerPlayer(player: boutWinner)
-        print("Bout Winner is: ", playerName)
     }
 
     func winner(playerName: String) {
@@ -399,7 +394,6 @@ extension GameManager: GameServiceGameClientDelegate {
         delegate?.gameWinner(winner: winner)
         self.stopTimer()
         timeLeft = game.gameTime
-        print("Winner is: ", playerName)
     }
     
     func remainingTime(time: Int) {

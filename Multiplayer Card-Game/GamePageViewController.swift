@@ -51,9 +51,9 @@ class GamePageViewController: UIPageViewController {
             gameVC.isHost = isHost
             deckController = gameVC
         } else if let gameVC = vc as? PlayerCardDeckViewController {
-            gameVC.getColor = deckController.getColor
             deckController.setDeck = gameVC.setDeck
             deckController.enablePlayer = gameVC.enablePlayer
+            deckController.setColor = gameVC.setColor
         }
         return vc
     }

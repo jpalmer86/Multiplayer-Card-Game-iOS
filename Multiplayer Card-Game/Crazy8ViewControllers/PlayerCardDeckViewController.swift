@@ -28,13 +28,7 @@ class PlayerCardDeckViewController: UIViewController {
     private var selectedColor: UIColor! = UIColor.white
     private var isDeck = false {
         didSet {
-            if isDeck {
-                deckStackView?.isHidden = false
-                cardStackView?.isHidden = true
-            } else {
-                deckStackView?.isHidden = true
-                cardStackView?.isHidden = false
-            }
+            updateDeck()
         }
     }
     private var isHost = false
@@ -45,14 +39,12 @@ class PlayerCardDeckViewController: UIViewController {
             updateUI()
         }
     }
-    var getColor: (() -> UIColor)!
-    private var enableInteraction: Bool!
+    private var enableInteraction = false
     
     //MARK:- Lifecycle Hooks
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        selectedColor = getColor()
         gameManager.cardsDelegate = self
                 
         if let index = gameManager.players.firstIndex(of: GameService.shared.getPeerID()) {
@@ -79,6 +71,8 @@ class PlayerCardDeckViewController: UIViewController {
         rightDeckView.addBorder(color: self.selectedColor)
         rightDeckTopCardView.isHidden = true
         rightDeckView.addSubview(rightDeckTopCardView)
+        
+        updateDeck()
     }
     
     //MARK:- ViewController Methods
@@ -93,8 +87,18 @@ class PlayerCardDeckViewController: UIViewController {
     
     //MARK:- Custom Methods
     
+    @objc func selectCard(_ sender: UITapGestureRecognizer? = nil) {
+        if let senderView = sender?.view, let cardView = senderView as? CardView, let index = cardViews.firstIndex(of: cardView) {
+            // gameManager.swapCard(player: gameService.getPeerID(),index: index)
+        }
+    }
+    
     func setDeck(deck: Bool) {
         isDeck = deck
+    }
+    
+    func setColor(color: UIColor) {
+        selectedColor = color
     }
     
     func enablePlayer(enable: Bool) {
@@ -106,6 +110,8 @@ class PlayerCardDeckViewController: UIViewController {
             }
         }
     }
+    
+    //MARK:- Private Methods
     
     private func updateUI() {
         DispatchQueue.main.async { [unowned self] in
@@ -136,11 +142,9 @@ class PlayerCardDeckViewController: UIViewController {
         }
     }
     
-    @objc func selectCard(_ sender: UITapGestureRecognizer? = nil) {
-        if let senderView = sender?.view, let cardView = senderView as? CardView, let index = cardViews.firstIndex(of: cardView) {
-//            gameManager.swapCard(player: gameService.getPeerID(),index: index)
-            print("tap gesture working with drag interaction")
-        }
+    private func updateDeck() {
+        deckStackView?.isHidden = !isDeck
+        cardStackView?.isHidden = isDeck
     }
 }
 

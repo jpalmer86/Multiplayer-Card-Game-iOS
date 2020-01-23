@@ -73,8 +73,10 @@ class DeckGameViewController: UIViewController {
     private var selectedColor: UIColor! {
         didSet {
             DispatchQueue.main.async { [weak self] in
-                self?.startGameAndOptionsButton?.backgroundColor = self?.selectedColor
-                self?.gameStateLabel?.textColor = self?.selectedColor
+                guard let self = self else { return }
+                self.startGameAndOptionsButton?.backgroundColor = self.selectedColor
+                self.gameStateLabel.textColor = self.selectedColor
+                self.setColor(self.selectedColor)
             }
         }
     }
@@ -237,6 +239,8 @@ class DeckGameViewController: UIViewController {
     
     var setDeck: ((Bool) -> Void)!
     var enablePlayer: ((Bool)->Void)!
+    var setColor: ((UIColor)-> Void)!
+    
     
     //MARK:- IBActions
     
@@ -338,10 +342,6 @@ class DeckGameViewController: UIViewController {
             newPlayerIndexState[0] = myName
             gameManager.changeplayerIndexState(state: newPlayerIndexState)
         }
-    }
-    
-    func getColor() -> UIColor {
-        return selectedColor
     }
     
     //MARK:- Private Methods
