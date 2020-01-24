@@ -33,30 +33,23 @@ class DeckGameViewController: UIViewController {
         }
     }
     @IBOutlet var gameStateLabel: UILabel!
-    @IBOutlet var connectedPlayersLabel: UILabel!
-    
     @IBOutlet var stackViewDeck: UIStackView!
     @IBOutlet var deckRightView: UIView!
     @IBOutlet var deckLeftView: UIView!
-
     @IBOutlet var player1StackView: UIStackView!
     @IBOutlet var player2StackView: UIStackView!
     @IBOutlet var player3StackView: UIStackView!
     @IBOutlet var player4StackView: UIStackView!
-    
     @IBOutlet var emptyPlayerView: [UIView]!
-    
     @IBOutlet var player1Cards: [UIView]!
     @IBOutlet var player2Cards: [UIView]!
     @IBOutlet var player3Cards: [UIView]!
     @IBOutlet var player4Cards: [UIView]!
-    
     @IBOutlet var playerNameLabel: [UILabel]!
-    
     @IBOutlet var timeLabel: UILabel!
     @IBOutlet var playersTurnLabel: UILabel!
-    
     @IBOutlet var roundsWonLabel: [UILabel]!
+    @IBOutlet var roundWinnerLabel: UILabel!
     
     //MARK:- Property Variables
     
@@ -147,17 +140,10 @@ class DeckGameViewController: UIViewController {
     private var connectedPlayers: [MCPeerID]! {
         didSet {
             playerNameArray = connectedPlayers.map({ $0.displayName })
-            self.gameManager.newGame(/*playersArray: self.connectedPlayers,*/ newGame: game)
+            gameManager.newGame(newGame: game)
         }
     }
-    private var playerNameArray: [String]! {
-        didSet {
-            var labelString = "CONNECTED:\n"
-            for player in playerNameArray {
-                labelString += "\(player)\n"
-            }
-        }
-    }
+    private var playerNameArray: [String]!
     
     private var gameState: GameState! {
         didSet {
@@ -191,11 +177,13 @@ class DeckGameViewController: UIViewController {
                         } else {
                             self.emptyPlayerView[index-1].isHidden = false
                             self.playerStackView[index-1].isHidden = true
+                            if index == 1 || index == 3 {
+                                self.playerNameLabel[index].isHidden = true
+                            }
                         }
                     }
                     
                     self.timeLabel.isHidden = false
-                    self.connectedPlayersLabel.isHidden = true
                     self.gameStateLabel.text = "Game has started"
                     self.startOrOptionsButtonState = .options
                     self.disableUserInteraction(viewArrays: self.cardViews)
@@ -531,7 +519,13 @@ extension DeckGameViewController: GameServiceSessionDelegate {
             connectedPlayers.append(peerID)
         }
         if isHost {
-            if connectedPlayers.count == 4 {
+            var count = 0
+            for (index,player) in playerIndexState.enumerated() {
+                if index > 0 && player != noPlayer {
+                    count += 1
+                }
+            }
+            if count == 4 {
                 gameService.stopAdvertisingToPeers()
             }
         }
@@ -592,6 +586,18 @@ extension DeckGameViewController: GameManagerDelegate {
     func roundWinner(winner: MCPeerID) {
         gameState = .decidingRoundWinner
         gameState = .playing
+        
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.roundWinnerLabel.text = "\(winner.displayName) wins the round"
+            self.roundWinnerLabel.isHidden = false
+            self.roundWinnerLabel.alpha = 0
+            UIView.animate(withDuration: 2 * self.animationDuration, animations: {
+                self.roundWinnerLabel.alpha = 1
+            }, completion: { _ in
+                self.roundWinnerLabel.isHidden = true
+            })
+        }
     }
     
     func gameWinner(winner: MCPeerID) {

@@ -398,12 +398,6 @@
                                 <color key="textColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connected:" textAlignment="justified" lineBreakMode="wordWrap" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hmc-EY-t7x">
-                                <rect key="frame" x="32" y="76" width="81" height="20"/>
-                                <fontDescription key="fontDescription" name="MarkerFelt-Thin" family="Marker Felt" pointSize="18"/>
-                                <color key="textColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Won: 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V6U-kB-C0Y">
                                 <rect key="frame" x="180" y="469" width="54" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -557,7 +551,6 @@
                             <constraint firstItem="Z3F-Av-i4h" firstAttribute="centerX" secondItem="Nft-kP-Lfy" secondAttribute="centerX" id="B5A-8h-ePa"/>
                             <constraint firstItem="0fb-nu-FqN" firstAttribute="leading" secondItem="aDP-4O-I1d" secondAttribute="trailing" constant="8" id="Ba3-6X-00p"/>
                             <constraint firstItem="0fb-nu-FqN" firstAttribute="top" secondItem="DNB-0f-5vp" secondAttribute="bottom" constant="48" id="Bw9-AZ-VUg"/>
-                            <constraint firstItem="Hmc-EY-t7x" firstAttribute="leading" secondItem="KdF-sO-ch6" secondAttribute="leading" constant="32" id="ClC-D6-t33"/>
                             <constraint firstItem="Ufr-vl-tKm" firstAttribute="centerY" secondItem="qrH-O0-8IT" secondAttribute="centerY" id="CxL-1S-ac0"/>
                             <constraint firstItem="KHa-pj-UCo" firstAttribute="top" secondItem="2Px-bF-oDT" secondAttribute="bottom" constant="8" id="DGJ-rv-dJ3"/>
                             <constraint firstItem="0fb-nu-FqN" firstAttribute="centerX" secondItem="Nft-kP-Lfy" secondAttribute="centerX" id="DwO-ld-LiX"/>
@@ -571,7 +564,6 @@
                             <constraint firstItem="DNB-0f-5vp" firstAttribute="height" secondItem="Svz-Qf-hue" secondAttribute="height" multiplier="0.65" id="L82-3U-Cya"/>
                             <constraint firstItem="jwd-LM-kfi" firstAttribute="top" secondItem="KdF-sO-ch6" secondAttribute="top" constant="32" id="LwB-G5-rhr"/>
                             <constraint firstItem="Q2m-Gc-VX1" firstAttribute="centerX" secondItem="DNB-0f-5vp" secondAttribute="centerX" id="Maz-r2-TwF"/>
-                            <constraint firstItem="Hmc-EY-t7x" firstAttribute="top" secondItem="KdF-sO-ch6" secondAttribute="top" constant="32" id="Mt8-cd-1W6"/>
                             <constraint firstItem="qrH-O0-8IT" firstAttribute="top" secondItem="0fb-nu-FqN" secondAttribute="bottom" constant="32" id="NXC-YB-guU"/>
                             <constraint firstItem="KdF-sO-ch6" firstAttribute="trailing" secondItem="jwd-LM-kfi" secondAttribute="trailing" constant="32" id="Nay-Wn-0fD"/>
                             <constraint firstItem="Z60-Mq-AMf" firstAttribute="top" secondItem="0fb-nu-FqN" secondAttribute="bottom" constant="64" id="P6C-D8-lNU"/>
@@ -606,7 +598,6 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="o0R-H3-Z4F"/>
                     <connections>
-                        <outlet property="connectedPlayersLabel" destination="Hmc-EY-t7x" id="kLX-Fw-bei"/>
                         <outlet property="deckLeftView" destination="Svz-Qf-hue" id="eFR-nG-Mf7"/>
                         <outlet property="deckRightView" destination="MSC-6n-Jdo" id="8uT-JS-ary"/>
                         <outlet property="gameStateLabel" destination="14S-W0-D92" id="Ocf-bY-27P"/>
@@ -615,6 +606,7 @@
                         <outlet property="player3StackView" destination="cuE-02-pG2" id="1ZS-IG-00W"/>
                         <outlet property="player4StackView" destination="aDP-4O-I1d" id="EuU-J3-frD"/>
                         <outlet property="playersTurnLabel" destination="3Sl-Eg-1NX" id="94v-Wc-aDq"/>
+                        <outlet property="roundWinnerLabel" destination="7nS-OB-bN4" id="tDQ-rg-wYP"/>
                         <outlet property="stackViewDeck" destination="0fb-nu-FqN" id="VoI-4a-lMj"/>
                         <outlet property="startGameAndOptionsButton" destination="Ygl-h1-ovq" id="doc-oS-3Ra"/>
                         <outlet property="timeLabel" destination="jwd-LM-kfi" id="H4q-Om-u4e"/>
