@@ -12,6 +12,17 @@ import UIKit
 
 extension UIViewController
 {
+    
+    private func getRootViewController() -> UIViewController {
+        if var topController = UIApplication.shared.keyWindow?.rootViewController {
+            while let presentedViewController = topController.presentedViewController {
+                topController = presentedViewController
+            }
+            return topController
+        }
+        return self
+    }
+    
     func alert(title: String?, message: String?, completion: @escaping (Bool) -> Void)
     {
         DispatchQueue.main.async {
@@ -22,7 +33,7 @@ extension UIViewController
             alert.addAction(UIAlertAction(title: "Close", style: .cancel, handler: { _ in
                 completion(false)
             }))
-            self.present(alert, animated: true, completion: nil)
+            self.getRootViewController().present(alert, animated: true, completion: nil)
         }
     }
     
@@ -31,7 +42,7 @@ extension UIViewController
         DispatchQueue.main.async {
             let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            self.getRootViewController().present(alert, animated: true, completion: nil)
         }
     }
     

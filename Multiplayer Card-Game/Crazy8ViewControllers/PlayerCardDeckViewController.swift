@@ -46,6 +46,8 @@ class PlayerCardDeckViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         gameManager.cardsDelegate = self
+        
+        finalDropLocation = CGPoint(x: view.frame.maxX / 2, y: view.frame.maxY / 2)
                 
         if let index = gameManager.players.firstIndex(of: GameService.shared.getPeerID()) {
             cards = gameManager.cardsForPlayer[index]
@@ -180,8 +182,8 @@ extension PlayerCardDeckViewController: UIDropInteractionDelegate {
     
     func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
         if let location = finalDropLocation, location.x < 40.0 {
-            gameManager.throwCardInCenter(player: gameManager.playersConnected[0], card: gameManager.cardsForPlayer[0][cardViewIndex], playerColorIndex: allColors.firstIndex(of: selectedColor)!)
             finalDropLocation = nil
+            gameManager.throwCardInCenter(player: gameManager.playersConnected[0], card: gameManager.cardsForPlayer[0][cardViewIndex], playerColorIndex: allColors.firstIndex(of: selectedColor)!)
         }
         swipeGestureEnabled(true)
     }

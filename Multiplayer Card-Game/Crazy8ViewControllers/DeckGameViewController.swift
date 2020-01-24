@@ -50,6 +50,7 @@ class DeckGameViewController: UIViewController {
     @IBOutlet var playersTurnLabel: UILabel!
     @IBOutlet var roundsWonLabel: [UILabel]!
     @IBOutlet var roundWinnerLabel: UILabel!
+    @IBOutlet var centreDeckTopCard: CardView!
     
     //MARK:- Property Variables
     
@@ -60,9 +61,10 @@ class DeckGameViewController: UIViewController {
     private let takenColor = Constants.Colors.color[Constants.Colors.Crazy8.darkGrey.rawValue]!
     private var connectingAlert: UIAlertController?
     private let gameManager = GameManager.shared
-    private let animationDuration = 0.8
+    private let animationDuration = Constants.crazy8AnimationDuration
     private let myName = gameService.getPeerID().displayName
     private var playerStackView: [UIStackView]!
+    private let dispatchGroup = DispatchGroup()
     
     private var selectedColor: UIColor! {
         didSet {
@@ -268,10 +270,10 @@ class DeckGameViewController: UIViewController {
                         gameState = .dealing
                         startGame()
                     } else {
-                        showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded) players to start the game")
+                        showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded + 1) selected players to start the game")
                     }
                 } else {
-                    showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded) players to start the game")
+                    showOnlyAlert(title: "Unable to start", message: "There must be atleast \(gameManager.minPlayersNeeded + 1) players to start the game")
                 }
             }
         case .options:
@@ -289,7 +291,7 @@ class DeckGameViewController: UIViewController {
         cardViewsState = [.unselected, .unselected, .unselected, .unselected, .unselected]
         addShadowToViews(viewArrays: [[deckRightView, deckLeftView]])
         addShadowToViews(viewArrays: [player1Cards, player2Cards, player3Cards, player4Cards], offset: Constants.shadowOffsetCard)
-        addBorderToViews(viewArrays: [emptyPlayerView])
+        addBorderToViews(viewArrays: [emptyPlayerView], color: unSelectColor)
         playerStackView = [player1StackView, player2StackView, player3StackView, player4StackView]
         rotateViewArray(viewArrays: [emptyPlayerView, playerStackView])
         
@@ -333,6 +335,10 @@ class DeckGameViewController: UIViewController {
         }
         
         gameState = .waitingForPlayers
+        
+        dispatchGroup.notify(queue: .main) {
+            print("Alerts gone..........")
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -388,7 +394,7 @@ class DeckGameViewController: UIViewController {
         } else {
             gameService.messageService.sendClientGameOverToHost()
         }
-        showOnlyAlert(title: "Disconnected", message: "Successfully disconnected from the game.")
+        showOnlyAlert(title: "Disconnected", message: "Got disconnected from the game.")
     }
     
     //MARK:- Private Methods
@@ -457,10 +463,7 @@ class DeckGameViewController: UIViewController {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.timeLabel.isHidden = false
-            self.gameManager.distributeCards { [weak self] result in
-                guard let self = self else {
-                    return
-                }
+            self.gameManager.distributeCards { result in
                 switch result {
                 case .success((let card, let player)):
                     print("gave \(card) to \(player)")
@@ -489,9 +492,13 @@ class DeckGameViewController: UIViewController {
             
             self.playerStackView[playerIndex - 1].addSubview(animatingCard)
             
+            self.centreDeckTopCard.isHidden = false
+
             UIView.animate(withDuration: self.animationDuration, animations: {
                 animatingCard.transform = .init(translationX: -translationX, y: -translationY)
                 animatingCard.alpha = 0
+                self.centreDeckTopCard.rank = animatingCard.rank
+                self.centreDeckTopCard.suit = animatingCard.suit
             }, completion: { _ in
                 animatingCard.removeFromSuperview()
             })
@@ -543,7 +550,8 @@ extension DeckGameViewController: GameServiceSessionDelegate {
             if self.gameState == GameState.waitingForPlayers && self.isHost {
                 self.showOnlyAlert(title: "\(peerID.displayName) Left", message: "\(peerID.displayName) disconnected from the game.")
             } else if !self.isHost {
-                self.dismiss(animated: true, completion: nil)
+                self.connectingAlert?.dismiss(animated: true, completion: nil)
+                self.dismissVC()
             }
         }
     }
@@ -562,8 +570,11 @@ extension DeckGameViewController: GameServiceSessionDelegate {
 extension DeckGameViewController: GameServiceAdvertiserDelegate {
     
     func invitationWasReceived(fromPeer: String, handler: @escaping (Bool, MCSession?) -> Void, session: MCSession) {
-        self.alert(title: "Invitation to Connect", message: "\(fromPeer) wants to connect.") { (response) in
+        dispatchGroup.enter()
+        self.alert(title: "Invitation to Connect", message: "\(fromPeer) wants to connect.") { [weak self] response in
+            guard let self = self else { return }
             handler(response,session)
+            self.dispatchGroup.leave()
         }
     }
 }
@@ -590,13 +601,14 @@ extension DeckGameViewController: GameManagerDelegate {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             self.roundWinnerLabel.text = "\(winner.displayName) wins the round"
-            self.roundWinnerLabel.isHidden = false
-            self.roundWinnerLabel.alpha = 0
-            UIView.animate(withDuration: 2 * self.animationDuration, animations: {
-                self.roundWinnerLabel.alpha = 1
-            }, completion: { _ in
-                self.roundWinnerLabel.isHidden = true
-            })
+//            self.roundWinnerLabel.isHidden = false
+//            self.roundWinnerLabel.alpha = 0
+            self.centreDeckTopCard.isHidden = true
+//            UIView.animate(withDuration: self.animationDuration, animations: {
+//                self.roundWinnerLabel.alpha = 1
+//            }, completion: { _ in
+//                self.roundWinnerLabel.isHidden = true
+//            })
         }
     }
     
@@ -625,12 +637,13 @@ extension DeckGameViewController: GameManagerDelegate {
         
     func nextPlayerTurn(playerName: String) {
         DispatchQueue.main.async { [weak self] in
-            self?.playersTurnLabel.isHidden = false
-            self?.playersTurnLabel.text = "\(playerName)'s turn"
-            if self?.connectedPlayers[0].displayName == playerName {
-                self?.enablePlayer(true)
+            guard let self = self else { return }
+            self.playersTurnLabel.isHidden = false
+            self.playersTurnLabel.text = "\(playerName)'s turn"
+            if self.connectedPlayers[0].displayName == playerName {
+                self.enablePlayer(true)
             } else {
-                self?.enablePlayer(false)
+                self.enablePlayer(false)
             }
         }
     }

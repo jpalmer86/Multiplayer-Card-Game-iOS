@@ -59,6 +59,7 @@ struct Constants {
     static let translateDistance = [CGPoint(x: 0.0, y: 48.0),CGPoint(x: 48.0, y: 0.0),CGPoint(x: 0.0, y: 48.0),CGPoint(x: 48.0, y: 0.0)]
     
     static let animateDistance: CGFloat = 64
+    static let crazy8AnimationDuration = 1.5
     
     static let buttonCornerRadius: CGFloat = 10
     static let borderWidth: CGFloat = 2
