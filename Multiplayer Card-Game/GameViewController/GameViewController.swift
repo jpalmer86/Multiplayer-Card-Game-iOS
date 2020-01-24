@@ -211,7 +211,7 @@ class GameViewController: UIViewController {
     }
     
     @objc func throwCardInCenter(_ sender: UIGestureRecognizer) {
-        gameManager.throwCardInCenter(player: connectedPlayers[0], card: gameManager.cardsForPlayer[0][0])
+        gameManager.throwCardInCenter(player: connectedPlayers[0], card: gameManager.cardsForPlayer[0][0], playerColorIndex: 0)
         playersTurnLabel.isHidden = true
         middlePlayerCards[0].isUserInteractionEnabled = false
         setCardViews()
@@ -431,7 +431,7 @@ extension GameViewController: GameManagerDelegate {
         giveCardToPlayer(player: playerID)
     }
     
-    func playerTurnedCard(player: MCPeerID, card: Card) {
+    func playerTurnedCard(player: MCPeerID, card: Card, colorIndex: Int) {
         playerTurnedCard(card: card, player: player)
     }
         

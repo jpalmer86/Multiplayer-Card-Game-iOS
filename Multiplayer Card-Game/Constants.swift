@@ -43,14 +43,22 @@ struct Constants {
             Crazy8.yellow.rawValue: UIColor(red: 248 / 255.0, green: 171 / 255.0, blue: 0 / 255.0, alpha: 1),
             Crazy8.red.rawValue: UIColor(red: 248 / 255.0, green: 60 / 255.0, blue: 70 / 255.0, alpha: 1),
             Crazy8.lightGrey.rawValue: UIColor(red: 214 / 255.0, green: 213 / 255.0, blue: 213 / 255.0, alpha: 1),
-            Crazy8.darkGrey.rawValue: UIColor(red: 94 / 255.0, green: 94 / 255.0, blue: 94 / 255.0, alpha: 1)        ]
+            Crazy8.darkGrey.rawValue: UIColor(red: 94 / 255.0, green: 94 / 255.0, blue: 94 / 255.0, alpha: 1)
+        ]
+        
+        static func allColors() -> [UIColor] {
+            let allColors = [color[Crazy8.green.rawValue]!, color[Crazy8.blue.rawValue]!, color[Crazy8.pink.rawValue]!, color[Crazy8.yellow.rawValue]!, color[Crazy8.red.rawValue]!, color[Crazy8.lightGrey.rawValue]!, color[Crazy8.darkGrey.rawValue]!]
+            return allColors
+        }
 
     }
     
     //MARK:- Other Constants
     
     static let distributeDirection = [CGPoint(x: 0.0, y: 1.0),CGPoint(x: 1.0, y: 0.0),CGPoint(x: 0.0, y: -1.0),CGPoint(x: -1.0, y: 0.0)]
-    static let translateDistance = [CGPoint(x: 0.0, y: 32.0),CGPoint(x: 128.0, y: 0.0),CGPoint(x: 0.0, y: -32.0),CGPoint(x: -128.0, y: 0.0)]
+    static let translateDistance = [CGPoint(x: 0.0, y: 48.0),CGPoint(x: 48.0, y: 0.0),CGPoint(x: 0.0, y: 48.0),CGPoint(x: 48.0, y: 0.0)]
+    
+    static let animateDistance: CGFloat = 64
     
     static let buttonCornerRadius: CGFloat = 10
     static let borderWidth: CGFloat = 2
@@ -61,6 +69,7 @@ struct Constants {
     static let shadowRadius: CGFloat = 3
     static let shadowOpacity: Float = 0.5
     
+    static let gameCardRadius: CGFloat = 60
     static let noplayer = "noPlayer"
     
     //MARK:- Method to get information of all games

@@ -15,7 +15,7 @@ protocol GameManagerDelegate {
     func gameWinner(winner: MCPeerID)
     func timeRemaining(timeString: String)
     func gaveCardToPlayer(card: Card, playerName: String)
-    func playerTurnedCard(player: MCPeerID, card: Card)
+    func playerTurnedCard(player: MCPeerID, card: Card, colorIndex: Int)
     func nextPlayerTurn(playerName: String)
     func roundsWonPerPlayer(playerArray: [String],wonCountArray: [Int])
     func playerList(playerList: [MCPeerID])
@@ -209,7 +209,7 @@ class GameManager {
             for playerIndex in 0..<players.count {
                 if let card = deck.draw() {
                     cardsForPlayer[playerIndex].append(card)
-                    gameService.messageService.sendCardExchangePlayerMessage(played: .GiveCardToPlayerMessage, card: card, player: players[playerIndex].displayName)
+                    gameService.messageService.sendCardExchangePlayerMessage(played: .GiveCardToPlayerMessage, card: card, player: players[playerIndex].displayName, colorIndex: colorIndex)
                     uiHandler(.success((card,players[playerIndex])))
                 } else {
                     print("Error getting the card from the deck")
@@ -223,13 +223,13 @@ class GameManager {
         }
     }
     
-    func throwCardInCenter(player: MCPeerID, card: Card) {
+    func throwCardInCenter(player: MCPeerID, card: Card, playerColorIndex: Int) {
         if isHost {
-            throwCardInCenterClient(player: player, card: card)
-            gameService.messageService.sendCardExchangePlayerMessage(played: .PlayerTurnedCardHostMessage, card: card, player: player.displayName)
+            throwCardInCenterClient(player: player, card: card, playerColorIndex: playerColorIndex)
+            gameService.messageService.sendCardExchangePlayerMessage(played: .PlayerTurnedCardHostMessage, card: card, player: player.displayName, colorIndex: colorIndex)
             updateNextPlayer()
         } else {
-            gameService.messageService.sendCardExchangePlayerMessage(played: .PlayerTurnedCardClientMessage, card: card, player: player.displayName)
+            gameService.messageService.sendCardExchangePlayerMessage(played: .PlayerTurnedCardClientMessage, card: card, player: player.displayName, colorIndex: colorIndex)
         }
     }
     
@@ -268,12 +268,12 @@ class GameManager {
     
     //MARK:- Private Methods
     
-    private func throwCardInCenterClient(player: MCPeerID, card: Card) {
+    private func throwCardInCenterClient(player: MCPeerID, card: Card, playerColorIndex: Int) {
         cardsInCentre.append(card)
         let playerIndex = players.firstIndex(of: player)!
         let cardIndex = cardsForPlayer[playerIndex].firstIndex(of: card)!
         cardsForPlayer[playerIndex].remove(at: cardIndex)
-        delegate?.playerTurnedCard(player: player, card: card)
+        delegate?.playerTurnedCard(player: player, card: card, colorIndex: playerColorIndex)
     }
     
     private func swapCardWithFirst(player: MCPeerID, index: Int) {
@@ -365,7 +365,6 @@ extension GameManager: GameServiceGameClientDelegate {
     
     func connectedPlayersClient(connectedPlayers: [MCPeerID]) {
         playersConnected = connectedPlayers
-//        players = connectedPlayers
     }
     
     func playerListFromHost(playerNameList: [String]) {
@@ -412,9 +411,9 @@ extension GameManager: GameServiceGameClientDelegate {
         }
     }
     
-    func playerTurnedCard(playerName: String, card: Card) {
+    func playerTurnedCard(playerName: String, card: Card, colorIndex: Int) {
         let playerID = players[playerNames.firstIndex(of: playerName)!]
-        throwCardInCenterClient(player: playerID, card: card)
+        throwCardInCenterClient(player: playerID, card: card, playerColorIndex: colorIndex)
     }
     
     func cardsSwapped(byPlayer: String, index: Int) {
@@ -437,13 +436,12 @@ extension GameManager: GameServiceGameHostDelegate {
     
     func connectedPlayersHost(connectedPlayers: [MCPeerID]) {
         playersConnected = connectedPlayers
-//        players = connectedPlayers
         gameService.messageService.sendPlayerPositionState(positionState: playerIndexState, toHost: !isHost)
     }
     
-    func clientPlayerTurnedCard(playerName: String, card: Card) {
+    func clientPlayerTurnedCard(playerName: String, card: Card, colorIndex: Int) {
         let playerID = players[playerNames.firstIndex(of: playerName)!]
-        throwCardInCenter(player: playerID, card: card)
+        throwCardInCenter(player: playerID, card: card, playerColorIndex: colorIndex)
     }
     
     func clientCardsSwapped(byPlayer: String, index: Int) {
@@ -457,6 +455,7 @@ extension GameManager: GameServiceGameHostDelegate {
     }
     
     func clientGameOverMessage() {
+        playerIndexState = [noPlayer, noPlayer, noPlayer, noPlayer, noPlayer]
         delegate?.quit()
     }
 }

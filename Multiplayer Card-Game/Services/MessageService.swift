@@ -39,8 +39,8 @@ class MessageService {
     
     //MARK:- Sending Methods
     
-    func sendCardExchangePlayerMessage(played: MessageType, card: Card, player: String) {
-        let message = "\(played.rawValue)\(seperator)\(card)\(seperator)\(player)"
+    func sendCardExchangePlayerMessage(played: MessageType, card: Card, player: String, colorIndex: Int) {
+        let message = "\(played.rawValue)\(seperator)\(card)\(seperator)\(player)\(seperator)\(colorIndex)"
         
         if played == .PlayerTurnedCardClientMessage {
             sendToHost(message: message) { (result) in
@@ -169,7 +169,7 @@ class MessageService {
         return messageType
     }
     
-    func cardExchangeData(data: Data) -> [String:Card] {
+    func cardExchangeData(data: Data) -> ([String:Card],Int) {
         let message = String(data: data, encoding: .utf8)!
          
         let characterArray = message.split(separator: Character(seperator))
@@ -180,9 +180,11 @@ class MessageService {
         let rank = Card.Rank.orderOf(rank: cardArray[0])
         let suit = Card.Suit.allSuits[suits.firstIndex(of: cardArray[1])!]
         
+        let colorIndex = Int(messageArray[3])!
+        
         let card = Card(suit: suit, rank: Card.Rank.allRanks[rank - 1])
         
-        return [messageArray[2]: card] 
+        return ([messageArray[2]: card],colorIndex)
     }
     
     func gameStateData(data: Data) -> GameState {

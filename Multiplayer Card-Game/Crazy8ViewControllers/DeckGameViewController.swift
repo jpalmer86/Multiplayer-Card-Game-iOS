@@ -69,6 +69,7 @@ class DeckGameViewController: UIViewController {
     private let gameManager = GameManager.shared
     private let animationDuration = 0.8
     private let myName = gameService.getPeerID().displayName
+    private var playerStackView: [UIStackView]!
     
     private var selectedColor: UIColor! {
         didSet {
@@ -287,7 +288,7 @@ class DeckGameViewController: UIViewController {
         }
         
     }
-    
+        
     //MARK:- Lifecycle Hooks
 
     override func viewDidLoad() {
@@ -302,7 +303,10 @@ class DeckGameViewController: UIViewController {
         addShadowToViews(viewArrays: [player1Cards, player2Cards, player3Cards, player4Cards], offset: Constants.shadowOffsetCard)
         
         addBorderToViews(viewArrays: [emptyPlayerView])
-        rotateViewArray(viewArrays: [emptyPlayerView, [player1StackView, player2StackView, player3StackView, player4StackView]])
+        
+        playerStackView = [player1StackView, player2StackView, player3StackView, player4StackView]
+        
+        rotateViewArray(viewArrays: [emptyPlayerView, playerStackView])
         
         for label in playerNameLabel {
             label.textColor = unSelectColor
@@ -472,6 +476,33 @@ class DeckGameViewController: UIViewController {
             }
         }
     }
+    
+    private func showAnimatingCard(playerIndex: Int, card: Card, playerColorIndex: Int) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            let animatingCard = CardView(frame: self.cardViews[playerIndex][2].bounds)
+            animatingCard.rank = card.rank.order
+            animatingCard.suit = card.suit.description
+            animatingCard.backgroundColor = UIColor.clear
+            animatingCard.addBorder(color: Constants.Colors.color[self.colorKey[playerColorIndex]!]!)
+            
+            animatingCard.center = CGPoint(x: self.stackViewDeck.frame.size.width / 2, y: self.stackViewDeck.frame.size.height / 2)
+            
+            let translateDistance = Constants.animateDistance
+            
+            let translationX: CGFloat = 0
+            var translationY: CGFloat = playerIndex == 3 ? -translateDistance : translateDistance
+            
+            self.playerStackView[playerIndex - 1].addSubview(animatingCard)
+            
+            UIView.animate(withDuration: self.animationDuration, animations: {
+                animatingCard.transform = .init(translationX: -translationX, y: -translationY)
+                animatingCard.alpha = 0
+            }, completion: { _ in
+                animatingCard.removeFromSuperview()
+            })
+        }
+    }
 }
 
 //MARK:- Gesture Recognizer Delegate Methods
@@ -575,7 +606,10 @@ extension DeckGameViewController: GameManagerDelegate {
         print("gave \(card) to player: ",playerID.displayName)
     }
     
-    func playerTurnedCard(player: MCPeerID, card: Card) {
+    func playerTurnedCard(player: MCPeerID, card: Card, colorIndex: Int) {
+        if let index = playerIndexState.firstIndex(of: player.displayName) {
+            showAnimatingCard(playerIndex: index, card: card, playerColorIndex: colorIndex)
+        }
     }
         
     func nextPlayerTurn(playerName: String) {

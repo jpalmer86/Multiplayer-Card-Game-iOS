@@ -31,7 +31,7 @@ protocol GameServiceGameClientDelegate {
     func winner(playerName: String)
     func nextPlayer(playerName: String)
     func gaveCardToPlayer(card: Card, playerName: String)
-    func playerTurnedCard(playerName: String, card: Card)
+    func playerTurnedCard(playerName: String, card: Card, colorIndex: Int)
     func remainingTime(time: Int)
     func cardsSwapped(byPlayer: String, index: Int)
     func playerListFromHost(playerNameList: [String])
@@ -41,7 +41,7 @@ protocol GameServiceGameClientDelegate {
 }
 
 protocol GameServiceGameHostDelegate {
-    func clientPlayerTurnedCard(playerName: String, card: Card)
+    func clientPlayerTurnedCard(playerName: String, card: Card, colorIndex: Int)
     func clientCardsSwapped(byPlayer: String, index: Int)
     func clientPlayerName(playerName: String)
     func clientGameOverMessage()
@@ -204,17 +204,23 @@ extension GameService: MCSessionDelegate {
             let gameWinnerName = messageService.winnerData(data: data)
             gameClientDelegate?.winner(playerName: gameWinnerName)
         case .GiveCardToPlayerMessage:
-            let dict = messageService.cardExchangeData(data: data)
+            let tuple = messageService.cardExchangeData(data: data)
+            let playerColorIndex = tuple.1
+            let dict = tuple.0
             let playerName = dict.keys.first!
             gameClientDelegate?.gaveCardToPlayer(card: dict[playerName]!, playerName: playerName)
         case .PlayerTurnedCardHostMessage:
-            let dict = messageService.cardExchangeData(data: data)
+            let tuple = messageService.cardExchangeData(data: data)
+            let playerColorIndex = tuple.1
+            let dict = tuple.0
             let playerName = dict.keys.first!
-            gameClientDelegate?.playerTurnedCard(playerName: playerName, card: dict[playerName]!)
+            gameClientDelegate?.playerTurnedCard(playerName: playerName, card: dict[playerName]!, colorIndex: playerColorIndex)
         case .PlayerTurnedCardClientMessage:
-            let dict = messageService.cardExchangeData(data: data)
+            let tuple = messageService.cardExchangeData(data: data)
+            let playerColorIndex = tuple.1
+            let dict = tuple.0
             let playerName = dict.keys.first!
-            gameHostDelegate?.clientPlayerTurnedCard(playerName: playerName, card: dict[playerName]!)
+            gameHostDelegate?.clientPlayerTurnedCard(playerName: playerName, card: dict[playerName]!, colorIndex: playerColorIndex)
         case .RemainingTimeMessage:
             let time = messageService.timeData(data: data)
             gameClientDelegate?.remainingTime(time: time)

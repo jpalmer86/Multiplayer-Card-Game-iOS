@@ -39,6 +39,7 @@ class PlayerCardDeckViewController: UIViewController {
     private var enableInteraction = false
     private var finalDropLocation: CGPoint?
     private var cardViewIndex = 0
+    private let allColors = Constants.Colors.allColors()
     
     //MARK:- Lifecycle Hooks
     
@@ -183,7 +184,7 @@ extension PlayerCardDeckViewController: UIDropInteractionDelegate {
     
     func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
         if let location = finalDropLocation, location.x < 40.0 {
-            gameManager.throwCardInCenter(player: gameManager.playersConnected[0], card: gameManager.cardsForPlayer[0][cardViewIndex])
+            gameManager.throwCardInCenter(player: gameManager.playersConnected[0], card: gameManager.cardsForPlayer[0][cardViewIndex], playerColorIndex: allColors.firstIndex(of: selectedColor)!)
             finalDropLocation = nil
         }
         swipeGestureEnabled(true)
