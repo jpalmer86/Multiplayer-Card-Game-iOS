@@ -32,7 +32,6 @@ class GameViewController: UIViewController {
     private var connectedPlayers: [MCPeerID]! {
         didSet {
             playerNameArray = connectedPlayers.map({ $0.displayName })
-            print(playerNameArray)
             self.gameManager.newGame(/*playersArray: self.connectedPlayers,*/ newGame: game)
         }
     }

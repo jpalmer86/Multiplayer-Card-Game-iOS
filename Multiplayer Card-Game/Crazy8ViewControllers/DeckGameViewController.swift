@@ -156,9 +156,6 @@ class DeckGameViewController: UIViewController {
             for player in playerNameArray {
                 labelString += "\(player)\n"
             }
-            DispatchQueue.main.async { [weak self] in
-                
-            }
         }
     }
     
@@ -183,14 +180,20 @@ class DeckGameViewController: UIViewController {
             case .dealing:
                 DispatchQueue.main.async { [unowned self] in
                     self.title = "Game"
+                    
                     if self.isHost {
                         gameService.stopAdvertisingToPeers()
                     }
+                    
                     for index in 1..<self.playerIndexState.count {
                         if self.playerIndexState[index] != self.noPlayer {
                             self.roundsWonLabel[index].isHidden = false
+                        } else {
+                            self.emptyPlayerView[index-1].isHidden = false
+                            self.playerStackView[index-1].isHidden = true
                         }
                     }
+                    
                     self.timeLabel.isHidden = false
                     self.connectedPlayersLabel.isHidden = true
                     self.gameStateLabel.text = "Game has started"
@@ -335,6 +338,10 @@ class DeckGameViewController: UIViewController {
             for view in viewArray {
                 view.addRoundCorner()
             }
+        }
+        
+        for emptyView in emptyPlayerView {
+            emptyView.backgroundColor = UIColor.white
         }
         
         gameState = .waitingForPlayers
@@ -490,7 +497,7 @@ class DeckGameViewController: UIViewController {
             let translateDistance = Constants.animateDistance
             
             let translationX: CGFloat = 0
-            var translationY: CGFloat = playerIndex == 3 ? -translateDistance : translateDistance
+            let translationY: CGFloat = playerIndex == 3 ? -translateDistance : translateDistance
             
             self.playerStackView[playerIndex - 1].addSubview(animatingCard)
             
@@ -580,7 +587,6 @@ extension DeckGameViewController: GameManagerDelegate {
     
     func playerList(playerList: [MCPeerID]) {
         connectedPlayers = playerList
-        print("player list from host",connectedPlayers)
     }
     
     func roundWinner(winner: MCPeerID) {
