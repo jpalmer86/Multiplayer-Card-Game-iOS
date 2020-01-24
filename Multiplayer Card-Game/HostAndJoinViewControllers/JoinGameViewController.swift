@@ -29,7 +29,6 @@ class JoinGameViewController: UIViewController {
     var game: Game!
     var availableDevices = [MCPeerID]() {
         didSet {
-            print(availableDevices)
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.lobbiesTableView.reloadData()

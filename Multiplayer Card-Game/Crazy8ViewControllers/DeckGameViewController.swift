@@ -91,8 +91,10 @@ class DeckGameViewController: UIViewController {
                    } else {
                        startGameAndOptionsButton.setTitle("Waiting for Game Start", for: .normal)
                    }
+                   changeNavigationBarTitle("Waiting for Devices")
                case .options:
                    self.startGameAndOptionsButton.setTitle("Options", for: .normal)
+                   changeNavigationBarTitle("Game")
                }
            }
        }
@@ -205,18 +207,14 @@ class DeckGameViewController: UIViewController {
                 }
             case .gameOver:
                 DispatchQueue.main.async { [unowned self] in
-                    self.dismiss(animated: true) {
-                        AppUtility.lockOrientation(.all)
-                        let value = UIInterfaceOrientation.portrait.rawValue
-                        UIDevice.current.setValue(value, forKey: "orientation")
-                        gameService.disconnectSession()
-                        if self.isHost {
-                            gameService.stopAdvertisingToPeers()
-                            self.gameManager.endGame()
-                        } else {
-                            gameService.joinSession()
-                        }
+                    gameService.disconnectSession()
+                    if self.isHost {
+                        gameService.stopAdvertisingToPeers()
+                        self.gameManager.endGame()
+                    } else {
+                        gameService.joinSession()
                     }
+                    self.dismissVC()
                 }
             case .none:
                 print("Do nothing")
@@ -262,8 +260,10 @@ class DeckGameViewController: UIViewController {
     }
     
     var setDeck: ((Bool) -> Void)!
-    var enablePlayer: ((Bool)->Void)!
-    var setColor: ((UIColor)-> Void)!
+    var enablePlayer: ((Bool) -> Void)!
+    var setColor: ((UIColor) -> Void)!
+    var changeNavigationBarTitle: ((String) -> Void)!
+    var dismissVC: (() -> Void)!
     
     
     //MARK:- IBActions
@@ -295,17 +295,11 @@ class DeckGameViewController: UIViewController {
         super.viewDidLoad()
         
         cardViews =  [[deckLeftView, deckRightView], player1Cards, player2Cards, player3Cards, player4Cards]
-        
         cardViewsState = [.unselected, .unselected, .unselected, .unselected, .unselected]
-
         addShadowToViews(viewArrays: [[deckRightView, deckLeftView]])
-        
         addShadowToViews(viewArrays: [player1Cards, player2Cards, player3Cards, player4Cards], offset: Constants.shadowOffsetCard)
-        
         addBorderToViews(viewArrays: [emptyPlayerView])
-        
         playerStackView = [player1StackView, player2StackView, player3StackView, player4StackView]
-        
         rotateViewArray(viewArrays: [emptyPlayerView, playerStackView])
         
         for label in playerNameLabel {
@@ -344,19 +338,22 @@ class DeckGameViewController: UIViewController {
         }
         
         gameState = .waitingForPlayers
-
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
         AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
         AppUtility.lockOrientation(.all)
+    }
+    
+    //MARK:- ViewController Methods
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     
     //MARK:- Custom Methods
@@ -369,7 +366,7 @@ class DeckGameViewController: UIViewController {
                     newPlayerIndexState[index] = noPlayer
                 }
                 newPlayerIndexState[playerIndex] = myName
-                gameManager.changeplayerIndexState(state: newPlayerIndexState)
+                gameManager.changePlayerIndexState(state: newPlayerIndexState)
             }
         }
     }
@@ -381,8 +378,22 @@ class DeckGameViewController: UIViewController {
                 newPlayerIndexState[index] = noPlayer
             }
             newPlayerIndexState[0] = myName
-            gameManager.changeplayerIndexState(state: newPlayerIndexState)
+            gameManager.changePlayerIndexState(state: newPlayerIndexState)
         }
+    }
+    
+    func quitGame() {
+        if self.isHost || self.gameState == GameState.waitingForPlayers {
+            self.gameState = .gameOver
+            var newPlayerIndexState = playerIndexState
+            if let index = newPlayerIndexState.firstIndex(of: myName) {
+                newPlayerIndexState[index] = noPlayer
+            }
+            gameManager.changePlayerIndexState(state: newPlayerIndexState)
+        } else {
+            gameService.messageService.sendClientGameOverToHost()
+        }
+        showOnlyAlert(title: "Disconnected", message: "Successfully disconnected from the game.")
     }
     
     //MARK:- Private Methods
@@ -443,18 +454,6 @@ class DeckGameViewController: UIViewController {
         for viewArray in viewArrays {
             for index in 0..<viewArray.count {
                 viewArray[index].isUserInteractionEnabled = false
-            }
-        }
-    }
-    
-    private func quit(_ sender: Any) {
-        alert(title: "Confirm disconnection:", message: "Are you sure you want to end the game?") { response in
-            if response {
-                if self.isHost || self.gameState == GameState.waitingForPlayers {
-                    self.gameState = .gameOver
-                } else {
-                    gameService.messageService.sendClientGameOverToHost()
-                }
             }
         }
     }

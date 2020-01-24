@@ -259,7 +259,7 @@ class GameManager {
         stopTimer()
     }
     
-    func changeplayerIndexState(state: [String]) {
+    func changePlayerIndexState(state: [String]) {
         if isHost {
             playerIndexState = state
         }
@@ -431,7 +431,7 @@ extension GameManager: GameServiceGameClientDelegate {
 
 extension GameManager: GameServiceGameHostDelegate {
     func clientPlayerPositionChanged(stateArray: [String]) {
-        changeplayerIndexState(state: stateArray)
+        changePlayerIndexState(state: stateArray)
     }
     
     func connectedPlayersHost(connectedPlayers: [MCPeerID]) {

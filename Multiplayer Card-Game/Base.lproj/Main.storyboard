@@ -74,7 +74,7 @@
                                                     </attributedString>
                                                 </state>
                                                 <connections>
-                                                    <segue destination="uki-ix-de4" kind="presentation" identifier="Start Game segue" modalPresentationStyle="fullScreen" modalTransitionStyle="flipHorizontal" id="7GO-F7-g8b"/>
+                                                    <segue destination="uki-ix-de4" kind="show" identifier="Start Game segue" id="7GO-F7-g8b"/>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Begin a new game." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YBl-U8-6QF">
@@ -190,7 +190,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="uki-ix-de4" kind="presentation" identifier="Join Existing Segue" modalPresentationStyle="fullScreen" modalTransitionStyle="flipHorizontal" id="Dkn-8u-LxE"/>
+                                            <segue destination="uki-ix-de4" kind="show" identifier="Join Existing Segue" id="Dkn-8u-LxE"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -387,7 +387,7 @@
                                 </constraints>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0:00" textAlignment="justified" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jwd-LM-kfi">
-                                <rect key="frame" x="188" y="76" width="38" height="21.5"/>
+                                <rect key="frame" x="344" y="76" width="38" height="21.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -541,7 +541,6 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="jwd-LM-kfi" firstAttribute="centerX" secondItem="Nft-kP-Lfy" secondAttribute="centerX" id="0ar-js-3F7"/>
                             <constraint firstItem="0fb-nu-FqN" firstAttribute="top" secondItem="cuE-02-pG2" secondAttribute="bottom" constant="64" id="0eq-kP-0KL"/>
                             <constraint firstItem="NZY-qj-BXU" firstAttribute="centerY" secondItem="0fb-nu-FqN" secondAttribute="centerY" id="130-a8-KkP"/>
                             <constraint firstItem="14S-W0-D92" firstAttribute="width" secondItem="Ygl-h1-ovq" secondAttribute="width" id="19W-DM-L4L"/>
@@ -574,6 +573,7 @@
                             <constraint firstItem="Q2m-Gc-VX1" firstAttribute="centerX" secondItem="DNB-0f-5vp" secondAttribute="centerX" id="Maz-r2-TwF"/>
                             <constraint firstItem="Hmc-EY-t7x" firstAttribute="top" secondItem="KdF-sO-ch6" secondAttribute="top" constant="32" id="Mt8-cd-1W6"/>
                             <constraint firstItem="qrH-O0-8IT" firstAttribute="top" secondItem="0fb-nu-FqN" secondAttribute="bottom" constant="32" id="NXC-YB-guU"/>
+                            <constraint firstItem="KdF-sO-ch6" firstAttribute="trailing" secondItem="jwd-LM-kfi" secondAttribute="trailing" constant="32" id="Nay-Wn-0fD"/>
                             <constraint firstItem="Z60-Mq-AMf" firstAttribute="top" secondItem="0fb-nu-FqN" secondAttribute="bottom" constant="64" id="P6C-D8-lNU"/>
                             <constraint firstItem="DNB-0f-5vp" firstAttribute="centerX" secondItem="Nft-kP-Lfy" secondAttribute="centerX" id="QGk-HS-VKf"/>
                             <constraint firstItem="2Px-bF-oDT" firstAttribute="centerX" secondItem="pZ4-DV-8Kw" secondAttribute="centerX" id="RT0-5E-fMA"/>
@@ -662,7 +662,7 @@
         <scene sceneID="xEw-ep-mRd">
             <objects>
                 <viewController storyboardIdentifier="PlayerCardDeckViewController" id="T8e-0i-oLn" customClass="PlayerCardDeckViewController" customModule="Multiplayer_Card_Game" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" ambiguous="YES" id="Tl4-vi-ypg">
+                    <view key="view" contentMode="scaleToFill" id="Tl4-vi-ypg">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>

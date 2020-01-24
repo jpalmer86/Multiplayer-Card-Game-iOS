@@ -22,6 +22,7 @@ class GamePageViewController: UIPageViewController {
     var isHost: Bool!
     var game: Game!
     var deckController: DeckGameViewController!
+    var quit: (() -> Void)!
 
     //MARK:- Lifecycle Hooks
     
@@ -39,7 +40,19 @@ class GamePageViewController: UIPageViewController {
         }
         
         self.delegate = self
+
         configurePageControl()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        quit()
+        super.viewWillDisappear(animated)
+    }
+    
+    //MARK:- ViewController Methods
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     
     //MARK:- Custom Methods
@@ -52,6 +65,14 @@ class GamePageViewController: UIPageViewController {
         }
     }
     
+    func changeNavigationBarTitle(newTitle: String) {
+        title = newTitle
+    }
+    
+    func dismissVC() {
+        navigationController?.popViewController(animated: true)
+    }
+    
     //MARK:- Private Methods
     
     private func newVc(viewController: String) -> UIViewController {
@@ -59,6 +80,9 @@ class GamePageViewController: UIPageViewController {
         if let gameVC = vc as? DeckGameViewController {
             gameVC.game = game
             gameVC.isHost = isHost
+            gameVC.changeNavigationBarTitle = self.changeNavigationBarTitle
+            gameVC.dismissVC = self.dismissVC
+            self.quit = gameVC.quitGame
             deckController = gameVC
         } else if let gameVC = vc as? PlayerCardDeckViewController {
             gameVC.swipeGestureEnabled = self.swipeGestureEnabled
