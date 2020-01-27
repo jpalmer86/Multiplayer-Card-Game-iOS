@@ -33,9 +33,14 @@ class GameManager {
     //MARK:- Property Variables
     
     static var shared = GameManager()
+    
     private var deck: Deck!
     private let numberOfCardsPerPlayer = 13
     private let noPlayer = Constants.noplayer
+    private var isHost = true
+    private var timer: Timer? = nil
+    private var game: Game!
+    private let myPeerID = gameService.getPeerID()
     private var currentPlayerIndex = 0 {
         didSet {
             delegate?.nextPlayerTurn(playerName: players[currentPlayerIndex].displayName)
@@ -44,7 +49,6 @@ class GameManager {
             }
         }
     }
-    private var timer: Timer? = nil
     private var timeLeft = 0 {
         didSet {
             self.delegate?.timeRemaining(timeString: self.getTimeString())
@@ -59,23 +63,21 @@ class GameManager {
             }
         }
     }
-    private var isHost = true
-    lazy var hostID: MCPeerID = {
-        let id = gameService.messageService.getHost()
-        return id
-    }()
-    private let myPeerID = gameService.getPeerID()
     private var colorIndex = 0 {
         didSet {
             delegate?.playerColorIndex(index: colorIndex)
         }
     }
-    private var game: Game!
-
+    
     var delegate: GameManagerDelegate?
     var cardsDelegate: GameCardManagerDelegate?
-
     var minPlayersNeeded = 1
+    var playerCount: Int!
+    var cardsWonPerPlayer: [[Card]]!
+    lazy var hostID: MCPeerID = {
+        let id = gameService.messageService.getHost()
+        return id
+    }()
     var playerNames: [String]! = [] {
         didSet {
             if isHost {
@@ -85,15 +87,15 @@ class GameManager {
     }
     var players: [MCPeerID] = [] {
         didSet {
-            newGame(/*playersArray: self.connectedPlayers,*/ newGame: game)
+            newGame(newGame: game)
         }
     }
     var playersConnected: [MCPeerID] = [] {
         didSet {
             players = playersConnected
+            playerIndexState = [noPlayer, noPlayer, noPlayer, noPlayer, noPlayer]
         }
     }
-    var playerCount: Int!
     var cardsForPlayer: [[Card]]! {
         didSet {
             if cardsForPlayer.count > 0 {
@@ -121,13 +123,11 @@ class GameManager {
             }
         }
     }
-    var cardsWonPerPlayer: [[Card]]!
     var roundsWonPerPlayer: [Int]! {
         didSet {
             delegate?.roundsWonPerPlayer(playerArray: playerNames, wonCountArray: roundsWonPerPlayer)
         }
     }
-    
     var playerIndexState: [String] = ["noPlayer", "noPlayer", "noPlayer", "noPlayer", "noPlayer"] {
         didSet {
             delegate?.cardStateUpdated(state: playerIndexState)

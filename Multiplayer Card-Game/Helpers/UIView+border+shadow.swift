@@ -64,6 +64,7 @@ extension UIView {
         self.layer.shadowOpacity = opacity
     }
     
+    //// Adds a rounded corner around the view
     func addRoundCorner() {
         layer.cornerRadius = cornerRadius
     }

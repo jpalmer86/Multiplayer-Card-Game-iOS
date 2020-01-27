@@ -12,9 +12,16 @@ import UIKit
 
 extension UIViewController
 {
-    
-    private func getRootViewController() -> UIViewController {
-        if var topController = UIApplication.shared.keyWindow?.rootViewController {
+    //// gets the rootViewController to show the alert above
+    func getRootViewController() -> UIViewController {
+        let keyWindow = UIApplication.shared.connectedScenes
+        .filter({$0.activationState == .foregroundActive})
+        .map({$0 as? UIWindowScene})
+        .compactMap({$0})
+        .first?.windows
+        .filter({$0.isKeyWindow}).first
+        
+        if var topController = keyWindow?.rootViewController {
             while let presentedViewController = topController.presentedViewController {
                 topController = presentedViewController
             }
@@ -23,6 +30,7 @@ extension UIViewController
         return self
     }
     
+    //// Shows an alert with customized action
     func alert(title: String?, message: String?, completion: @escaping (Bool) -> Void)
     {
         DispatchQueue.main.async {
@@ -37,6 +45,7 @@ extension UIViewController
         }
     }
     
+    //// Shows an alert without any actions
     func showOnlyAlert(title: String?, message: String?)
     {
         DispatchQueue.main.async {
@@ -46,6 +55,7 @@ extension UIViewController
         }
     }
     
+    ////  Returns a loading alert with the given title
     func loadingAlert(title: String) -> UIAlertController {
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
 

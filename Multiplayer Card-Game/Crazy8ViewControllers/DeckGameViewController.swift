@@ -313,7 +313,7 @@ class DeckGameViewController: UIViewController {
             }
         } else {
             connectingAlert = loadingAlert(title: "Connecting ...")
-            present(connectingAlert!, animated: true, completion: nil)
+            getRootViewController().present(connectingAlert!, animated: true, completion: nil)
             gameService.stopBrowsingForPeers()
         }
 

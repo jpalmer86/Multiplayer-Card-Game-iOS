@@ -28,18 +28,18 @@ class PlayerCardDeckViewController: UIViewController {
     }
     var swipeGestureEnabled: ((Bool)->Void)!
     
+    private let animationDistance: CGFloat = 150
     private let gameManager = GameManager.shared
     private var selectedColor: UIColor! = UIColor.white
+    private var isHost = false
+    private var enableInteraction = false
+    private let allColors = Constants.Colors.allColors()
+    private var animator = UIViewPropertyAnimator()
     private var isDeck = false {
         didSet {
             updateDeck()
         }
     }
-    private var isHost = false
-    private var enableInteraction = false
-    private var finalDropLocation: CGPoint?
-    private var cardViewIndex = 0
-    private let allColors = Constants.Colors.allColors()
     
     //MARK:- Lifecycle Hooks
     
@@ -47,14 +47,10 @@ class PlayerCardDeckViewController: UIViewController {
         super.viewDidLoad()
         gameManager.cardsDelegate = self
         
-        finalDropLocation = CGPoint(x: view.frame.maxX / 2, y: view.frame.maxY / 2)
                 
         if let index = gameManager.players.firstIndex(of: GameService.shared.getPeerID()) {
             cards = gameManager.cardsForPlayer[index]
         }
-        
-        let dropInteraction = UIDropInteraction(delegate: self)
-        view.addInteraction(dropInteraction)
         
         for cardView in cardViews {
             cardView.addShadow()
@@ -62,9 +58,8 @@ class PlayerCardDeckViewController: UIViewController {
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectCard(_:)))
             cardView.addGestureRecognizer(tapGesture)
             
-            let dragInteraction = UIDragInteraction(delegate: self)
-            dragInteraction.isEnabled = true
-            cardView.addInteraction(dragInteraction)
+            let gestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
+            cardView.addGestureRecognizer(gestureRecognizer)
         }
         
         deckStackView.transform = .init(rotationAngle: -CGFloat.pi/2)
@@ -81,8 +76,34 @@ class PlayerCardDeckViewController: UIViewController {
     //MARK:- Custom Methods
     
     @objc func selectCard(_ sender: UITapGestureRecognizer? = nil) {
-        if let senderView = sender?.view, let cardView = senderView as? CardView, let index = cardViews.firstIndex(of: cardView) {
-            // gameManager.swapCard(player: gameService.getPeerID(),index: index)
+//        if let senderView = sender?.view, let cardView = senderView as? CardView, let index = cardViews.firstIndex(of: cardView) {
+//             gameManager.swapCard(player: gameService.getPeerID(),index: index)
+//        }
+    }
+    
+    @objc func handlePan(recognizer: UIPanGestureRecognizer) {
+        if let senderView = recognizer.view, let cardView = senderView as? CardView, let index = cardViews.firstIndex(of: cardView) {
+            let selectedCardView = cardView
+            switch recognizer.state {
+            case .began:
+                animator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: Constants.crazy8AnimationDuration, delay: 0.2, options: [], animations: {
+                    selectedCardView.transform = .init(translationX: self.animationDistance, y: 0)
+                    selectedCardView.alpha = 0
+                }) {  [weak self] _ in
+                    guard let self = self else { return }
+                    print("throw card in center")
+                    self.gameManager.throwCardInCenter(player: self.gameManager.playersConnected[0], card: self.gameManager.cardsForPlayer[0][index], playerColorIndex: self.allColors.firstIndex(of: self.selectedColor)!)
+                    selectedCardView.transform = .identity
+                    selectedCardView.transform = .init(rotationAngle: -CGFloat.pi / 2)
+                }
+                animator.pauseAnimation()
+            case .changed:
+                animator.fractionComplete = recognizer.translation(in: selectedCardView).x / animationDistance
+            case .ended:
+                animator.continueAnimation(withTimingParameters: nil, durationFactor: 0)
+            default:
+                ()
+            }
         }
     }
     
@@ -105,7 +126,6 @@ class PlayerCardDeckViewController: UIViewController {
     }
     
     //MARK:- Private Methods
-    
     
     private func updateDeck() {
         deckStackView?.isHidden = !isDeck
@@ -149,42 +169,5 @@ class PlayerCardDeckViewController: UIViewController {
 extension PlayerCardDeckViewController: GameCardManagerDelegate {
     func cardsSwapped(updatedCards: [Card], deck: Bool) {
         cards = updatedCards
-    }
-}
-
-//MARK:- UIDragInteraction Delegate Methods
-
-extension PlayerCardDeckViewController: UIDragInteractionDelegate {
-    func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
-        swipeGestureEnabled(false)
-        if let cardView = interaction.view as? CardView, let index = cardViews.firstIndex(of: cardView) {
-            cardViewIndex = index
-            let object = "\(cardView.rank)-\(cardView.suit)"
-            let stringProvider = NSItemProvider(object: object as NSString)
-            return [UIDragItem(itemProvider: stringProvider)]
-        }
-        return []
-    }
-}
-
-//MARK:- UIDropInteraction Delegate Methods
-
-extension PlayerCardDeckViewController: UIDropInteractionDelegate {
-    func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
-        return session.items.count == 1
-    }
-    
-    func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
-        let dropLocation = session.location(in: view)
-        finalDropLocation = dropLocation
-        return UIDropProposal(operation: .move)
-    }
-    
-    func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
-        if let location = finalDropLocation, location.x < 40.0 {
-            finalDropLocation = nil
-            gameManager.throwCardInCenter(player: gameManager.playersConnected[0], card: gameManager.cardsForPlayer[0][cardViewIndex], playerColorIndex: allColors.firstIndex(of: selectedColor)!)
-        }
-        swipeGestureEnabled(true)
     }
 }
