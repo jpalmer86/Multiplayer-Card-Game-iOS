@@ -98,7 +98,16 @@ class PlayerCardDeckViewController: UIViewController {
                 }
                 animator.pauseAnimation()
             case .changed:
-                animator.fractionComplete = recognizer.translation(in: selectedCardView).x / animationDistance
+                let fractionComplete = recognizer.translation(in: selectedCardView).x / animationDistance
+                print(fractionComplete)
+                if fractionComplete < 0.01 {
+                    animator.stopAnimation(true)
+                    selectedCardView.transform = .identity
+                    selectedCardView.transform = .init(rotationAngle: -CGFloat.pi / 2)
+                    selectedCardView.alpha = 1
+                } else {
+                    animator.fractionComplete = fractionComplete
+                }
             case .ended:
                 animator.continueAnimation(withTimingParameters: nil, durationFactor: 0)
             default:
