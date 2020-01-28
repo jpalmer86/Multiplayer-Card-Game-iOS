@@ -21,11 +21,7 @@ class PlayerCardDeckViewController: UIViewController {
     
     //MARK:- Property Variables
     
-    var cards: [Card]? {
-        didSet {
-            updateUI()
-        }
-    }
+    var cards: [Card]?
     var swipeGestureEnabled: ((Bool)->Void)!
     
     private let animationDistance: CGFloat = 150
@@ -63,6 +59,7 @@ class PlayerCardDeckViewController: UIViewController {
         deckStackView.transform = .init(rotationAngle: -CGFloat.pi/2)
         leftDeckView.addShadow()
         updateDeck()
+        updateUI()
     }
     
     //MARK:- ViewController Methods
@@ -81,9 +78,11 @@ class PlayerCardDeckViewController: UIViewController {
                 animator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: Constants.crazy8AnimationDuration, delay: 0.2, options: [], animations: {
                     selectedCardView.transform = .init(translationX: self.animationDistance, y: 0)
                     selectedCardView.alpha = 0
-                }) { _ in
+                }) { [weak self] _ in
+                    guard let self = self else { return }
                     selectedCardView.transform = .identity
                     selectedCardView.transform = .init(rotationAngle: -CGFloat.pi / 2)
+                    self.updateUI()
                 }
                 animator.pauseAnimation()
             case .changed:

@@ -82,11 +82,12 @@ class GameService: NSObject {
     
     private var connectedPeers: [MCPeerID]! = [] {
         didSet {
-            gameHostDelegate?.connectedPlayersHost(connectedPlayers: connectedPeers)
-            gameClientDelegate?.connectedPlayersClient(connectedPlayers: connectedPeers)
             if connectedPeers.count > 1 {
+                print("hostId: ",connectedPeers[1])
                 messageService.setHost(hostID: connectedPeers[1])
             }
+            gameHostDelegate?.connectedPlayersHost(connectedPlayers: connectedPeers)
+            gameClientDelegate?.connectedPlayersClient(connectedPlayers: connectedPeers)
         }
     }
         

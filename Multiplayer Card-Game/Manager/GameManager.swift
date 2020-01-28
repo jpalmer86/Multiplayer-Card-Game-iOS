@@ -263,7 +263,9 @@ class GameManager {
         if isHost {
             playerIndexState = state
         }
-        gameService.messageService.sendPlayerPositionState(positionState: state, toHost: !isHost)
+        if playersConnected.count > 1 {
+            gameService.messageService.sendPlayerPositionState(positionState: state, toHost: !isHost)
+        }
     }
     
     //MARK:- Private Methods
@@ -436,7 +438,9 @@ extension GameManager: GameServiceGameHostDelegate {
     
     func connectedPlayersHost(connectedPlayers: [MCPeerID]) {
         playersConnected = connectedPlayers
-        gameService.messageService.sendPlayerPositionState(positionState: playerIndexState, toHost: !isHost)
+        if connectedPlayers.count > 1 {
+            gameService.messageService.sendPlayerPositionState(positionState: playerIndexState, toHost: !isHost)
+        }
     }
     
     func clientPlayerTurnedCard(playerName: String, card: Card, colorIndex: Int) {
