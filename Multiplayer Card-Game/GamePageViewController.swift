@@ -44,8 +44,14 @@ class GamePageViewController: UIPageViewController {
         configurePageControl()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
         quit()
+        AppUtility.lockOrientation(.all)
         super.viewWillDisappear(animated)
     }
     

@@ -341,16 +341,6 @@ class DeckGameViewController: UIViewController {
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        AppUtility.lockOrientation(.portrait, andRotateTo: .portrait)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        AppUtility.lockOrientation(.all)
-    }
-    
     //MARK:- ViewController Methods
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -535,12 +525,15 @@ extension DeckGameViewController: GameServiceSessionDelegate {
             if count == 4 {
                 gameService.stopAdvertisingToPeers()
             }
+            self.showOnlyAlert(title: "Connected", message: "Successfully connected with \(peerID.displayName)")
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.connectingAlert?.dismiss(animated: true, completion:  {
+                    self.showOnlyAlert(title: "Connected", message: "Successfully connected with \(peerID.displayName)")
+                })
+            }
         }
-        
-        DispatchQueue.main.async {
-            self.connectingAlert?.dismiss(animated: true, completion: nil)
-        }
-        showOnlyAlert(title: "Connected", message: "Successfully connected with \(peerID.displayName)")
     }
     
     func connectionFailed(peerID: MCPeerID) {

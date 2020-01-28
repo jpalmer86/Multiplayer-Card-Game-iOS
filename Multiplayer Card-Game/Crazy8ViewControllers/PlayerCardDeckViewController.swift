@@ -55,8 +55,6 @@ class PlayerCardDeckViewController: UIViewController {
         for cardView in cardViews {
             cardView.addShadow()
             cardView.transform = .init(rotationAngle: -CGFloat.pi/2)
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(selectCard(_:)))
-            cardView.addGestureRecognizer(tapGesture)
             
             let gestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan))
             cardView.addGestureRecognizer(gestureRecognizer)
@@ -75,12 +73,6 @@ class PlayerCardDeckViewController: UIViewController {
     
     //MARK:- Custom Methods
     
-    @objc func selectCard(_ sender: UITapGestureRecognizer? = nil) {
-//        if let senderView = sender?.view, let cardView = senderView as? CardView, let index = cardViews.firstIndex(of: cardView) {
-//             gameManager.swapCard(player: gameService.getPeerID(),index: index)
-//        }
-    }
-    
     @objc func handlePan(recognizer: UIPanGestureRecognizer) {
         if let senderView = recognizer.view, let cardView = senderView as? CardView, let index = cardViews.firstIndex(of: cardView) {
             let selectedCardView = cardView
@@ -89,27 +81,25 @@ class PlayerCardDeckViewController: UIViewController {
                 animator = UIViewPropertyAnimator.runningPropertyAnimator(withDuration: Constants.crazy8AnimationDuration, delay: 0.2, options: [], animations: {
                     selectedCardView.transform = .init(translationX: self.animationDistance, y: 0)
                     selectedCardView.alpha = 0
-                }) {  [weak self] _ in
-                    guard let self = self else { return }
-                    print("throw card in center")
-                    self.gameManager.throwCardInCenter(player: self.gameManager.playersConnected[0], card: self.gameManager.cardsForPlayer[0][index], playerColorIndex: self.allColors.firstIndex(of: self.selectedColor)!)
+                }) { _ in
                     selectedCardView.transform = .identity
                     selectedCardView.transform = .init(rotationAngle: -CGFloat.pi / 2)
                 }
                 animator.pauseAnimation()
             case .changed:
                 let fractionComplete = recognizer.translation(in: selectedCardView).x / animationDistance
-                print(fractionComplete)
-                if fractionComplete < 0.01 {
+                if fractionComplete < 0.001 {
                     animator.stopAnimation(true)
                     selectedCardView.transform = .identity
                     selectedCardView.transform = .init(rotationAngle: -CGFloat.pi / 2)
                     selectedCardView.alpha = 1
+                    recognizer.state = .cancelled
                 } else {
                     animator.fractionComplete = fractionComplete
                 }
             case .ended:
                 animator.continueAnimation(withTimingParameters: nil, durationFactor: 0)
+                gameManager.throwCardInCenter(player: gameManager.playersConnected[0], card: gameManager.cardsForPlayer[0][index], playerColorIndex: allColors.firstIndex(of: selectedColor)!)
             default:
                 ()
             }
