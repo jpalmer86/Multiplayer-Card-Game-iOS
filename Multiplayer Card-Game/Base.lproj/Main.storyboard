@@ -139,7 +139,9 @@
         <scene sceneID="dFk-Sk-mTH">
             <objects>
                 <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="uki-ix-de4" customClass="GamePageViewController" customModule="Multiplayer_Card_Game" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="Ssu-9i-N7W"/>
+                    <navigationItem key="navigationItem" id="Ssu-9i-N7W">
+                        <barButtonItem key="backBarButtonItem" title="back" id="60b-OJ-PHj"/>
+                    </navigationItem>
                 </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y7X-C2-NHP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

@@ -35,7 +35,7 @@ class Multiplayer_Card_GameTests: XCTestCase {
         host = MCPeerID(displayName: "Host iphone")
         client1 = MCPeerID(displayName: "Client iphone 1")
         
-        sut1.newGame(playersArray: [host, client1])
+        sut1.newGame(newGame: Constants.getAllGamesInfo()[0])
         sut1.setAsHost(host: true)
         
         sut2 = gameService
@@ -72,6 +72,7 @@ class Multiplayer_Card_GameTests: XCTestCase {
     
     func test_DistributedCards() {
         XCTAssertEqual(sut1.cardsForPlayer[0].count, 0, "CardsForPlayer Array not initialized")
+        sut1.connectedPlayersHost(connectedPlayers: [host,client1])
         sut1.distributeCards { (result) in
             switch result {
             case .success(_, _):
@@ -90,7 +91,6 @@ class Multiplayer_Card_GameTests: XCTestCase {
         gameService.browser(serviceBrowser, foundPeer: client1, withDiscoveryInfo: nil)
         
         XCTAssertEqual(mockGameServiceBrowser.mockPeers.count, 1, "Didn't get the nearby client")
-        
     }
 
 }

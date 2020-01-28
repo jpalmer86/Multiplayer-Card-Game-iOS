@@ -83,7 +83,6 @@ class GameService: NSObject {
     private var connectedPeers: [MCPeerID]! = [] {
         didSet {
             if connectedPeers.count > 1 {
-                print("hostId: ",connectedPeers[1])
                 messageService.setHost(hostID: connectedPeers[1])
             }
             gameHostDelegate?.connectedPlayersHost(connectedPlayers: connectedPeers)
@@ -283,7 +282,6 @@ extension GameService: MCNearbyServiceBrowserDelegate {
         } else {
             foundPeers.append(peerID)
         }
-        print(foundPeers)
     }
 
     func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {

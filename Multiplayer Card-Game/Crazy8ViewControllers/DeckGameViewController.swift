@@ -123,7 +123,6 @@ class DeckGameViewController: UIViewController {
                         }
                         self.playerNameLabel[index].textColor = self.selectedColor
                         self.playerNameLabel[index].text = self.playerIndexState[index]
-                        print(self.playerIndexState[index])
                     case .taken:
                         if index == 0 {
                             self.setViewColor(viewsArray: [self.cardViews[index][0]], color: self.takenColor)
@@ -193,10 +192,8 @@ class DeckGameViewController: UIViewController {
             case .decidingRoundWinner:
                 print("round winner decided")
             case .playing:
-                print("play the game turn by turn")
                 DispatchQueue.main.async { [unowned self] in
                     self.playersTurnLabel.isHidden = false
-                    
                 }
             case .gameOver:
                 DispatchQueue.main.async { [unowned self] in
@@ -509,7 +506,6 @@ class DeckGameViewController: UIViewController {
 extension DeckGameViewController: GameServiceSessionDelegate {
     
     func connectedWithPeer(peerID: MCPeerID) {
-        print("Connected with peer: ", peerID.displayName)
         if let index = connectedPlayers.firstIndex(of: peerID) {
             connectedPlayers[index] = peerID
         } else {

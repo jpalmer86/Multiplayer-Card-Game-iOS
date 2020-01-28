@@ -77,7 +77,6 @@ class GameViewController: UIViewController {
             case .decidingRoundWinner:
                 print("round winner decided")
             case .playing:
-                print("play the game turn by turn")
                 DispatchQueue.main.async { [unowned self] in
                     self.playersTurnLabel.isHidden = false
                     self.centreDeckTopCard.isHidden = true
@@ -340,7 +339,6 @@ class GameViewController: UIViewController {
 extension GameViewController: GameServiceSessionDelegate {
     
     func connectedWithPeer(peerID: MCPeerID) {
-        print("Connected with peer: ", peerID.displayName)
         if let index = connectedPlayers.firstIndex(of: peerID) {
             connectedPlayers[index] = peerID
         } else {

@@ -42,6 +42,9 @@ class GamePageViewController: UIPageViewController {
         self.delegate = self
 
         configurePageControl()
+        
+        let imageBarButton = UIBarButtonItem(image: UIImage(systemName: "arrowshape.turn.up.left.2"), style: .plain, target: self, action: #selector(quitGame))
+        navigationItem.leftBarButtonItem = imageBarButton
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,6 +65,14 @@ class GamePageViewController: UIPageViewController {
     }
     
     //MARK:- Custom Methods
+    
+    @objc func quitGame() {
+        alert(title: "Confirm disconnection:", message: "Are you sure you want to disconnect?") {  [weak self] response in
+            if response {
+                self?.navigationController?.popViewController(animated: true)
+            }
+        }
+    }
     
     func swipeGestureEnabled(enable: Bool) {
         for view in self.view.subviews {
