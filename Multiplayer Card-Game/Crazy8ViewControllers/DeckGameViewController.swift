@@ -333,6 +333,9 @@ class DeckGameViewController: UIViewController {
         
         gameState = .waitingForPlayers
         
+        playersTurnLabel.text = "Select your position to play."
+        playersTurnLabel.isHidden = false
+        
         dispatchGroup.notify(queue: .main) {
             print("Alerts gone..........")
         }
@@ -348,6 +351,7 @@ class DeckGameViewController: UIViewController {
     
     @objc func selectedPlayer(_ sender: UIGestureRecognizer) {
         if let tappedView = sender.view, let playerIndex = getPlayerIndexOf(cardView: tappedView) {
+            playersTurnLabel.isHidden = true
             var newPlayerIndexState = playerIndexState
             if cardViewsState[playerIndex] == .unselected {
                 if let index = newPlayerIndexState.firstIndex(of: myName) {
@@ -361,6 +365,7 @@ class DeckGameViewController: UIViewController {
     
     @objc func selectDeck(_ sender: UIGestureRecognizer) {
         var newPlayerIndexState = playerIndexState
+        playersTurnLabel.isHidden = true
         if cardViewsState[0] == .unselected {
             if let index = newPlayerIndexState.firstIndex(of: myName) {
                 newPlayerIndexState[index] = noPlayer
@@ -464,6 +469,7 @@ class DeckGameViewController: UIViewController {
     private func showAnimatingCard(playerIndex: Int, card: Card, playerColorIndex: Int) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+            
             let animatingCard = CardView(frame: self.cardViews[playerIndex][2].bounds)
             animatingCard.rank = card.rank.order
             animatingCard.suit = card.suit.description
@@ -478,15 +484,15 @@ class DeckGameViewController: UIViewController {
             let translationY: CGFloat = playerIndex == 3 ? -translateDistance : translateDistance
             
             self.playerStackView[playerIndex - 1].addSubview(animatingCard)
-            
+
             self.centreDeckTopCard.isHidden = false
 
             UIView.animate(withDuration: self.animationDuration, animations: {
                 animatingCard.transform = .init(translationX: -translationX, y: -translationY)
                 animatingCard.alpha = 0
+            }, completion: { _ in
                 self.centreDeckTopCard.rank = animatingCard.rank
                 self.centreDeckTopCard.suit = animatingCard.suit
-            }, completion: { _ in
                 animatingCard.removeFromSuperview()
             })
         }

@@ -43,8 +43,8 @@ class GamePageViewController: UIPageViewController {
 
         configurePageControl()
         
-        let imageBarButton = UIBarButtonItem(image: UIImage(systemName: "arrowshape.turn.up.left.2"), style: .plain, target: self, action: #selector(quitGame))
-        navigationItem.leftBarButtonItem = imageBarButton
+        let quitBarButton = UIBarButtonItem(title: "Quit", style: .plain, target: self, action: #selector(quitGame))
+        navigationItem.leftBarButtonItem = quitBarButton
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -18,6 +18,7 @@ class PlayerCardDeckViewController: UIViewController {
     @IBOutlet var leftDeckView: CardView!
     @IBOutlet var rightDeckView: UIView!
     @IBOutlet var rightDeckTopCard: CardView!
+    @IBOutlet var dragInstructionView: UIStackView!
     
     //MARK:- Property Variables
     
@@ -128,6 +129,7 @@ class PlayerCardDeckViewController: UIViewController {
     private func updateDeck() {
         deckStackView?.isHidden = !isDeck
         cardStackView?.isHidden = isDeck
+        dragInstructionView?.isHidden = isDeck
     }
     
     private func updateUI() {

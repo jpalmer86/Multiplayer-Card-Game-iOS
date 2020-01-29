@@ -667,12 +667,12 @@
         <scene sceneID="xEw-ep-mRd">
             <objects>
                 <viewController storyboardIdentifier="PlayerCardDeckViewController" id="T8e-0i-oLn" customClass="PlayerCardDeckViewController" customModule="Multiplayer_Card_Game" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Tl4-vi-ypg">
+                    <view key="view" contentMode="scaleToFill" ambiguous="YES" id="Tl4-vi-ypg">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleAspectFill" ambiguous="YES" axis="vertical" distribution="fillEqually" alignment="top" spacing="-32" translatesAutoresizingMaskIntoConstraints="NO" id="Jok-eW-gOG">
-                                <rect key="frame" x="179.5" y="203" width="55.5" height="578"/>
+                                <rect key="frame" x="142.5" y="203" width="129" height="578"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pIu-e5-AzT" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="55.5" height="74"/>
@@ -798,7 +798,7 @@
                                 </constraints>
                             </stackView>
                             <stackView hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" ambiguous="YES" distribution="fillEqually" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="MeE-aO-A4c">
-                                <rect key="frame" x="131.5" y="76" width="253" height="163"/>
+                                <rect key="frame" x="131.5" y="371.5" width="253" height="163"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Eid-HK-zm2" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="0.0" width="122.5" height="163"/>
@@ -815,7 +815,7 @@
                                         <rect key="frame" x="130.5" y="0.0" width="122.5" height="163"/>
                                         <subviews>
                                             <view hidden="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ckg-1l-4wF" customClass="CardView" customModule="Multiplayer_Card_Game" customModuleProvider="target">
-                                                <rect key="frame" x="-0.5" y="0.0" width="122" height="163"/>
+                                                <rect key="frame" x="4" y="4" width="114.5" height="155"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                         </subviews>
@@ -833,6 +833,24 @@
                                     <constraint firstItem="AoZ-5H-Ddl" firstAttribute="height" secondItem="Eid-HK-zm2" secondAttribute="height" id="UQV-WO-BCS"/>
                                 </constraints>
                             </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" distribution="fillEqually" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="28D-YO-4XC">
+                                <rect key="frame" x="279.5" y="296" width="118.5" height="215"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Drag card here to play!" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="muy-6q-UDP">
+                                        <rect key="frame" x="0.0" y="0.0" width="118.5" height="103.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrowshape.turn.up.right.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="VSz-aA-ZVK">
+                                        <rect key="frame" x="0.0" y="112.5" width="118.5" height="101"/>
+                                        <color key="tintColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="VSz-aA-ZVK" secondAttribute="height" multiplier="8:7" id="zev-tl-fR0"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
@@ -841,6 +859,9 @@
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="MeE-aO-A4c" secondAttribute="trailing" constant="16" id="BRC-U9-mUF"/>
                             <constraint firstItem="MeE-aO-A4c" firstAttribute="centerY" secondItem="gXI-EE-R27" secondAttribute="centerY" id="Cu7-bu-w0U"/>
                             <constraint firstItem="Jok-eW-gOG" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="gXI-EE-R27" secondAttribute="leading" constant="32" id="H4k-XG-fFb"/>
+                            <constraint firstAttribute="trailing" secondItem="28D-YO-4XC" secondAttribute="trailing" constant="16" id="PW4-nE-q5B"/>
+                            <constraint firstItem="28D-YO-4XC" firstAttribute="leading" secondItem="Jok-eW-gOG" secondAttribute="trailing" constant="8" id="R42-mr-VTm"/>
+                            <constraint firstItem="28D-YO-4XC" firstAttribute="centerY" secondItem="Tl4-vi-ypg" secondAttribute="centerY" id="VQj-3m-9aY"/>
                             <constraint firstItem="Jok-eW-gOG" firstAttribute="centerX" secondItem="Tl4-vi-ypg" secondAttribute="centerX" id="dHe-ly-c4r"/>
                             <constraint firstItem="MeE-aO-A4c" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="gXI-EE-R27" secondAttribute="leading" constant="16" id="f9F-Qj-qrH"/>
                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Jok-eW-gOG" secondAttribute="trailing" constant="32" id="iUj-cz-5h9"/>
@@ -852,6 +873,7 @@
                     <connections>
                         <outlet property="cardStackView" destination="Jok-eW-gOG" id="Ibb-yy-uZh"/>
                         <outlet property="deckStackView" destination="MeE-aO-A4c" id="uWT-Sn-3JT"/>
+                        <outlet property="dragInstructionView" destination="28D-YO-4XC" id="RoF-sg-us0"/>
                         <outlet property="leftDeckView" destination="Eid-HK-zm2" id="4ot-Ze-UaL"/>
                         <outlet property="rightDeckTopCard" destination="ckg-1l-4wF" id="dwV-a8-k4W"/>
                         <outlet property="rightDeckView" destination="AoZ-5H-Ddl" id="tL0-b8-xwZ"/>
@@ -1448,10 +1470,11 @@
     </scenes>
     <resources>
         <image name="arrowshape.turn.up.left.fill" catalog="system" width="64" height="52"/>
+        <image name="arrowshape.turn.up.right.fill" catalog="system" width="64" height="52"/>
         <image name="card_table" width="1820" height="1214"/>
         <image name="quit" width="512" height="512"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Dkn-8u-LxE"/>
+        <segue reference="7GO-F7-g8b"/>
     </inferredMetricsTieBreakers>
 </document>
