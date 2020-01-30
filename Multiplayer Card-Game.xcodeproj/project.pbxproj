@@ -19,6 +19,7 @@
 		ED4D604D23BE11FE00AFCA36 /* CardError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED4D604C23BE11FE00AFCA36 /* CardError.swift */; };
 		ED79368223D4631B00DAFD36 /* GamePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED79368123D4631B00DAFD36 /* GamePageViewController.swift */; };
 		ED79368423D46BDB00DAFD36 /* PlayerCardDeckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED79368323D46BDB00DAFD36 /* PlayerCardDeckViewController.swift */; };
+		ED89BD0823E2D70A00475428 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = ED89BD0723E2D70A00475428 /* Settings.bundle */; };
 		ED8C470723C490D900E66B48 /* MessageType.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C470623C490D900E66B48 /* MessageType.swift */; };
 		ED8C470923C4929300E66B48 /* MessageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED8C470823C4929300E66B48 /* MessageService.swift */; };
 		ED9D648B23CB6BB400AD0875 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED9D648A23CB6BB400AD0875 /* Player.swift */; };
@@ -76,6 +77,7 @@
 		ED4D604C23BE11FE00AFCA36 /* CardError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardError.swift; sourceTree = "<group>"; };
 		ED79368123D4631B00DAFD36 /* GamePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamePageViewController.swift; sourceTree = "<group>"; };
 		ED79368323D46BDB00DAFD36 /* PlayerCardDeckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerCardDeckViewController.swift; sourceTree = "<group>"; };
+		ED89BD0723E2D70A00475428 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		ED8C470623C490D900E66B48 /* MessageType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageType.swift; sourceTree = "<group>"; };
 		ED8C470823C4929300E66B48 /* MessageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageService.swift; sourceTree = "<group>"; };
 		ED9D648A23CB6BB400AD0875 /* Player.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
@@ -202,6 +204,7 @@
 				ED9F50F923B5F76E00FD5161 /* Assets.xcassets */,
 				ED9F50FB23B5F76E00FD5161 /* LaunchScreen.storyboard */,
 				ED9F50FE23B5F76E00FD5161 /* Info.plist */,
+				ED89BD0723E2D70A00475428 /* Settings.bundle */,
 			);
 			path = "Multiplayer Card-Game";
 			sourceTree = "<group>";
@@ -402,6 +405,7 @@
 			files = (
 				ED9F50FD23B5F76E00FD5161 /* LaunchScreen.storyboard in Resources */,
 				ED9F50FA23B5F76E00FD5161 /* Assets.xcassets in Resources */,
+				ED89BD0823E2D70A00475428 /* Settings.bundle in Resources */,
 				ED9F50F823B5F76D00FD5161 /* Main.storyboard in Resources */,
 				ED9F512B23B6027500FD5161 /* GameTableViewCell.xib in Resources */,
 			);

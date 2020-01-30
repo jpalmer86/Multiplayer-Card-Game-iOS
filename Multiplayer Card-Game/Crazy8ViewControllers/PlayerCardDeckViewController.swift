@@ -99,7 +99,11 @@ class PlayerCardDeckViewController: UIViewController {
                 }
             case .ended:
                 animator.continueAnimation(withTimingParameters: nil, durationFactor: 0)
-                gameManager.throwCardInCenter(player: gameManager.playersConnected[0], card: gameManager.cardsForPlayer[0][index], playerColorIndex: allColors.firstIndex(of: selectedColor)!)
+                let rank = Card.Rank.orderOf(rank: "\(cardView.rank)")
+                let suit = Card.Suit(rawValue: cardView.suit)!
+                let card = Card(suit: suit, rank: Card.Rank.allRanks[rank - 1])
+                let cardIndex = cards!.firstIndex(of: card)!
+                gameManager.throwCardInCenter(player: gameManager.playersConnected[0], card: gameManager.cardsForPlayer[0][cardIndex], playerColorIndex: allColors.firstIndex(of: selectedColor)!)
             default:
                 ()
             }
@@ -152,12 +156,16 @@ class PlayerCardDeckViewController: UIViewController {
                     cardView.addBorder(color: self.selectedColor)
                     cardView.isUserInteractionEnabled = false
                 }
+                let m = 13
+                let cardsToCut = Int((m - cards.count)/2)
+                let start = cardsToCut
+                
                 for (index,card) in cards.enumerated() {
-                    self.cardViews[index].rank = card.rank.order
-                    self.cardViews[index].suit = card.suit.description
-                    self.cardViews[index].isFaceUp = true
-                    self.cardViews[index].alpha = 1
-                    self.cardViews[index].isUserInteractionEnabled = self.enableInteraction
+                        self.cardViews[start + index].rank = card.rank.order
+                        self.cardViews[start + index].suit = card.suit.description
+                        self.cardViews[start + index].isFaceUp = true
+                        self.cardViews[start + index].alpha = 1
+                        self.cardViews[start + index].isUserInteractionEnabled = self.enableInteraction
                 }
             }
         }

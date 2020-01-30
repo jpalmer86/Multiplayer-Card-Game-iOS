@@ -275,6 +275,7 @@ class DeckGameViewController: UIViewController {
             }
         case .options:
             print("options selected")
+            openSettings()
         }
         
     }
@@ -486,14 +487,29 @@ class DeckGameViewController: UIViewController {
             self.playerStackView[playerIndex - 1].addSubview(animatingCard)
 
             self.centreDeckTopCard.isHidden = false
+            
+            self.centreDeckTopCard.alpha = 0
 
             UIView.animate(withDuration: self.animationDuration, animations: {
                 animatingCard.transform = .init(translationX: -translationX, y: -translationY)
-                animatingCard.alpha = 0
-            }, completion: { _ in
                 self.centreDeckTopCard.rank = animatingCard.rank
                 self.centreDeckTopCard.suit = animatingCard.suit
+                animatingCard.alpha = 0
+                self.centreDeckTopCard.alpha = 1
+            }, completion: { _ in
                 animatingCard.removeFromSuperview()
+            })
+        }
+    }
+    
+    private func openSettings() {
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl, completionHandler: { (success) in
+                print("Settings opened: \(success)")
             })
         }
     }
